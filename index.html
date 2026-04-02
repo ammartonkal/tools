@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clinical Tools — Dr. Ammar Tonkal</title>
+<meta name="description" content="Evidence-based clinical tools, lecture resources, and patient education by Dr. Ammar Tonkal — Lifestyle Medicine Physician.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0F6E56;
+  --teal-mid: #1D9E75;
+  --teal-light: #E1F5EE;
+  --teal-pale: #F2FAF7;
+  --bg: #F7F6F2;
+  --surface: #FFFFFF;
+  --text: #1A1A18;
+  --text-mid: #4A4A46;
+  --text-muted: #8A8A84;
+  --border: rgba(0,0,0,0.08);
+  --border-mid: rgba(0,0,0,0.12);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-pill: 100px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
+nav { position: sticky; top: 0; z-index: 100; background: rgba(247,246,242,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 1.5rem; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+.nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo { width: 32px; height: 32px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 13px; color: #fff; flex-shrink: 0; }
+.nav-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.nav-name span { color: var(--text-muted); font-weight: 400; }
+.nav-link { font-size: 13px; color: var(--teal); text-decoration: none; }
+.nav-link:hover { text-decoration: underline; }
+.hero { background: var(--teal); padding: 4rem 1.5rem 5rem; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 320px; height: 320px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+.hero::after { content: ''; position: absolute; bottom: -60px; left: 30%; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.03); }
+.hero-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: var(--radius-pill); padding: 5px 14px; margin-bottom: 1.5rem; }
+.hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: #9FE1CB; }
+.hero-eyebrow span { font-size: 12px; color: rgba(255,255,255,0.8); letter-spacing: 0.03em; }
+.hero-title { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 6vw, 44px); color: #fff; line-height: 1.15; margin-bottom: 8px; }
+.hero-title-ar { font-family: 'DM Serif Display', serif; font-size: clamp(20px, 4vw, 30px); color: rgba(255,255,255,0.6); line-height: 1.4; margin-bottom: 1.25rem; direction: rtl; text-align: right; }
+.hero-desc { font-size: 15px; color: rgba(255,255,255,0.72); max-width: 500px; line-height: 1.7; margin-bottom: 6px; }
+.hero-desc-ar { font-size: 13px; color: rgba(255,255,255,0.48); max-width: 500px; line-height: 1.8; direction: rtl; text-align: right; }
+.hero-author { margin-top: 2rem; display: flex; align-items: center; gap: 12px; }
+.hero-author-avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 16px; color: #fff; flex-shrink: 0; }
+.hero-author-name { font-size: 14px; font-weight: 500; color: #fff; }
+.hero-author-title { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.4; }
+.content { max-width: 720px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+.stats-row { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 2.5rem; }
+.stat-card { background: var(--surface); border-radius: var(--radius-sm); border: 1px solid var(--border); padding: 14px 16px; text-align: center; }
+.stat-number { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--teal); line-height: 1; margin-bottom: 4px; }
+.stat-label { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+.stat-label-ar { font-size: 10px; color: var(--text-muted); direction: rtl; line-height: 1.4; }
+.filter-row { display: flex; gap: 8px; margin-bottom: 2rem; flex-wrap: wrap; }
+.filter-tab { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: var(--radius-pill); font-size: 13px; cursor: pointer; border: 1px solid var(--border-mid); background: var(--surface); color: var(--text-mid); transition: all 0.15s ease; user-select: none; }
+.filter-tab:hover { border-color: var(--teal); color: var(--teal); }
+.filter-tab.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+.filter-count { font-size: 11px; background: rgba(0,0,0,0.08); padding: 1px 6px; border-radius: 10px; }
+.filter-tab.active .filter-count { background: rgba(255,255,255,0.2); }
+.section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1rem; }
+.section-title-en { font-size: 12px; font-weight: 500; letter-spacing: 0.08em; color: var(--text-muted); text-transform: uppercase; }
+.section-title-ar { font-size: 12px; color: var(--text-muted); direction: rtl; }
+.tool-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; text-decoration: none; display: block; transition: all 0.2s ease; margin-bottom: 1rem; }
+.tool-card:hover { border-color: var(--teal-mid); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15,110,86,0.1); }
+.tool-card-top { background: var(--teal); padding: 1.25rem 1.5rem; position: relative; overflow: hidden; }
+.tool-card-top::after { content: ''; position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+.tool-card-category { display: inline-flex; align-items: center; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); border-radius: var(--radius-pill); padding: 4px 12px; margin-bottom: 10px; }
+.tool-card-category span { font-size: 11px; color: rgba(255,255,255,0.85); letter-spacing: 0.04em; }
+.tool-card-title-en { font-family: 'DM Serif Display', serif; font-size: 20px; color: #fff; line-height: 1.2; margin-bottom: 4px; }
+.tool-card-title-ar { font-size: 13px; color: rgba(255,255,255,0.6); direction: rtl; text-align: right; line-height: 1.5; }
+.tool-card-body { padding: 1.25rem 1.5rem; }
+.tool-card-desc-en { font-size: 14px; color: var(--text-mid); line-height: 1.6; margin-bottom: 6px; }
+.tool-card-desc-ar { font-size: 13px; color: var(--text-muted); direction: rtl; text-align: right; line-height: 1.7; margin-bottom: 1rem; }
+.tool-card-meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.tool-card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: 11px; padding: 3px 10px; border-radius: var(--radius-pill); background: var(--teal-light); color: var(--teal); font-weight: 500; }
+.tool-card-cta { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--teal); background: var(--teal-pale); padding: 8px 16px; border-radius: var(--radius-pill); border: 1px solid rgba(15,110,86,0.15); transition: all 0.15s ease; }
+.tool-card:hover .tool-card-cta { background: var(--teal); color: #fff; }
+.cta-arrow { font-size: 14px; transition: transform 0.15s ease; display: inline-block; }
+.tool-card:hover .cta-arrow { transform: translateX(3px); }
+.coming-soon-section { margin-top: 2rem; display: none; }
+.coming-soon-note { text-align: center; padding: 3rem 1.5rem; background: var(--surface); border-radius: var(--radius); border: 1px dashed var(--border-mid); }
+.coming-soon-note p { font-size: 14px; color: var(--text-muted); margin-bottom: 4px; }
+.coming-soon-note p.ar { font-size: 13px; direction: rtl; }
+footer { border-top: 1px solid var(--border); padding: 1.5rem; max-width: 720px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.footer-left { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+.footer-left strong { color: var(--teal); font-weight: 500; display: block; }
+.footer-right { display: flex; gap: 16px; align-items: center; }
+.footer-social { font-size: 12px; color: var(--text-muted); text-decoration: none; }
+.footer-social:hover { color: var(--teal); }
+@media (max-width: 480px) { .stats-row { grid-template-columns: repeat(2, minmax(0,1fr)); } .hero { padding: 3rem 1rem 4rem; } .content { padding: 2rem 1rem 3rem; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="/">
+    <div class="nav-logo">AT</div>
+    <div class="nav-name">Dr. Ammar Tonkal <span>· Clinical Tools</span></div>
+  </a>
+  <a class="nav-link" href="https://drammartonkal.com" target="_blank">drammartonkal.com ↗</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-dot"></div>
+      <span>Evidence-based · Clinical Practice · مبني على الدليل</span>
+    </div>
+    <div class="hero-title">Clinical Tools &amp; Resources</div>
+    <div class="hero-title-ar">أدوات سريرية ومصادر تعليمية</div>
+    <div class="hero-desc">Assessment frameworks, lecture tools, and patient education resources designed for healthcare professionals working in metabolic and lifestyle medicine.</div>
+    <div class="hero-desc-ar">أطر تقييم، أدوات محاضرات، ومصادر تثقيف المرضى — مُصمَّمة للمهنيين الصحيين في مجال الطب التحولي وطب نمط الحياة.</div>
+    <div class="hero-author">
+      <div class="hero-author-avatar">AT</div>
+      <div>
+        <div class="hero-author-name">Dr. Ammar Abdulkader Tonkal</div>
+        <div class="hero-author-title">CEO, Cooperative Association for Health Promotion and Quality of Life<br>Certified Lifestyle Medicine Physician · Medical Director, Thawat Medical Centre</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number">1</div>
+      <div class="stat-label">Active tool</div>
+      <div class="stat-label-ar">أداة نشطة</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">5</div>
+      <div class="stat-label">Clinical domains</div>
+      <div class="stat-label-ar">مجالات سريرية</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">2</div>
+      <div class="stat-label">Languages</div>
+      <div class="stat-label-ar">لغتان</div>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <div class="filter-tab active" onclick="filterTools('all', this)">All <span class="filter-count">1</span></div>
+    <div class="filter-tab" onclick="filterTools('lecture', this)">Lecture Tools <span class="filter-count">1</span></div>
+    <div class="filter-tab" onclick="filterTools('patient', this)">Patient Education <span class="filter-count">0</span></div>
+    <div class="filter-tab" onclick="filterTools('articles', this)">Articles <span class="filter-count">0</span></div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-title-en">Available now</div>
+    <div class="section-title-ar">متاح الآن</div>
+  </div>
+
+  <a class="tool-card" href="nhp-assessment/" data-category="lecture">
+    <div class="tool-card-top">
+      <div class="tool-card-category">
+        <span>Lecture Tool · أداة محاضرة</span>
+      </div>
+      <div class="tool-card-title-en">Neuro-Hormonal Profile Assessment</div>
+      <div class="tool-card-title-ar">تقييم الحالة العصبية الهرمونية</div>
+    </div>
+    <div class="tool-card-body">
+      <div class="tool-card-desc-en">A structured clinical reflection tool for assessing the neuro-hormonal drivers of lifestyle non-adherence in Type 2 Diabetes. Covers stress load, dopamine tone, sleep quality, executive function, and environmental context — with scored output and prioritized intervention recommendations.</div>
+      <div class="tool-card-desc-ar">أداة تأمل سريري منظمة لتقييم المحركات العصبية الهرمونية لعدم الالتزام بنمط الحياة في مرضى السكري من النوع الثاني. تغطي الحمل التوتري، ومنظومة الدوبامين، وجودة النوم، والوظيفة التنفيذية، والسياق البيئي — مع نتائج مُرقَّمة وتوصيات تدخل ذات أولوية.</div>
+      <div class="tool-card-meta">
+        <div class="tool-card-tags">
+          <span class="tag">Diabetes</span>
+          <span class="tag">Neuroscience</span>
+          <span class="tag">Lifestyle Medicine</span>
+          <span class="tag">Bilingual</span>
+        </div>
+        <div class="tool-card-cta">Open tool <span class="cta-arrow">→</span></div>
+      </div>
+    </div>
+  </a>
+
+  <div class="coming-soon-section" id="coming-soon">
+    <div class="section-header">
+      <div class="section-title-en">Coming soon</div>
+      <div class="section-title-ar">قريبًا</div>
+    </div>
+    <div class="coming-soon-note">
+      <p>More tools are being developed. Check back soon.</p>
+      <p class="ar">المزيد من الأدوات قيد التطوير. تابعنا قريبًا.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-left">
+    <strong>Dr. Ammar Abdulkader Tonkal</strong>
+    Certified Lifestyle Medicine Physician · Jeddah, Saudi Arabia<br>
+    CEO, Cooperative Association for Health Promotion and Quality of Life
+  </div>
+  <div class="footer-right">
+    <a class="footer-social" href="https://x.com/drammartonkal" target="_blank">X · Twitter</a>
+    <a class="footer-social" href="https://drammartonkal.com" target="_blank">Website ↗</a>
+  </div>
+</footer>
+
+<script>
+function filterTools(category, el) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const cards = document.querySelectorAll('.tool-card');
+  const comingSoon = document.getElementById('coming-soon');
+  if (category === 'patient' || category === 'articles') {
+    cards.forEach(c => c.style.display = 'none');
+    comingSoon.style.display = 'block';
+  } else {
+    comingSoon.style.display = 'none';
+    cards.forEach(card => {
+      card.style.display = (category === 'all' || card.dataset.category === category) ? 'block' : 'none';
+    });
+  }
+}
+</script>
+</body>
+</html>
