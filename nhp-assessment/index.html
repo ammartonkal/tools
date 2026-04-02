@@ -1,166 +1,1043 @@
 <!DOCTYPE html>
-Dr. Ammar Tonkal · drammartonkal.com
-Neuro-Hormonal Profile Assessment
-تقييم الحالة العصبية الهرمونية
-A clinical reflection tool for assessing neuro-hormonal drivers of lifestyle non-adherence in Type 2 Diabetes. Think of a typical patient who fails to sustain change.
-أداة سريرية لتقييم المحركات العصبية الهرمونية لعدم الالتزام بنمط الحياة في مرضى السكري من النوع الثاني. فكّر في مريض اعتيادي يفشل في الاستمرار بالتغيير.
-OPENING CASE · الحالة الافتتاحية
-Meet Khalid. 52 years old. Type 2 diabetes for 9 years. On metformin, a GLP-1 receptor agonist, and a statin. He attends every appointment. He never misses a follow-up. He can tell you his HbA1c target. He knows he should reduce carbohydrates. He knows he should exercise. He knows he should sleep more. He agrees with everything you say — every single time.
-تعرّف على خالد. عمره 52 عامًا. مصاب بالسكري من النوع الثاني منذ 9 سنوات. يتناول ثلاثة أدوية. لا يغيب عن أي موعد. يعرف هدف الهيموغلوبين السكري. يعلم أنه يجب أن يقلل الكربوهيدرات، يمارس الرياضة، وينام أكثر. يوافق على كل ما تقوله — في كل مرة.
-Last visit: HbA1c 9.4%. The visit before: 9.1%. The visit before that: 9.6%. He is not non-compliant. He is not uneducated. He is not unmotivated. He tells you he tries. You believe him.
-آخر زيارة: الهيموغلوبين السكري 9.4٪. قبلها: 9.1٪. وقبلها: 9.6٪. هو ليس غير ملتزم. وليس غير متعلم. وليس غير مكترث. يقول إنه يحاول. وأنت تصدّقه.
-So what is actually happening inside Khalid?
-إذًا، ماذا يحدث فعلًا داخل خالد؟
-ASSESSMENT · التقييم
-Domain 01 · المجال الأول
-Stress Load
-الحمل التوتري
-0 / 8
-1. How would you describe this patient's chronic stress level?
-١. كيف تصف مستوى التوتر المزمن لدى هذا المريض؟
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neuro-Hormonal Profile Assessment — Dr. Ammar Tonkal</title>
+<meta name="description" content="A clinical reflection tool for assessing neuro-hormonal drivers of lifestyle non-adherence in Type 2 Diabetes patients.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --teal-mid: #1D9E75;
+  --blue: #185FA5;
+  --blue-light: #E6F1FB;
+  --purple: #534AB7;
+  --purple-light: #EEEDFE;
+  --coral: #993C1D;
+  --coral-light: #FAECE7;
+  --amber: #854F0B;
+  --amber-light: #FAEEDA;
+  --red-light: #FCEBEB;
+  --red: #A32D2D;
+  --green-light: #EAF3DE;
+  --green: #3B6D11;
+  --mid-green: #FAC775;
+  --bg: #F7F6F2;
+  --surface: #FFFFFF;
+  --text: #1A1A18;
+  --text-mid: #4A4A46;
+  --text-muted: #8A8A84;
+  --border: rgba(0,0,0,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
 
-Low — life appears stable, no major stressors
-منخفض — الحياة مستقرة، لا ضغوط كبيرة
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-Moderate — some life stressors but manageable
-متوسط — بعض الضغوط لكنها محتملة
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
 
-High — significant ongoing stressors (financial, relational, occupational)
-مرتفع — ضغوط مستمرة وكبيرة (مالية، علائقية، مهنية)
-2. Does stress directly affect this patient's eating behavior?
-٢. هل يؤثر التوتر مباشرة على سلوك الأكل لدى المريض؟
+.page-header {
+  background: var(--teal);
+  padding: 2rem 1.5rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
 
-No — stress and eating appear unrelated
-لا — التوتر والأكل يبدوان غير مرتبطين
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
 
-Sometimes — occasional emotional eating under stress
-أحيانًا — أكل عاطفي عرضي تحت الضغط
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 40%;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
 
-Yes — clearly eats more or worse under stress
-نعم — يأكل أكثر أو أسوأ بوضوح عند التوتر
-3. Has this patient reported anxiety, burnout, or feeling overwhelmed?
-٣. هل أبلغ المريض عن قلق أو إرهاق أو شعور بالإرهاق؟
+.header-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
 
-Never mentioned
-لم يُذكر قط
+.author-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 6px 14px;
+  margin-bottom: 1.25rem;
+}
 
-Yes — reported at least once
-نعم — ذُكر مرة واحدة على الأقل
+.author-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #9FE1CB;
+}
 
-Yes — a recurring theme in consultations
-نعم — موضوع متكرر في الاستشارات
+.author-tag span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.02em;
+}
 
-Domain 02 · المجال الثاني
-Reward and Dopamine Tone
-منظومة المكافأة والدوبامين
-0 / 8
-4. Does this patient eat when not physically hungry, particularly highly palatable foods?
-٤. هل يأكل المريض دون جوع حقيقي، خاصة الأطعمة شديدة الاستساغة؟
+.header-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(22px, 5vw, 32px);
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
 
-Rarely or never
-نادرًا أو أبدًا
+.header-title-ar {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(18px, 4vw, 26px);
+  color: rgba(255,255,255,0.75);
+  line-height: 1.4;
+  margin-bottom: 1rem;
+  direction: rtl;
+  text-align: right;
+}
 
-Occasionally
-أحيانًا
+.header-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  max-width: 520px;
+  line-height: 1.6;
+}
 
-Frequently — a recognized pattern
-بشكل متكرر — نمط واضح ومعروف
-5. Does this patient struggle to stop eating once they start, particularly with certain foods?
-٥. هل يجد المريض صعوبة في التوقف عن الأكل بمجرد البدء، خاصة مع بعض الأطعمة؟
+.header-sub-ar {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  max-width: 520px;
+  line-height: 1.7;
+  direction: rtl;
+  text-align: right;
+  margin-top: 4px;
+}
 
-No — generally stops when full
-لا — يتوقف عادةً عند الشبع
+.main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem;
+}
 
-Sometimes — with specific trigger foods
-أحيانًا — مع أطعمة محفّزة بعينها
+.case-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid var(--teal-mid);
+}
 
-Yes — consistently reports difficulty stopping
-نعم — يُفيد باستمرار بصعوبة التوقف
+.case-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
 
-Domain 03 · المجال الثالث
-Sleep and Circadian Alignment
-النوم والإيقاع اليومي
-0 / 8
-6. How many hours does this patient typically sleep per night?
-٦. كم ساعة ينام المريض عادةً في الليلة الواحدة؟
+.case-text {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
 
-7–9 hours — adequate
-7-9 ساعات — كافية
+.case-text-ar {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.8;
+  direction: rtl;
+  text-align: right;
+}
 
-5–6 hours — mildly restricted
-5-6 ساعات — محدودة نسبيًا
+.case-question {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
 
-Less than 5 hours — severely restricted
-أقل من 5 ساعات — محدودة بشدة
-7. Does this patient eat late at night or have irregular meal timing?
-٧. هل يأكل المريض في وقت متأخر من الليل أو لديه توقيت غير منتظم للوجبات؟
+.case-question-ar {
+  font-size: 13px;
+  color: var(--text-muted);
+  direction: rtl;
+  text-align: right;
+  margin-top: 4px;
+}
 
-No — meals are structured and appropriately timed
-لا — الوجبات منتظمة وفي أوقاتها المناسبة
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  margin-top: 0.25rem;
+}
 
-Occasionally — irregular on some days
-أحيانًا — غير منتظمة في بعض الأيام
+.domain-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
 
-Yes — consistently eats late or has no meal structure
-نعم — يأكل متأخرًا باستمرار أو لا يوجد نظام للوجبات
+.domain-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  gap: 12px;
+}
 
-Domain 04 · المجال الرابع
-Executive Function and Cognitive Load
-الوظيفة التنفيذية والحمل المعرفي
-0 / 8
-8. When this patient fails lifestyle recommendations, what is the most likely reason?
-٨. حين يفشل المريض في الالتزام بالتوصيات، ما هو السبب الأرجح؟
+.domain-title-wrap {}
 
-Lack of knowledge — doesn't fully understand what to do
-نقص المعرفة — لا يفهم تمامًا ما يجب فعله
+.domain-number {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
 
-Competing priorities — life gets in the way
-أولويات متنافسة — تتدخل ضغوط الحياة
+.domain-title-en {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
 
-Cannot execute consistently — knows what to do but can't sustain it
-لا يستطيع التنفيذ باستمرار — يعرف ما يجب لكن لا يستطيع المداومة
-9. How complex is this patient's current diabetes management plan?
-٩. ما مدى تعقيد خطة إدارة السكري الحالية للمريض؟
+.domain-title-ar {
+  font-size: 12px;
+  color: var(--text-muted);
+  direction: rtl;
+}
 
-Simple — 1–2 medications, clear instructions
-بسيطة — دواء أو دواءان، تعليمات واضحة
+.domain-score-badge {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  background: var(--bg);
+  padding: 4px 10px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
 
-Moderate — multiple medications, some lifestyle requirements
-متوسطة — أدوية متعددة، بعض متطلبات نمط الحياة
+.question {
+  margin-bottom: 16px;
+}
 
-High — complex regimen, many lifestyle demands, multiple providers
-عالية — نظام معقد، متطلبات كثيرة، مقدمو رعاية متعددون
+.q-text-en {
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.55;
+}
 
-Domain 05 · المجال الخامس
-Environment and Social Context
-البيئة والسياق الاجتماعي
-0 / 6
-10. How would you describe this patient's food environment at home?
-١٠. كيف تصف البيئة الغذائية للمريض في المنزل؟
+.q-text-ar {
+  font-size: 12px;
+  color: var(--text-muted);
+  direction: rtl;
+  text-align: right;
+  margin-bottom: 10px;
+  line-height: 1.7;
+}
 
-Supportive — healthy food available, family supports change
-داعمة — طعام صحي متاح، الأسرة تدعم التغيير
+.q-options {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
 
-Neutral — neither supporting nor undermining goals
-محايدة — لا تدعم ولا تعيق الأهداف
+.q-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
 
-Unsupportive — unhealthy food available, family does not support change
-غير داعمة — طعام غير صحي متاح، الأسرة لا تدعم التغيير
-11. Does this patient have social support for their health goals?
-١١. هل يحظى المريض بدعم اجتماعي لأهدافه الصحية؟
+.q-option:hover {
+  background: var(--bg);
+  border-color: var(--border);
+}
 
-Yes — family or community actively supports them
-نعم — الأسرة أو المجتمع يدعمانه بفاعلية
+.q-option input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--teal);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
 
-Minimal — largely managing alone
-محدود — يتعامل مع الأمر بمفرده إلى حد بعيد
+.q-option.selected {
+  background: var(--teal-light);
+  border-color: rgba(15,110,86,0.2);
+}
 
-None — isolated or facing active social resistance
-لا يوجد — معزول أو يواجه مقاومة اجتماعية فعلية
+.option-texts {}
 
-Generate Neuro-Hormonal Profile
-إنشاء الملف الشخصي العصبي الهرموني
-Dr. Ammar Abdulkader Tonkal
-CEO, Cooperative Association for Health Promotion and Quality of Life
-Certified Lifestyle Medicine Physician · Medical Director, Thawat Medical Centre
-drammartonkal.com
+.opt-en {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.4;
+  cursor: pointer;
+  display: block;
+}
+
+.opt-ar {
+  font-size: 11px;
+  color: var(--text-muted);
+  direction: rtl;
+  display: block;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+.domain-progress {
+  margin-top: 12px;
+  height: 4px;
+  background: var(--bg);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.domain-progress-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.generate-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s ease;
+  letter-spacing: 0.01em;
+}
+
+.generate-btn:hover { background: var(--teal-mid); }
+
+.generate-btn-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  display: block;
+  margin-top: 2px;
+}
+
+.results-section {
+  display: none;
+  margin-top: 1.5rem;
+}
+
+.results-header {
+  background: var(--teal);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.results-header-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.results-total-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.results-total-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 48px;
+  color: #fff;
+  line-height: 1;
+}
+
+.results-total-denom {
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+}
+
+.results-interpretation {
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+.results-interpretation-ar {
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  direction: rtl;
+  text-align: right;
+  line-height: 1.7;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.profile-card {
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  border: 1px solid transparent;
+}
+
+.profile-card-num {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+}
+
+.profile-card-name {
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.profile-card-name-ar {
+  font-size: 11px;
+  direction: rtl;
+  margin-bottom: 6px;
+  opacity: 0.7;
+}
+
+.profile-card-score {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.profile-card-score span {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+.profile-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+.interventions-section {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.interventions-title {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.interventions-title-en {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.interventions-title-ar {
+  font-size: 12px;
+  color: var(--text-muted);
+  direction: rtl;
+  text-align: right;
+}
+
+.intervention-item {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.intervention-item:last-child { border-bottom: none; }
+
+.intervention-domain-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.intervention-domain-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.intervention-level-badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 10px;
+  border-radius: 100px;
+}
+
+.intervention-text-en {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+.intervention-text-ar {
+  font-size: 12px;
+  color: var(--text-muted);
+  direction: rtl;
+  text-align: right;
+  line-height: 1.7;
+}
+
+.disclaimer {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  margin-bottom: 1rem;
+}
+
+.disclaimer-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+.disclaimer-text-ar {
+  font-size: 11px;
+  color: var(--text-muted);
+  direction: rtl;
+  text-align: right;
+  line-height: 1.7;
+}
+
+.page-footer {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-author {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.footer-author strong {
+  color: var(--teal);
+  font-weight: 500;
+}
+
+.footer-link {
+  font-size: 12px;
+  color: var(--teal);
+  text-decoration: none;
+}
+
+.footer-link:hover { text-decoration: underline; }
+
+.reset-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: all 0.15s ease;
+}
+
+.reset-btn:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+
+@media (max-width: 480px) {
+  .profile-grid { grid-template-columns: 1fr; }
+  .page-header { padding: 1.5rem 1rem 2.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-inner">
+    <div class="author-tag">
+      <div class="author-dot"></div>
+      <span>Dr. Ammar Tonkal · drammartonkal.com</span>
+    </div>
+    <div class="header-title">Neuro-Hormonal Profile Assessment</div>
+    <div class="header-title-ar">تقييم الحالة العصبية الهرمونية</div>
+    <div class="header-sub">A clinical reflection tool for assessing neuro-hormonal drivers of lifestyle non-adherence in Type 2 Diabetes. Think of a typical patient who fails to sustain change.</div>
+    <div class="header-sub-ar">أداة سريرية لتقييم المحركات العصبية الهرمونية لعدم الالتزام بنمط الحياة في مرضى السكري من النوع الثاني. فكّر في مريض اعتيادي يفشل في الاستمرار بالتغيير.</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="case-card">
+    <div class="case-label">Opening Case · الحالة الافتتاحية</div>
+    <div class="case-text">Meet Khalid. 52 years old. Type 2 diabetes for 9 years. On metformin, a GLP-1 receptor agonist, and a statin. He attends every appointment. He never misses a follow-up. He can tell you his HbA1c target. He knows he should reduce carbohydrates. He knows he should exercise. He knows he should sleep more. He agrees with everything you say — every single time.</div>
+    <div class="case-text-ar">تعرّف على خالد. عمره 52 عامًا. مصاب بالسكري من النوع الثاني منذ 9 سنوات. يتناول ثلاثة أدوية. لا يغيب عن أي موعد. يعرف هدف الهيموغلوبين السكري. يعلم أنه يجب أن يقلل الكربوهيدرات، يمارس الرياضة، وينام أكثر. يوافق على كل ما تقوله — في كل مرة.</div>
+    <div class="case-text" style="margin-top:10px;">Last visit: HbA1c 9.4%. The visit before: 9.1%. The visit before that: 9.6%. He is not non-compliant. He is not uneducated. He is not unmotivated. He tells you he tries. You believe him.</div>
+    <div class="case-text-ar">آخر زيارة: الهيموغلوبين السكري 9.4٪. قبلها: 9.1٪. وقبلها: 9.6٪. هو ليس غير ملتزم. وليس غير متعلم. وليس غير مكترث. يقول إنه يحاول. وأنت تصدّقه.</div>
+    <div class="case-question">So what is actually happening inside Khalid?</div>
+    <div class="case-question-ar">إذًا، ماذا يحدث فعلًا داخل خالد؟</div>
+  </div>
+
+  <div class="section-label">Assessment · التقييم</div>
+
+  <!-- DOMAIN 1 -->
+  <div class="domain-card">
+    <div class="domain-header">
+      <div class="domain-title-wrap">
+        <div class="domain-number">Domain 01 · المجال الأول</div>
+        <div class="domain-title-en">Stress Load</div>
+        <div class="domain-title-ar">الحمل التوتري</div>
+      </div>
+      <div class="domain-score-badge" id="d1-score">0 / 8</div>
+    </div>
+
+    <div class="question">
+      <div class="q-text-en">1. How would you describe this patient's chronic stress level?</div>
+      <div class="q-text-ar">١. كيف تصف مستوى التوتر المزمن لدى هذا المريض؟</div>
+      <div class="q-options">
+        <label class="q-option" id="opt-q1-0"><input type="radio" name="q1" value="0" onchange="update();selectOpt('q1',this)"><div class="option-texts"><span class="opt-en">Low — life appears stable, no major stressors</span><span class="opt-ar">منخفض — الحياة مستقرة، لا ضغوط كبيرة</span></div></label>
+        <label class="q-option" id="opt-q1-1"><input type="radio" name="q1" value="1" onchange="update();selectOpt('q1',this)"><div class="option-texts"><span class="opt-en">Moderate — some life stressors but manageable</span><span class="opt-ar">متوسط — بعض الضغوط لكنها محتملة</span></div></label>
+        <label class="q-option" id="opt-q1-2"><input type="radio" name="q1" value="2" onchange="update();selectOpt('q1',this)"><div class="option-texts"><span class="opt-en">High — significant ongoing stressors (financial, relational, occupational)</span><span class="opt-ar">مرتفع — ضغوط مستمرة وكبيرة (مالية، علائقية، مهنية)</span></div></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-text-en">2. Does stress directly affect this patient's eating behavior?</div>
+      <div class="q-text-ar">٢. هل يؤثر التوتر مباشرة على سلوك الأكل لدى المريض؟</div>
+      <div class="q-options">
+        <label class="q-option" id="opt-q2-0"><input type="radio" name="q2" value="0" onchange="update();selectOpt('q2',this)"><div class="option-texts"><span class="opt-en">No — stress and eating appear unrelated</span><span class="opt-ar">لا — التوتر والأكل يبدوان غير مرتبطين</span></div></label>
+        <label class="q-option" id="opt-q2-1"><input type="radio" name="q2" value="1" onchange="update();selectOpt('q2',this)"><div class="option-texts"><span class="opt-en">Sometimes — occasional emotional eating under stress</span><span class="opt-ar">أحيانًا — أكل عاطفي عرضي تحت الضغط</span></div></label>
+        <label class="q-option" id="opt-q2-2"><input type="radio" name="q2" value="2" onchange="update();selectOpt('q2',this)"><div class="option-texts"><span class="opt-en">Yes — clearly eats more or worse under stress</span><span class="opt-ar">نعم — يأكل أكثر أو أسوأ بوضوح عند التوتر</span></div></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-text-en">3. Has this patient reported anxiety, burnout, or feeling overwhelmed?</div>
+      <div class="q-text-ar">٣. هل أبلغ المريض عن قلق أو إرهاق أو شعور بالإرهاق؟</div>
+      <div class="q-options">
+        <label class="q-option" id="opt-q3-0"><input type="radio" name="q3" value="0" onchange="update();selectOpt('q3',this)"><div class="option-texts"><span class="opt-en">Never mentioned</span><span class="opt-ar">لم يُذكر قط</span></div></label>
+        <label class="q-option" id="opt-q3-2"><input type="radio" name="q3" value="2" onchange="update();selectOpt('q3',this)"><div class="option-texts"><span class="opt-en">Yes — reported at least once</span><span class="opt-ar">نعم — ذُكر مرة واحدة على الأقل</span></div></label>
+        <label class="q-option" id="opt-q3-4"><input type="radio" name="q3" value="4" onchange="update();selectOpt('q3',this)"><div class="option-texts"><span class="opt-en">Yes — a recurring theme in consultations</span><span class="opt-ar">نعم — موضوع متكرر في الاستشارات</span></div></label>
+      </div>
+    </div>
+    <div class="domain-progress"><div class="domain-progress-bar" id="d1-bar" style="background:var(--teal-mid);"></div></div>
+  </div>
+
+  <!-- DOMAIN 2 -->
+  <div class="domain-card">
+    <div class="domain-header">
+      <div class="domain-title-wrap">
+        <div class="domain-number">Domain 02 · المجال الثاني</div>
+        <div class="domain-title-en">Reward and Dopamine Tone</div>
+        <div class="domain-title-ar">منظومة المكافأة والدوبامين</div>
+      </div>
+      <div class="domain-score-badge" id="d2-score">0 / 8</div>
+    </div>
+
+    <div class="question">
+      <div class="q-text-en">4. Does this patient eat when not physically hungry, particularly highly palatable foods?</div>
+      <div class="q-text-ar">٤. هل يأكل المريض دون جوع حقيقي، خاصة الأطعمة شديدة الاستساغة؟</div>
+      <div class="q-options">
+        <label class="q-option" id="opt-q4-0"><input type="radio" name="q4" value="0" onchange="update();selectOpt('q4',this)"><div class="option-texts"><span class="opt-en">Rarely or never</span><span class="opt-ar">نادرًا أو أبدًا</span></div></label>
+        <label class="q-option" id="opt-q4-2"><input type="radio" name="q4" value="2" onchange="update();selectOpt('q4',this)"><div class="option-texts"><span class="opt-en">Occasionally</span><span class="opt-ar">أحيانًا</span></div></label>
+        <label class="q-option" id="opt-q4-4"><input type="radio" name="q4" value="4" onchange="update();selectOpt('q4',this)"><div class="option-texts"><span class="opt-en">Frequently — a recognized pattern</span><span class="opt-ar">بشكل متكرر — نمط واضح ومعروف</span></div></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-text-en">5. Does this patient struggle to stop eating once they start, particularly with certain foods?</div>
+      <div class="q-text-ar">٥. هل يجد المريض صعوبة في التوقف عن الأكل بمجرد البدء، خاصة مع بعض الأطعمة؟</div>
+      <div class="q-options">
+        <label class="q-option" id="opt-q5-0"><input type="radio" name="q5" value="0" onchange="update();selectOpt('q5',this)"><div class="option-texts"><span class="opt-en">No — generally stops when full</span><span class="opt-ar">لا — يتوقف عادةً عند الشبع</span></div></label>
+        <label class="q-option" id="opt-q5-2"><input type="radio" name="q5" value="2" onchange="update();selectOpt('q5',this)"><div class="option-texts"><span class="opt-en">Sometimes — with specific trigger foods</span><span class="opt-ar">أحيانًا — مع أطعمة محفّزة بعينها</span></div></label>
+        <label class="q-option" id="opt-q5-4"><input type="radio" name="q5" value="4" onchange="update();selectOpt('q5',this)"><div class="option-texts"><span class="opt-en">Yes — consistently reports difficulty stopping</span><span class="opt-ar">نعم — يُفيد باستمرار بصعوبة التوقف</span></div></label>
+      </div>
+    </div>
+    <div class="domain-progress"><div class="domain-progress-bar" id="d2-bar" style="background:#378ADD;"></div></div>
+  </div>
+
+  <!-- DOMAIN 3 -->
+  <div class="domain-card">
+    <div class="domain-header">
+      <div class="domain-title-wrap">
+        <div class="domain-number">Domain 03 · المجال الثالث</div>
+        <div class="domain-title-en">Sleep and Circadian Alignment</div>
+        <div class="domain-title-ar">النوم والإيقاع اليومي</div>
+      </div>
+      <div class="domain-score-badge" id="d3-score">0 / 8</div>
+    </div>
+
+    <div class="question">
+      <div class="q-text-en">6. How many hours does this patient typically sleep per night?</div>
+      <div class="q-text-ar">٦. كم ساعة ينام المريض عادةً في الليلة الواحدة؟</div>
+      <div class="q-options">
+        <label class="q-option" id="opt-q6-0"><input type="radio" name="q6" value="0" onchange="update();selectOpt('q6',this)"><div class="option-texts"><span class="opt-en">7–9 hours — adequate</span><span class="opt-ar">7-9 ساعات — كافية</span></div></label>
+        <label class="q-option" id="opt-q6-2"><input type="radio" name="q6" value="2" onchange="update();selectOpt('q6',this)"><div class="option-texts"><span class="opt-en">5–6 hours — mildly restricted</span><span class="opt-ar">5-6 ساعات — محدودة نسبيًا</span></div></label>
+        <label class="q-option" id="opt-q6-4"><input type="radio" name="q6" value="4" onchange="update();selectOpt('q6',this)"><div class="option-texts"><span class="opt-en">Less than 5 hours — severely restricted</span><span class="opt-ar">أقل من 5 ساعات — محدودة بشدة</span></div></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-text-en">7. Does this patient eat late at night or have irregular meal timing?</div>
+      <div class="q-text-ar">٧. هل يأكل المريض في وقت متأخر من الليل أو لديه توقيت غير منتظم للوجبات؟</div>
+      <div class="q-options">
+        <label class="q-option" id="opt-q7-0"><input type="radio" name="q7" value="0" onchange="update();selectOpt('q7',this)"><div class="option-texts"><span class="opt-en">No — meals are structured and appropriately timed</span><span class="opt-ar">لا — الوجبات منتظمة وفي أوقاتها المناسبة</span></div></label>
+        <label class="q-option" id="opt-q7-2"><input type="radio" name="q7" value="2" onchange="update();selectOpt('q7',this)"><div class="option-texts"><span class="opt-en">Occasionally — irregular on some days</span><span class="opt-ar">أحيانًا — غير منتظمة في بعض الأيام</span></div></label>
+        <label class="q-option" id="opt-q7-4"><input type="radio" name="q7" value="4" onchange="update();selectOpt('q7',this)"><div class="option-texts"><span class="opt-en">Yes — consistently eats late or has no meal structure</span><span class="opt-ar">نعم — يأكل متأخرًا باستمرار أو لا يوجد نظام للوجبات</span></div></label>
+      </div>
+    </div>
+    <div class="domain-progress"><div class="domain-progress-bar" id="d3-bar" style="background:#7F77DD;"></div></div>
+  </div>
+
+  <!-- DOMAIN 4 -->
+  <div class="domain-card">
+    <div class="domain-header">
+      <div class="domain-title-wrap">
+        <div class="domain-number">Domain 04 · المجال الرابع</div>
+        <div class="domain-title-en">Executive Function and Cognitive Load</div>
+        <div class="domain-title-ar">الوظيفة التنفيذية والحمل المعرفي</div>
+      </div>
+      <div class="domain-score-badge" id="d4-score">0 / 8</div>
+    </div>
+
+    <div class="question">
+      <div class="q-text-en">8. When this patient fails lifestyle recommendations, what is the most likely reason?</div>
+      <div class="q-text-ar">٨. حين يفشل المريض في الالتزام بالتوصيات، ما هو السبب الأرجح؟</div>
+      <div class="q-options">
+        <label class="q-option" id="opt-q8-0"><input type="radio" name="q8" value="0" onchange="update();selectOpt('q8',this)"><div class="option-texts"><span class="opt-en">Lack of knowledge — doesn't fully understand what to do</span><span class="opt-ar">نقص المعرفة — لا يفهم تمامًا ما يجب فعله</span></div></label>
+        <label class="q-option" id="opt-q8-2"><input type="radio" name="q8" value="2" onchange="update();selectOpt('q8',this)"><div class="option-texts"><span class="opt-en">Competing priorities — life gets in the way</span><span class="opt-ar">أولويات متنافسة — تتدخل ضغوط الحياة</span></div></label>
+        <label class="q-option" id="opt-q8-4"><input type="radio" name="q8" value="4" onchange="update();selectOpt('q8',this)"><div class="option-texts"><span class="opt-en">Cannot execute consistently — knows what to do but can't sustain it</span><span class="opt-ar">لا يستطيع التنفيذ باستمرار — يعرف ما يجب لكن لا يستطيع المداومة</span></div></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-text-en">9. How complex is this patient's current diabetes management plan?</div>
+      <div class="q-text-ar">٩. ما مدى تعقيد خطة إدارة السكري الحالية للمريض؟</div>
+      <div class="q-options">
+        <label class="q-option" id="opt-q9-0"><input type="radio" name="q9" value="0" onchange="update();selectOpt('q9',this)"><div class="option-texts"><span class="opt-en">Simple — 1–2 medications, clear instructions</span><span class="opt-ar">بسيطة — دواء أو دواءان، تعليمات واضحة</span></div></label>
+        <label class="q-option" id="opt-q9-2"><input type="radio" name="q9" value="2" onchange="update();selectOpt('q9',this)"><div class="option-texts"><span class="opt-en">Moderate — multiple medications, some lifestyle requirements</span><span class="opt-ar">متوسطة — أدوية متعددة، بعض متطلبات نمط الحياة</span></div></label>
+        <label class="q-option" id="opt-q9-4"><input type="radio" name="q9" value="4" onchange="update();selectOpt('q9',this)"><div class="option-texts"><span class="opt-en">High — complex regimen, many lifestyle demands, multiple providers</span><span class="opt-ar">عالية — نظام معقد، متطلبات كثيرة، مقدمو رعاية متعددون</span></div></label>
+      </div>
+    </div>
+    <div class="domain-progress"><div class="domain-progress-bar" id="d4-bar" style="background:#D85A30;"></div></div>
+  </div>
+
+  <!-- DOMAIN 5 -->
+  <div class="domain-card">
+    <div class="domain-header">
+      <div class="domain-title-wrap">
+        <div class="domain-number">Domain 05 · المجال الخامس</div>
+        <div class="domain-title-en">Environment and Social Context</div>
+        <div class="domain-title-ar">البيئة والسياق الاجتماعي</div>
+      </div>
+      <div class="domain-score-badge" id="d5-score">0 / 6</div>
+    </div>
+
+    <div class="question">
+      <div class="q-text-en">10. How would you describe this patient's food environment at home?</div>
+      <div class="q-text-ar">١٠. كيف تصف البيئة الغذائية للمريض في المنزل؟</div>
+      <div class="q-options">
+        <label class="q-option" id="opt-q10-0"><input type="radio" name="q10" value="0" onchange="update();selectOpt('q10',this)"><div class="option-texts"><span class="opt-en">Supportive — healthy food available, family supports change</span><span class="opt-ar">داعمة — طعام صحي متاح، الأسرة تدعم التغيير</span></div></label>
+        <label class="q-option" id="opt-q10-1"><input type="radio" name="q10" value="1" onchange="update();selectOpt('q10',this)"><div class="option-texts"><span class="opt-en">Neutral — neither supporting nor undermining goals</span><span class="opt-ar">محايدة — لا تدعم ولا تعيق الأهداف</span></div></label>
+        <label class="q-option" id="opt-q10-2"><input type="radio" name="q10" value="2" onchange="update();selectOpt('q10',this)"><div class="option-texts"><span class="opt-en">Unsupportive — unhealthy food available, family does not support change</span><span class="opt-ar">غير داعمة — طعام غير صحي متاح، الأسرة لا تدعم التغيير</span></div></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-text-en">11. Does this patient have social support for their health goals?</div>
+      <div class="q-text-ar">١١. هل يحظى المريض بدعم اجتماعي لأهدافه الصحية؟</div>
+      <div class="q-options">
+        <label class="q-option" id="opt-q11-0"><input type="radio" name="q11" value="0" onchange="update();selectOpt('q11',this)"><div class="option-texts"><span class="opt-en">Yes — family or community actively supports them</span><span class="opt-ar">نعم — الأسرة أو المجتمع يدعمانه بفاعلية</span></div></label>
+        <label class="q-option" id="opt-q11-2"><input type="radio" name="q11" value="2" onchange="update();selectOpt('q11',this)"><div class="option-texts"><span class="opt-en">Minimal — largely managing alone</span><span class="opt-ar">محدود — يتعامل مع الأمر بمفرده إلى حد بعيد</span></div></label>
+        <label class="q-option" id="opt-q11-4"><input type="radio" name="q11" value="4" onchange="update();selectOpt('q11',this)"><div class="option-texts"><span class="opt-en">None — isolated or facing active social resistance</span><span class="opt-ar">لا يوجد — معزول أو يواجه مقاومة اجتماعية فعلية</span></div></label>
+      </div>
+    </div>
+    <div class="domain-progress"><div class="domain-progress-bar" id="d5-bar" style="background:#BA7517;"></div></div>
+  </div>
+
+  <button class="generate-btn" onclick="calculate()">
+    Generate Neuro-Hormonal Profile
+    <span class="generate-btn-sub">إنشاء الملف الشخصي العصبي الهرموني</span>
+  </button>
+
+  <div class="results-section" id="results">
+
+    <div class="results-header">
+      <div class="results-header-label">Neuro-Hormonal Profile · الملف العصبي الهرموني</div>
+      <div class="results-total-row">
+        <div class="results-total-num" id="total-num">0</div>
+        <div class="results-total-denom">/ 38</div>
+      </div>
+      <div class="results-interpretation" id="total-interp-en"></div>
+      <div class="results-interpretation-ar" id="total-interp-ar"></div>
+    </div>
+
+    <div class="profile-grid" id="profile-grid"></div>
+
+    <div class="interventions-section">
+      <div class="interventions-title">
+        <div class="interventions-title-en">Priority interventions — ranked by domain score</div>
+        <div class="interventions-title-ar">التدخلات ذات الأولوية — مرتبة حسب درجة المجال</div>
+      </div>
+      <div id="interventions-list"></div>
+    </div>
+
+    <div class="disclaimer">
+      <div class="disclaimer-text">This tool is a clinical reflection framework, not a validated diagnostic instrument. Scores guide conversation and prioritization — not diagnosis. Use alongside clinical judgment.</div>
+      <div class="disclaimer-text-ar">هذه الأداة إطار للتأمل السريري وليست أداة تشخيصية مُعتمدة. الدرجات توجّه المحادثة وترتيب الأولويات — لا التشخيص. استخدمها جنبًا إلى جنب مع الحكم السريري.</div>
+    </div>
+
+    <button class="reset-btn" onclick="resetForm()">Reset assessment · إعادة التقييم</button>
+
+  </div>
+
+</div>
+
+<div class="page-footer">
+  <div class="footer-author">
+    <strong>Dr. Ammar Abdulkader Tonkal</strong><br>
+    CEO, Cooperative Association for Health Promotion and Quality of Life<br>
+    Certified Lifestyle Medicine Physician · Medical Director, Thawat Medical Centre
+  </div>
+  <a class="footer-link" href="https://drammartonkal.com" target="_blank">drammartonkal.com</a>
+</div>
+
+<script>
+const domains = [
+  { id:'d1', name:'Stress Load', nameAr:'الحمل التوتري', max:8, qs:['q1','q2','q3'], color:'#1D9E75' },
+  { id:'d2', name:'Reward / Dopamine', nameAr:'منظومة المكافأة والدوبامين', max:8, qs:['q4','q5'], color:'#378ADD' },
+  { id:'d3', name:'Sleep / Circadian', nameAr:'النوم والإيقاع اليومي', max:8, qs:['q6','q7'], color:'#7F77DD' },
+  { id:'d4', name:'Executive Function', nameAr:'الوظيفة التنفيذية', max:8, qs:['q8','q9'], color:'#D85A30' },
+  { id:'d5', name:'Environment / Social', nameAr:'البيئة والسياق الاجتماعي', max:6, qs:['q10','q11'], color:'#BA7517' }
+];
+
+const interventionData = {
+  d1: {
+    low: { en: 'Stress load appears manageable. Maintain awareness with a brief check-in at each visit.', ar: 'يبدو الحمل التوتري محتملًا. حافظ على الوعي بسؤال سريع في كل زيارة.' },
+    mid: { en: 'Consider structured stress reduction: diaphragmatic breathing protocols, 150 min/week moderate physical activity, and mindfulness-based stress reduction (MBSR). Assess spiritual practice as a cortisol-modulating resource.', ar: 'فكر في تقنيات منظمة لتخفيف التوتر: تمارين التنفس الحجابي، 150 دقيقة أسبوعيًا من النشاط البدني المعتدل، وبرنامج تخفيف التوتر القائم على اليقظة الذهنية. قيّم الممارسة الروحية كمورد لتنظيم الكورتيزول.' },
+    high: { en: 'Stress is a primary driver. Prioritize stress management before intensifying dietary change. Refer to MBSR program. Assess need for psychological support. Frame all dietary recommendations within the stress context.', ar: 'التوتر محرك رئيسي. أعطِ الأولوية لإدارة التوتر قبل تكثيف التغييرات الغذائية. أحل المريض لبرنامج MBSR. قيّم الحاجة للدعم النفسي. ضع جميع التوصيات الغذائية في سياق التوتر.' }
+  },
+  d2: {
+    low: { en: 'Reward system appears functional. Standard dietary guidance is appropriate.', ar: 'منظومة المكافأة تعمل بشكل طبيعي. التوجيه الغذائي المعتاد مناسب.' },
+    mid: { en: 'Begin reward recalibration: reduce ultra-processed food exposure, introduce structured meal timing, avoid grazing. Discuss the dopamine role in eating motivation using simple language.', ar: 'ابدأ بإعادة معايرة المكافأة: قلل التعرض للأطعمة فائقة المعالجة، أدخل توقيتًا منظمًا للوجبات، تجنب الأكل العشوائي. ناقش دور الدوبامين في دوافع الأكل بلغة بسيطة.' },
+    high: { en: 'Reward dysregulation is likely driving non-adherence. Prioritize: eliminate constant food stimulation, structured 2–3 meals per day with no snacking, gradual reduction in palatable food exposure. Consider referral for behavioral counselling.', ar: 'اضطراب منظومة المكافأة يُرجَّح أنه المحرك الرئيسي لعدم الالتزام. الأولوية: تخلص من التحفيز الغذائي المستمر، 2-3 وجبات يومية منظمة بدون وجبات خفيفة، تقليل تدريجي للأطعمة شديدة الاستساغة. فكر في إحالته للإرشاد السلوكي.' }
+  },
+  d3: {
+    low: { en: 'Sleep is adequate. Maintain sleep hygiene awareness at routine visits.', ar: 'النوم كافٍ. حافظ على الوعي بصحة النوم في الزيارات الروتينية.' },
+    mid: { en: 'Sleep restriction is contributing to insulin resistance and behavioral dysregulation. Provide sleep hygiene guidance: consistent sleep/wake times, screen reduction before bed, no eating after 9pm.', ar: 'تقييد النوم يُسهم في مقاومة الأنسولين واضطراب السلوك. قدم إرشادات صحة النوم: أوقات نوم واستيقاظ منتظمة، تقليل الشاشات قبل النوم، عدم الأكل بعد الساعة التاسعة مساءً.' },
+    high: { en: 'Sleep is a primary metabolic and behavioral driver. Screen for sleep apnea. Prioritize sleep before intensifying dietary demands. Poor sleep overrides most behavioral interventions.', ar: 'النوم محرك أيضي وسلوكي رئيسي. افحص لاحتمال انقطاع التنفس أثناء النوم. أعطِ الأولوية لتحسين النوم قبل تكثيف المتطلبات الغذائية. ضعف النوم يُبطل معظم التدخلات السلوكية.' }
+  },
+  d4: {
+    low: { en: 'Executive function appears intact. Standard behavioral goal-setting is appropriate.', ar: 'الوظيفة التنفيذية تبدو سليمة. تحديد الأهداف السلوكية المعتاد مناسب.' },
+    mid: { en: 'Reduce cognitive load: simplify the management plan, provide 2–3 clear rules rather than complex guidance, use pre-planned meal templates.', ar: 'قلل الحمل المعرفي: بسّط خطة الإدارة، قدم 2-3 قواعد واضحة بدلًا من توجيهات معقدة، استخدم نماذج وجبات مُعدّة مسبقًا.' },
+    high: { en: 'Executive burden is high. Simplify everything. One behavioral change at a time. Use environmental design (remove triggers, pre-plan decisions) rather than willpower-dependent strategies. Reduce treatment complexity if possible.', ar: 'الحمل التنفيذي مرتفع. بسّط كل شيء. تغيير سلوكي واحد في كل مرة. استخدم تصميم البيئة (إزالة المحفزات، التخطيط المسبق للقرارات) بدلًا من الاستراتيجيات المعتمدة على الإرادة. قلل تعقيد العلاج إن أمكن.' }
+  },
+  d5: {
+    low: { en: 'Environment is supportive. Leverage family and social context as an active resource.', ar: 'البيئة داعمة. استثمر الأسرة والسياق الاجتماعي كموارد فاعلة.' },
+    mid: { en: 'Environment is neutral. Explore simple restructuring: healthy food availability at home, meal planning, identifying one supportive person in their network.', ar: 'البيئة محايدة. استكشف إعادة هيكلة بسيطة: توفر الطعام الصحي في المنزل، التخطيط للوجبات، تحديد شخص داعم في محيطه.' },
+    high: { en: 'Environmental and social barriers are significant. Address before expecting behavioral change. Consider family consultation. Explore community-based physical activity. Environmental change must precede behavioral change.', ar: 'العوائق البيئية والاجتماعية كبيرة. عالجها قبل توقع أي تغيير سلوكي. فكر في استشارة الأسرة. استكشف النشاط البدني المجتمعي. التغيير البيئي يجب أن يسبق التغيير السلوكي.' }
+  }
+};
+
+function getScore(qs) {
+  return qs.reduce((s, n) => {
+    const el = document.querySelector(`input[name="${n}"]:checked`);
+    return s + (el ? parseInt(el.value) : 0);
+  }, 0);
+}
+
+function getLevel(score, max) {
+  const p = score / max;
+  if (p <= 0.33) return 'low';
+  if (p <= 0.66) return 'mid';
+  return 'high';
+}
+
+function getLevelLabel(level) {
+  if (level === 'low') return { en: 'Low concern', ar: 'منخفض' };
+  if (level === 'mid') return { en: 'Moderate', ar: 'متوسط' };
+  return { en: 'High priority', ar: 'أولوية عالية' };
+}
+
+function getLevelStyle(level) {
+  if (level === 'low') return { bg: '#EAF3DE', text: '#27500A', badgeBg: '#C0DD97', badgeText: '#27500A', cardBorder: '#C0DD97' };
+  if (level === 'mid') return { bg: '#FAEEDA', text: '#633806', badgeBg: '#FAC775', badgeText: '#633806', cardBorder: '#FAC775' };
+  return { bg: '#FCEBEB', text: '#791F1F', badgeBg: '#F7C1C1', badgeText: '#791F1F', cardBorder: '#F7C1C1' };
+}
+
+function selectOpt(name, input) {
+  document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+    r.closest('.q-option').classList.remove('selected');
+  });
+  input.closest('.q-option').classList.add('selected');
+}
+
+function update() {
+  domains.forEach(d => {
+    const score = getScore(d.qs);
+    const pct = Math.round((score / d.max) * 100);
+    document.getElementById(`${d.id}-score`).textContent = `${score} / ${d.max}`;
+    document.getElementById(`${d.id}-bar`).style.width = `${pct}%`;
+  });
+}
+
+function calculate() {
+  const answered = domains.every(d => d.qs.every(q => document.querySelector(`input[name="${q}"]:checked`)));
+  if (!answered) {
+    alert('Please answer all questions before generating your profile.\nيرجى الإجابة على جميع الأسئلة قبل إنشاء الملف الشخصي.');
+    return;
+  }
+
+  const scores = domains.map(d => ({ ...d, score: getScore(d.qs) }));
+  const total = scores.reduce((s, d) => s + d.score, 0);
+  const maxTotal = 38;
+  const pct = total / maxTotal;
+
+  document.getElementById('total-num').textContent = total;
+
+  let interpEn, interpAr;
+  if (pct <= 0.33) {
+    interpEn = 'Overall neuro-hormonal state appears relatively stable. Standard management with awareness of specific domain concerns.';
+    interpAr = 'تبدو الحالة العصبية الهرمونية الإجمالية مستقرة نسبيًا. إدارة معتادة مع الانتباه لمخاوف المجالات المحددة.';
+  } else if (pct <= 0.66) {
+    interpEn = 'Moderate neuro-hormonal dysregulation. Lifestyle recommendations should address state-level factors alongside behavioral advice.';
+    interpAr = 'اضطراب عصبي هرموني متوسط. يجب أن تعالج توصيات نمط الحياة عوامل الحالة الداخلية إلى جانب النصائح السلوكية.';
+  } else {
+    interpEn = 'Significant neuro-hormonal burden. Behavioral change is unlikely to succeed without addressing the underlying state. Prioritize high-scoring domains first.';
+    interpAr = 'حمل عصبي هرموني ملحوظ. يستبعد نجاح التغيير السلوكي دون معالجة الحالة الأساسية. أعطِ الأولوية للمجالات ذات الدرجات المرتفعة أولًا.';
+  }
+
+  document.getElementById('total-interp-en').textContent = interpEn;
+  document.getElementById('total-interp-ar').textContent = interpAr;
+
+  const grid = document.getElementById('profile-grid');
+  grid.innerHTML = '';
+  scores.forEach(d => {
+    const level = getLevel(d.score, d.max);
+    const style = getLevelStyle(level);
+    const label = getLevelLabel(level);
+    const card = document.createElement('div');
+    card.className = 'profile-card';
+    card.style.cssText = `background:${style.bg};border-color:${style.cardBorder};`;
+    card.innerHTML = `
+      <div class="profile-card-num" style="color:${style.text};opacity:0.6">Domain ${domains.indexOf(d)+1}</div>
+      <div class="profile-card-name" style="color:${style.text}">${d.name}</div>
+      <div class="profile-card-name-ar" style="color:${style.text}">${d.nameAr}</div>
+      <div class="profile-card-score" style="color:${style.text}">${d.score}<span> / ${d.max}</span></div>
+      <span class="profile-badge" style="background:${style.badgeBg};color:${style.badgeText}">${label.en}</span>
+    `;
+    grid.appendChild(card);
+  });
+
+  const list = document.getElementById('interventions-list');
+  list.innerHTML = '';
+  const sorted = [...scores].sort((a,b) => (b.score/b.max) - (a.score/a.max));
+  sorted.forEach(d => {
+    const level = getLevel(d.score, d.max);
+    const style = getLevelStyle(level);
+    const label = getLevelLabel(level);
+    const intv = interventionData[d.id][level];
+    const item = document.createElement('div');
+    item.className = 'intervention-item';
+    item.innerHTML = `
+      <div class="intervention-domain-row">
+        <div class="intervention-domain-name">${d.name} · <span style="font-weight:400;color:var(--text-muted)">${d.nameAr}</span></div>
+        <span class="intervention-level-badge" style="background:${style.badgeBg};color:${style.badgeText}">${label.en}</span>
+      </div>
+      <div class="intervention-text-en">${intv.en}</div>
+      <div class="intervention-text-ar">${intv.ar}</div>
+    `;
+    list.appendChild(item);
+  });
+
+  const results = document.getElementById('results');
+  results.style.display = 'block';
+  setTimeout(() => results.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+}
+
+function resetForm() {
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.q-option').forEach(o => o.classList.remove('selected'));
+  domains.forEach(d => {
+    document.getElementById(`${d.id}-score`).textContent = `0 / ${d.max}`;
+    document.getElementById(`${d.id}-bar`).style.width = '0%';
+  });
+  document.getElementById('results').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
