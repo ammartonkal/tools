@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقييم النشاط البدني حسب الفئة العمرية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --young:#6B3FA0; --young-mid:#8B52CC; --young-light:#B07AE0; --young-pale:#F3EEF9;
+  --adult:#0A6E9A; --adult-mid:#0D8FC4; --adult-light:#4DBAE0; --adult-pale:#E5F5FB;
+  --older:#1A6B4A; --older-mid:#2E8B5A; --older-light:#5CB87A; --older-pale:#E5F5EC;
+  --amber:#C07A00; --amber-pale:#FEF3E2;
+  --red:#B03A2E; --red-pale:#FDEDEC;
+  --ink:#1A2332; --ink-mid:#3D4F63; --ink-light:#6B7C93;
+  --border:#DDE4EC; --surface:#F6F8FA; --white:#fff;
+  --radius:14px; --radius-sm:8px;
+  --ac:#6B3FA0; --ac-mid:#8B52CC; --ac-light:#B07AE0; --ac-pale:#F3EEF9;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Tajawal',sans-serif;background:#F0EDF8;color:var(--ink);min-height:100vh;direction:rtl;}
+.page{max-width:780px;margin:0 auto;padding:32px 16px 60px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#3A1A6E 0%,#6B3FA0 55%,#8B52CC 100%);border-radius:20px;padding:36px 36px 32px;margin-bottom:28px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(58,26,110,0.35);}
+.hero::before{content:'';position:absolute;top:-60px;left:-40px;width:220px;height:220px;border:40px solid rgba(255,255,255,0.05);border-radius:50%;}
+.hero::after{content:'';position:absolute;bottom:-80px;right:-30px;width:260px;height:260px;border:50px solid rgba(255,255,255,0.04);border-radius:50%;}
+.hero-badge{display:inline-block;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.22);color:rgba(255,255,255,0.92);font-size:11px;font-weight:500;letter-spacing:2px;padding:4px 14px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;}
+.hero h1{font-size:25px;font-weight:800;color:#fff;line-height:1.35;margin-bottom:10px;position:relative;z-index:1;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.75;position:relative;z-index:1;}
+.hero-ref{display:inline-block;margin-top:14px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:7px 14px;font-size:12px;color:rgba(255,255,255,0.85);position:relative;z-index:1;}
+.hero-meta{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap;position:relative;z-index:1;}
+.hero-meta-item{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,0.82);}
+.hero-meta-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.45);flex-shrink:0;}
+
+/* AGE SELECTOR */
+.age-selector{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px 26px;margin-bottom:24px;}
+.age-selector h2{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.age-selector h2::before{content:'';width:4px;height:20px;background:var(--young-mid);border-radius:2px;display:inline-block;flex-shrink:0;}
+.age-groups{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.age-btn{border:2px solid var(--border);border-radius:var(--radius);padding:18px 14px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);}
+.age-btn:hover{transform:translateY(-2px);}
+.age-btn.active-young{border-color:var(--young);background:var(--young-pale);}
+.age-btn.active-adult{border-color:var(--adult);background:var(--adult-pale);}
+.age-btn.active-older{border-color:var(--older);background:var(--older-pale);}
+.age-icon{font-size:28px;margin-bottom:8px;}
+.age-range{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.age-desc{font-size:11px;color:var(--ink-light);line-height:1.4;}
+
+/* GUIDELINES BOX */
+.guidelines-box{border-radius:var(--radius);padding:20px 22px;margin-bottom:24px;display:none;}
+.guidelines-box.show{display:block;}
+.gl-title{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.gl-title::before{content:'';width:4px;height:16px;border-radius:2px;display:inline-block;flex-shrink:0;}
+.gl-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);}
+.gl-item:last-child{border-bottom:none;}
+.gl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.gl-txt{font-size:13px;line-height:1.6;}
+
+/* INTRO */
+.intro-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:24px;}
+.intro-card p{font-size:14px;color:var(--ink-mid);line-height:1.85;}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:24px;}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-size:12px;color:var(--ink-light);}
+.progress-count{font-size:13px;font-weight:700;}
+.progress-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;transition:width .4s ease;width:0%;}
+
+/* SEC DIVIDER */
+.sec-div{margin:24px 0 14px;display:flex;align-items:center;gap:12px;}
+.sec-div-line{flex:1;height:1px;background:var(--border);}
+.sec-div-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--ink-light);white-space:nowrap;padding:4px 12px;background:var(--surface);border:1px solid var(--border);border-radius:20px;}
+
+/* QUESTION CARD */
+.q-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
+.q-card.answered{box-shadow:0 2px 12px rgba(0,0,0,0.07);}
+.q-num-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;}
+.q-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:14.5px;font-weight:500;color:var(--ink);line-height:1.6;}
+.q-text .note{display:block;font-size:12px;font-weight:400;color:var(--ink-light);margin-top:4px;}
+.age-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;margin-top:5px;letter-spacing:1px;}
+
+/* OPTIONS */
+.options{display:flex;gap:7px;flex-wrap:wrap;}
+.opt-lbl{flex:1;min-width:90px;cursor:pointer;}
+.opt-lbl input[type="radio"]{display:none;}
+.opt-btn{display:block;padding:9px 8px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:400;color:var(--ink-mid);text-align:center;cursor:pointer;transition:all .18s;line-height:1.4;user-select:none;}
+.opt-btn:hover{border-color:var(--ac-light);}
+.opt-lbl input:checked + .opt-btn{background:var(--ac-pale);border-color:var(--ac-light);color:var(--ac);font-weight:600;}
+
+/* SUBMIT */
+.submit-wrap{text-align:center;margin-top:32px;}
+.submit-btn{display:inline-block;color:#fff;font-family:'Tajawal',sans-serif;font-size:17px;font-weight:700;padding:16px 52px;border-radius:14px;border:none;cursor:pointer;transition:all .2s;}
+.submit-btn:hover{transform:translateY(-2px);}
+.submit-note{font-size:13px;color:var(--ink-light);margin-top:10px;}
+.warn-msg{display:none;margin-top:14px;background:var(--amber-pale);border:1px solid #E8B060;border-radius:10px;padding:12px 16px;font-size:13px;color:#7A4800;}
+.warn-msg.show{display:block;}
+
+/* RESULT */
+#result-section{display:none;margin-top:28px;}
+.result-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.08);}
+.result-header{padding:32px 30px 26px;text-align:center;}
+.score-circle{width:110px;height:110px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;border:4px solid currentColor;}
+.score-num{font-size:36px;font-weight:800;line-height:1;}
+.score-max{font-size:13px;opacity:.7;margin-top:2px;}
+.result-level{font-size:20px;font-weight:800;margin-bottom:8px;}
+.result-desc{font-size:14px;color:var(--ink-mid);line-height:1.75;max-width:500px;margin:0 auto;}
+.result-body{padding:24px 28px 28px;border-top:1px solid var(--border);background:var(--surface);}
+.criteria-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.cr-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:13px;}
+.cr-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.cr-icon{font-size:16px;}
+.cr-name{font-size:11px;font-weight:700;color:var(--ink-mid);}
+.cr-score{font-size:18px;font-weight:800;}
+.cr-score .mx{font-size:11px;color:var(--ink-light);font-weight:400;}
+.cr-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden;}
+.cr-bar{height:100%;border-radius:2px;}
+.age-result-badge{display:inline-block;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;margin-bottom:14px;}
+.recs-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;}
+.rec-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
+.rec-item:last-child{border-bottom:none;}
+.rec-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.rec-txt{font-size:13.5px;color:var(--ink-mid);line-height:1.6;flex:1;}
+.source-note{font-size:11px;color:var(--ink-light);margin-top:16px;padding-top:12px;border-top:1px solid var(--border);line-height:1.7;text-align:center;}
+.retry-btn{display:inline-block;margin-top:20px;background:#fff;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:600;padding:10px 28px;border-radius:10px;cursor:pointer;transition:all .18s;border:1.5px solid var(--border);}
+
+/* AGE-SPECIFIC COLORS */
+.young-theme{--ac:var(--young);--ac-mid:var(--young-mid);--ac-light:var(--young-light);--ac-pale:var(--young-pale);}
+.adult-theme{--ac:var(--adult);--ac-mid:var(--adult-mid);--ac-light:var(--adult-light);--ac-pale:var(--adult-pale);}
+.older-theme{--ac:var(--older);--ac-mid:var(--older-mid);--ac-light:var(--older-light);--ac-pale:var(--older-pale);}
+
+@media(max-width:600px){
+  .hero{padding:28px 22px 24px;} .hero h1{font-size:21px;}
+  .age-groups{grid-template-columns:1fr;}
+  .criteria-grid{grid-template-columns:1fr;}
+  .options{flex-direction:column;} .opt-lbl{min-width:100%;}
+  .page{padding:20px 12px 48px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">WHO 2020 · ACSM 2022 · تقييم مخصص حسب العمر</div>
+  <h1>تقييم النشاط البدني حسب الفئة العمرية</h1>
+  <p class="hero-sub">معايير النشاط البدني الصحي تختلف باختلاف العمر — ما يُعدّ كافياً للشاب قد لا يُعدّ كافياً للمتوسط، وما يُعدّ مناسباً للبالغ قد يختلف لكبير السن. هذا التقييم يُقيّمك وفق معايير فئتك العمرية تحديداً.</p>
+  <div class="hero-ref">WHO Guidelines 2020 · ACSM GETP 2022 · American Geriatrics Society</div>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="dot"></div>3 فئات عمرية</div>
+    <div class="hero-meta-item"><div class="dot"></div>معايير مخصصة لكل فئة</div>
+    <div class="hero-meta-item"><div class="dot"></div>10–12 سؤالاً</div>
+    <div class="hero-meta-item"><div class="dot"></div>نتيجة فورية</div>
+  </div>
+</div>
+
+<!-- AGE SELECTOR -->
+<div class="age-selector">
+  <h2>أولاً — حدد فئتك العمرية</h2>
+  <div class="age-groups">
+    <div class="age-btn" id="btn-young" onclick="selectAge('young')">
+      <div class="age-icon">🧑</div>
+      <div class="age-range">18 — 30 سنة</div>
+      <div class="age-desc">الشباب<br>أعلى متطلبات النشاط وبناء القوة</div>
+    </div>
+    <div class="age-btn" id="btn-adult" onclick="selectAge('adult')">
+      <div class="age-icon">🧑‍💼</div>
+      <div class="age-range">31 — 64 سنة</div>
+      <div class="age-desc">البالغون<br>الصيانة والوقاية من الأمراض المزمنة</div>
+    </div>
+    <div class="age-btn" id="btn-older" onclick="selectAge('older')">
+      <div class="age-icon">🧓</div>
+      <div class="age-range">65 سنة فأكثر</div>
+      <div class="age-desc">كبار السن<br>التوازن والحفاظ على الاستقلالية</div>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDELINES BOX — shown after age selection -->
+<div class="guidelines-box" id="gl-box">
+  <div class="gl-title" id="gl-title"></div>
+  <div id="gl-items"></div>
+</div>
+
+<!-- FORM — hidden until age selected -->
+<div id="form-section" style="display:none;">
+
+  <div class="intro-card">
+    <p id="intro-txt"></p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">تقدم التقييم</span>
+      <span class="progress-count" id="prog-count">0 / 0</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+
+  <div id="questions-container"></div>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" id="submit-btn" onclick="showResult()">احسب نتيجتي حسب فئتي العمرية</button>
+    <p class="submit-note" id="submit-note">أجب على جميع الأسئلة ثم اضغط الزر</p>
+    <div class="warn-msg" id="warn-msg">⚠️ يرجى الإجابة على جميع الأسئلة</div>
+  </div>
+
+</div>
+
+<!-- RESULT -->
+<div id="result-section">
+  <div class="result-card">
+    <div class="result-header" id="result-header">
+      <div class="age-result-badge" id="age-badge"></div>
+      <div class="score-circle" id="score-circle">
+        <div class="score-num" id="score-num">0</div>
+        <div class="score-max" id="score-max">من 0</div>
+      </div>
+      <div class="result-level" id="result-level"></div>
+      <p class="result-desc" id="result-desc"></p>
+      <button class="retry-btn" id="retry-btn" onclick="resetAll()">إعادة التقييم</button>
+    </div>
+    <div class="result-body">
+      <div class="criteria-grid" id="criteria-grid"></div>
+      <div class="recs-title">توصيات مخصصة لفئتك العمرية</div>
+      <div id="recs-list"></div>
+      <div class="source-note">
+        مبني على: WHO Physical Activity Guidelines 2020 · ACSM Guidelines for Exercise Testing and Prescription 2022<br>
+        American Geriatrics Society Physical Activity Guidelines for Older Adults<br>
+        Bull FC et al. <em>BJSM</em> 2020 · Riebe D et al. <em>ACSM's GETP</em> 11th ed. 2022<br>
+        <strong>ملاحظة:</strong> هذا التقييم للتوعية الذاتية — استشر طبيبك قبل البدء ببرنامج رياضي جديد.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ── STATE ──
+let selectedAge = null;
+const answers   = {};
+
+// ── AGE CONFIGS ──
+const AGE_CONFIG = {
+
+  young: {
+    label: '18–30 سنة — الشباب',
+    color: '#6B3FA0', colorMid: '#8B52CC', colorLight: '#B07AE0', colorPale: '#F3EEF9',
+    icon: '🧑',
+    guidelineTitle: '📋 معايير النشاط البدني للشباب (18–30 سنة)',
+    guidelines: [
+      { txt: 'نشاط هوائي معتدل: 150–300 دقيقة أسبوعياً أو 75–150 دقيقة مكثفة — WHO 2020', dot: '#8B52CC' },
+      { txt: 'تمارين القوة: مرتان أو أكثر أسبوعياً — تشمل جميع المجموعات العضلية الكبرى', dot: '#8B52CC' },
+      { txt: 'تمارين القوة الأعلى شدة موصى بها في هذه المرحلة لبناء الكتلة العضلية والكثافة العظمية — ACSM 2022', dot: '#8B52CC' },
+      { txt: 'الهدف الأمثل: 300+ دقيقة معتدل أو 150+ مكثفة + قوة 3 مرات أسبوعياً', dot: '#B07AE0' },
+    ],
+    intro: 'أجب عن نشاطك البدني الفعلي خلال الأسبوع الماضي. في هذه الفئة العمرية يُركّز التقييم على بناء القوة العضلية والكثافة العظمية إضافةً للنشاط الهوائي.',
+    totalQ: 10,
+    criteria: [
+      { key:'aerobic', icon:'🏃', name:'النشاط الهوائي', qs:['q1','q2','q3'], max:15 },
+      { key:'strength', icon:'💪', name:'القوة العضلية', qs:['q4','q5'], max:10 },
+      { key:'intensity', icon:'⚡', name:'الشدة والتنوع', qs:['q6','q7'], max:10 },
+      { key:'lifestyle', icon:'🌿', name:'نمط الحياة النشط', qs:['q8','q9','q10'], max:15 },
+    ],
+    questions: [
+      { id:'q1', text:'كم دقيقة من النشاط الهوائي المعتدل أو المكثف مارست هذا الأسبوع؟', note:'المشي السريع، الجري، السباحة، الدراجة، كرة القدم', tag:'🏃 هوائي',
+        opts:[{v:1,l:'أقل من 75 دقيقة'},{v:2,l:'75–149 دقيقة'},{v:3,l:'150–299 دقيقة'},{v:4,l:'300 دقيقة'},{v:5,l:'أكثر من 300 دقيقة'}] },
+      { id:'q2', text:'على كم يوم وزّعت نشاطك الهوائي؟', note:'يُفضَّل التوزيع على 5 أيام فأكثر للحصول على أقصى فائدة', tag:'🏃 هوائي',
+        opts:[{v:1,l:'يوم واحد'},{v:2,l:'يومان'},{v:3,l:'3–4 أيام'},{v:4,l:'5 أيام'},{v:5,l:'6–7 أيام'}] },
+      { id:'q3', text:'هل تمارس نشاطاً مكثفاً (جري، رياضات تنافسية) بشكل منتظم؟', note:'نشاط يجعلك تتحدث بصعوبة — الشباب يستفيدون أكثر من النشاط المكثف', tag:'⚡ مكثف',
+        opts:[{v:1,l:'لا أمارسه أبداً'},{v:2,l:'مرة نادرة'},{v:3,l:'مرة أسبوعياً'},{v:4,l:'مرتان'},{v:5,l:'3 مرات فأكثر'}] },
+      { id:'q4', text:'كم مرة مارست تمارين القوة والمقاومة هذا الأسبوع؟', note:'الأثقال، تمارين الجسم، أجهزة الجيم — مرتان هو الحد الأدنى الموصى به', tag:'💪 قوة',
+        opts:[{v:1,l:'لا شيء'},{v:2,l:'مرة واحدة'},{v:3,l:'مرتان'},{v:4,l:'3 مرات'},{v:5,l:'4 مرات فأكثر'}] },
+      { id:'q5', text:'هل تمارينك تستهدف جميع المجموعات العضلية الكبرى؟', note:'الصدر والظهر والكتفين والذراعين والبطن والفخذين والساقين — خلال نفس الأسبوع', tag:'💪 قوة',
+        opts:[{v:1,l:'لا أمارس قوة'},{v:2,l:'أجزاء قليلة'},{v:3,l:'نصف العضلات'},{v:4,l:'معظمها'},{v:5,l:'جميعها'}] },
+      { id:'q6', text:'هل تمارس تمارين HIIT أو تدريب متقطع عالي الشدة؟', note:'HIIT مفيد جداً لهذه الفئة العمرية لتحسين اللياقة القلبية وحرق الدهون', tag:'⚡ شدة',
+        opts:[{v:1,l:'لا أمارسه'},{v:2,l:'نادراً'},{v:3,l:'مرة أسبوعياً'},{v:4,l:'مرتان'},{v:5,l:'3+ مرات'}] },
+      { id:'q7', text:'هل تنوّع في أنواع نشاطك البدني؟', note:'مزيج من الكارديو والقوة والمرونة والرياضات — التنوع يحمي من الإصابات ويحسن اللياقة الكاملة', tag:'🌀 تنوع',
+        opts:[{v:1,l:'نشاط واحد فقط'},{v:2,l:'نوعان'},{v:3,l:'3 أنواع'},{v:4,l:'4 أنواع'},{v:5,l:'5+ أنواع'}] },
+      { id:'q8', text:'هل تمشي أو تستخدم الدراجة بدلاً من السيارة للتنقل القصير؟', note:'النشاط العرضي يضيف لمجموع نشاطك اليومي بشكل ملحوظ', tag:'🌿 أسلوب حياة',
+        opts:[{v:1,l:'نادراً أبداً'},{v:2,l:'أحياناً'},{v:3,l:'أسبوعياً'},{v:4,l:'عدة مرات'},{v:5,l:'دائماً تقريباً'}] },
+      { id:'q9', text:'هل تحافظ على نشاطك رغم ضغوط العمل والدراسة؟', note:'الشباب أكثر عرضة لتقليل النشاط بسبب الانشغال — الاستمرارية أهم من الكمية', tag:'🌿 أسلوب حياة',
+        opts:[{v:1,l:'أتوقف كثيراً'},{v:2,l:'أتوقف أحياناً'},{v:3,l:'أحاول المواظبة'},{v:4,l:'مواظب غالباً'},{v:5,l:'مواظب دائماً'}] },
+      { id:'q10', text:'هل تضع أهدافاً رياضية واضحة وتتابع تقدمك؟', note:'وضع الأهداف يرفع مستوى النشاط البدني بشكل موثّق في الأبحاث', tag:'🎯 هدف',
+        opts:[{v:1,l:'لا أهداف'},{v:2,l:'أهداف مبهمة'},{v:3,l:'أهداف عامة'},{v:4,l:'أهداف واضحة'},{v:5,l:'أهداف واضحة ومتابعة'}] },
+    ],
+    levels: [
+      { min:42, cls:'green', level:'نشاط ممتاز لفئتك العمرية 🏆', desc:'نشاطك يتجاوز التوصيات وأنت تبني قاعدة صحية قوية لبقية حياتك.' },
+      { min:32, cls:'blue',  level:'نشاط جيد — مع فرص للتطوير', desc:'تلتزم بمعظم التوصيات. تطوير تمارين القوة أو الشدة سيرفعك للمستوى الأعلى.' },
+      { min:20, cls:'amber', level:'نشاط متوسط — دون التوصيات', desc:'نشاطك أقل من الموصى به لفئتك. الشباب يملك أعلى قدرة على التحسين.' },
+      { min:0,  cls:'red',   level:'نشاط منخفض جداً', desc:'وقت البدء الآن — الأعوام من 18–30 هي الأهم في بناء الكثافة العظمية واللياقة القلبية.' },
+    ],
+    recs: {
+      green: [{i:'🏋️',t:'واصل تمارين القوة وفكر في رفع الشدة تدريجياً'},{i:'🥗',t:'ادعم نشاطك ببروتين كافٍ لبناء العضلات'},{i:'📊',t:'قِس لياقتك سنوياً للتأكد من الحفاظ على مستواك'}],
+      blue:  [{i:'⚡',t:'أضف جلسة HIIT أسبوعياً — أقوى استثمار للوقت في هذه الفئة'},{i:'💪',t:'زد تمارين القوة إلى 3 مرات أسبوعياً لبناء كتلة عضلية كافية'},{i:'🌀',t:'نوّع رياضاتك — جرب رياضة جديدة كل شهر'}],
+      amber: [{i:'🚀',t:'ابدأ بهدف 150 دقيقة أسبوعياً — 22 دقيقة يومياً'},{i:'💪',t:'أضف تمارين قوة مرتين أسبوعياً — تمارين الجسم كافية في البداية'},{i:'📅',t:'ضع جدولاً أسبوعياً ثابتاً — الانتظام أهم من الكمية'}],
+      red:   [{i:'🎯',t:'الأعوام 18–30 هي الأهم في بناء الصحة — ابدأ اليوم لا غداً'},{i:'🚶',t:'البداية بالمشي 20 دقيقة يومياً أفضل بكثير من لا شيء'},{i:'🤝',t:'البحث عن شريك رياضي يضاعف الالتزام في هذه المرحلة'}],
+    },
+  },
+
+  adult: {
+    label: '31–64 سنة — البالغون',
+    color: '#0A6E9A', colorMid: '#0D8FC4', colorLight: '#4DBAE0', colorPale: '#E5F5FB',
+    icon: '🧑‍💼',
+    guidelineTitle: '📋 معايير النشاط البدني للبالغين (31–64 سنة)',
+    guidelines: [
+      { txt: 'نشاط هوائي معتدل: 150–300 دقيقة أسبوعياً أو 75–150 دقيقة مكثفة — WHO 2020', dot: '#0D8FC4' },
+      { txt: 'تمارين القوة: مرتان أو أكثر أسبوعياً — جميع المجموعات العضلية الكبرى — ACSM 2022', dot: '#0D8FC4' },
+      { txt: 'تقليل الجلوس المطوّل — مقاطعة كل 30–60 دقيقة بالحركة', dot: '#0D8FC4' },
+      { txt: 'الهدف الأمثل: 300+ دقيقة معتدل أسبوعياً للوقاية من الأمراض المزمنة', dot: '#4DBAE0' },
+    ],
+    intro: 'في هذه الفئة العمرية يُركّز التقييم على الوقاية من الأمراض المزمنة والحفاظ على الوزن الصحي والطاقة اليومية. أجب عن نشاطك خلال الأسبوع الماضي.',
+    totalQ: 11,
+    criteria: [
+      { key:'aerobic',  icon:'🏃', name:'النشاط الهوائي', qs:['q1','q2','q3'], max:15 },
+      { key:'strength', icon:'💪', name:'القوة والمقاومة', qs:['q4','q5'], max:10 },
+      { key:'sitting',  icon:'🪑', name:'تقليل الجلوس', qs:['q6','q7'], max:10 },
+      { key:'lifestyle',icon:'🌿', name:'نشاط الحياة اليومية', qs:['q8','q9','q10','q11'], max:20 },
+    ],
+    questions: [
+      { id:'q1', text:'كم دقيقة من النشاط الهوائي مارست هذا الأسبوع؟', note:'المشي السريع، السباحة، الدراجة، الجري — معتدل أو مكثف', tag:'🏃 هوائي',
+        opts:[{v:1,l:'أقل من 75'},{v:2,l:'75–149 دقيقة'},{v:3,l:'150–299 دقيقة'},{v:4,l:'300 دقيقة'},{v:5,l:'أكثر من 300'}] },
+      { id:'q2', text:'على كم يوم وزّعت نشاطك هذا الأسبوع؟', note:'التوزيع على أيام متعددة أفضل لمنع التراكم والإصابات', tag:'🏃 هوائي',
+        opts:[{v:1,l:'يوم واحد'},{v:2,l:'يومان'},{v:3,l:'3–4 أيام'},{v:4,l:'5 أيام'},{v:5,l:'6–7 أيام'}] },
+      { id:'q3', text:'هل تمارس نشاطاً هوائياً بشكل منتظم على مدار العام؟', note:'الاستمرارية أهم من الكمية — النشاط المتقطع يقلل الفائدة الصحية', tag:'🏃 استمرارية',
+        opts:[{v:1,l:'لا أو نادراً'},{v:2,l:'موسمياً فقط'},{v:3,l:'معظم الأشهر'},{v:4,l:'منتظم جداً'},{v:5,l:'طوال العام'}] },
+      { id:'q4', text:'كم مرة مارست تمارين القوة هذا الأسبوع؟', note:'مرتان هو الحد الأدنى — القوة العضلية تقاوم الزيادة في الدهون الحشوية مع التقدم في العمر', tag:'💪 قوة',
+        opts:[{v:1,l:'لا شيء'},{v:2,l:'مرة واحدة'},{v:3,l:'مرتان'},{v:4,l:'3 مرات'},{v:5,l:'4+ مرات'}] },
+      { id:'q5', text:'هل تمارس تمارين مرونة وتمدد بانتظام؟', note:'المرونة تتراجع مع العمر — اليوغا أو التمدد 2–3 مرات أسبوعياً يحميان المفاصل', tag:'🤸 مرونة',
+        opts:[{v:1,l:'لا أبداً'},{v:2,l:'نادراً'},{v:3,l:'أسبوعياً'},{v:4,l:'مرتان أسبوعياً'},{v:5,l:'يومياً تقريباً'}] },
+      { id:'q6', text:'كم ساعة تجلس يومياً في المتوسط؟', note:'الجلوس المطوّل مرتبط بأمراض القلب والسكري بشكل مستقل عن النشاط البدني', tag:'🪑 جلوس',
+        opts:[{v:5,l:'4 ساعات أو أقل'},{v:4,l:'5–6 ساعات'},{v:3,l:'7–8 ساعات'},{v:2,l:'9–10 ساعات'},{v:1,l:'أكثر من 10'}] },
+      { id:'q7', text:'هل تقاطع الجلوس بالوقوف أو الحركة بانتظام؟', note:'كل 30 دقيقة — حتى الوقوف لدقيقتين يحسّن المؤشرات الأيضية', tag:'🪑 مقاطعة',
+        opts:[{v:1,l:'نادراً أبداً'},{v:2,l:'أحياناً'},{v:3,l:'كل ساعة'},{v:4,l:'كل 45 دقيقة'},{v:5,l:'كل 30 دقيقة'}] },
+      { id:'q8', text:'هل تمشي لقضاء مشاوير قصيرة بدلاً من السيارة؟', note:'النشاط العرضي مهم جداً للبالغين المنشغلين — يضيف دقائق قيمة لمجموع الأسبوع', tag:'🌿 يومي',
+        opts:[{v:1,l:'نادراً'},{v:2,l:'أحياناً'},{v:3,l:'أسبوعياً'},{v:4,l:'عدة مرات'},{v:5,l:'دائماً'}] },
+      { id:'q9', text:'هل تستخدم الدرج بدلاً من المصعد؟', note:'عادة بسيطة تضيف مئات السعرات أسبوعياً وتقوي الساقين والقلب', tag:'🌿 يومي',
+        opts:[{v:1,l:'لا أبداً'},{v:2,l:'نادراً'},{v:3,l:'أحياناً'},{v:4,l:'غالباً'},{v:5,l:'دائماً'}] },
+      { id:'q10', text:'هل تؤدي نشاطاً ترفيهياً نشطاً (رياضة، سباحة، تنزه) أسبوعياً؟', note:'النشاط الترفيهي يحسن الالتزام طويل الأمد ويُقلل التوتر', tag:'🎉 ترفيه',
+        opts:[{v:1,l:'نادراً أبداً'},{v:2,l:'شهرياً'},{v:3,l:'مرة أسبوعياً'},{v:4,l:'مرتان'},{v:5,l:'3+ مرات'}] },
+      { id:'q11', text:'هل تراقب وزنك ومؤشراتك الصحية بانتظام؟', note:'الوعي بالمؤشرات الصحية يزيد التحفيز على الاستمرار في النشاط', tag:'📊 وعي',
+        opts:[{v:1,l:'لا أراقبها'},{v:2,l:'نادراً'},{v:3,l:'كل بضعة أشهر'},{v:4,l:'شهرياً'},{v:5,l:'بانتظام'}] },
+    ],
+    levels: [
+      { min:47, cls:'green', level:'نشاط ممتاز لفئتك العمرية 🏆', desc:'أنت تستوفي وتتجاوز توصيات WHO وACSM للبالغين — استمرارية ممتازة.' },
+      { min:36, cls:'blue',  level:'نشاط جيد — مستوف للحد الأدنى', desc:'تلتزم بأساسيات التوصيات. تحسين الجلوس والمرونة سيرفع صحتك بشكل ملحوظ.' },
+      { min:22, cls:'amber', level:'نشاط متوسط — أقل من التوصيات', desc:'نشاطك لا يصل للحد الأدنى الموصى به في هذه المرحلة العمرية الحرجة.' },
+      { min:0,  cls:'red',   level:'نشاط منخفض — خطر صحي', desc:'الخمول في الفئة 31–64 يرفع بشكل ملحوظ خطر السكري وأمراض القلب وضغط الدم.' },
+    ],
+    recs: {
+      green: [{i:'🏅',t:'حافظ على مستواك — الاستمرارية في هذه الفئة أصعب وأهم من الشباب'},{i:'🤸',t:'أضف تمارين مرونة منتظمة — تحمي المفاصل مع التقدم في العمر'},{i:'🩺',t:'اطلب فحصاً دورياً لقياس المؤشرات الأيضية'}],
+      blue:  [{i:'⏱️',t:'أضف 10 دقائق لكل جلسة نشاط — التراكم التدريجي مستدام'},{i:'🪑',t:'ضع منبهاً كل 30 دقيقة للوقوف — أسهل تغيير يصنع فرقاً'},{i:'💪',t:'تأكد من تمارين القوة مرتين أسبوعياً — ضرورية لمقاومة فقدان العضلة'}],
+      amber: [{i:'🚶',t:'ابدأ بالمشي 30 دقيقة 5 أيام أسبوعياً — أبسط طريقة للوصول للحد الأدنى'},{i:'🪑',t:'قلل وقت جلوسك ساعة يومياً — استبدل مكالمات بمشي'},{i:'👨‍⚕️',t:'فحص طبي دوري ضروري لمتابعة المؤشرات الصحية'}],
+      red:   [{i:'🚨',t:'هذه المرحلة العمرية حرجة — الخمول الآن يُراكم مخاطر صحية كبيرة'},{i:'🚶',t:'ابدأ بـ 10 دقائق مشي يومياً فقط وزد أسبوعياً'},{i:'👨‍⚕️',t:'استشر طبيبك لبرنامج نشاط آمن ومناسب لحالتك'}],
+    },
+  },
+
+  older: {
+    label: '65 سنة فأكثر — كبار السن',
+    color: '#1A6B4A', colorMid: '#2E8B5A', colorLight: '#5CB87A', colorPale: '#E5F5EC',
+    icon: '🧓',
+    guidelineTitle: '📋 معايير النشاط البدني لكبار السن (65+ سنة)',
+    guidelines: [
+      { txt: 'نشاط هوائي معتدل: 150–300 دقيقة أسبوعياً أو 75–150 مكثفة حسب القدرة — WHO 2020', dot: '#2E8B5A' },
+      { txt: 'تمارين القوة: مرتان فأكثر أسبوعياً لجميع المجموعات الكبرى — WHO 2020', dot: '#2E8B5A' },
+      { txt: 'تمارين التوازن ووظيفية متعددة المكونات: 3 مرات فأكثر أسبوعياً للوقاية من السقوط — WHO 2020 (توصية قوية)', dot: '#2E8B5A' },
+      { txt: 'من لا يستطيع بلوغ التوصيات بسبب حالته الصحية: ليكن نشطاً بقدر ما تسمح قدراته', dot: '#5CB87A' },
+    ],
+    intro: 'في هذه الفئة العمرية يُركّز التقييم على الحفاظ على الاستقلالية الوظيفية، والوقاية من السقوط، والصحة العقلية، والاستمرار في النشاط بأمان. أجب عن نشاطك خلال الأسبوع الماضي.',
+    totalQ: 12,
+    criteria: [
+      { key:'aerobic',  icon:'🏃', name:'النشاط الهوائي', qs:['q1','q2'], max:10 },
+      { key:'strength', icon:'💪', name:'القوة العضلية', qs:['q3','q4'], max:10 },
+      { key:'balance',  icon:'⚖️', name:'التوازن والوقاية من السقوط', qs:['q5','q6','q7'], max:15 },
+      { key:'function', icon:'🖐️', name:'الوظيفة والاستقلالية', qs:['q8','q9','q10','q11','q12'], max:25 },
+    ],
+    questions: [
+      { id:'q1', text:'كم دقيقة من النشاط الهوائي المعتدل مارست هذا الأسبوع؟', note:'المشي، السباحة الهادئة، الدراجة، اليوغا النشطة — حسب قدرتك وراحتك', tag:'🏃 هوائي',
+        opts:[{v:1,l:'أقل من 50 دقيقة'},{v:2,l:'50–99 دقيقة'},{v:3,l:'100–149 دقيقة'},{v:4,l:'150–299 دقيقة'},{v:5,l:'300 دقيقة فأكثر'}] },
+      { id:'q2', text:'هل تمشي يومياً؟', note:'المشي اليومي هو أفضل نشاط بدني وأكثرها أماناً لكبار السن', tag:'🏃 مشي',
+        opts:[{v:1,l:'لا أمشي خارج المنزل'},{v:2,l:'مرات قليلة أسبوعياً'},{v:3,l:'4–5 أيام أسبوعياً'},{v:4,l:'6 أيام أسبوعياً'},{v:5,l:'يومياً'}] },
+      { id:'q3', text:'كم مرة مارست تمارين القوة أو المقاومة هذا الأسبوع؟', note:'تمارين الكرسي، الأوزان الخفيفة، حزام المقاومة — ضرورية لمنع ضمور العضلة (Sarcopenia)', tag:'💪 قوة',
+        opts:[{v:1,l:'لا شيء'},{v:2,l:'مرة واحدة'},{v:3,l:'مرتان'},{v:4,l:'3 مرات'},{v:5,l:'4+ مرات'}] },
+      { id:'q4', text:'هل تستطيع حمل أشياء ثقيلة نسبياً والقيام بأعمال منزلية؟', note:'قياس القوة الوظيفية اليومية — مؤشر على الحفاظ على الكتلة العضلية', tag:'💪 قوة وظيفية',
+        opts:[{v:1,l:'بصعوبة شديدة'},{v:2,l:'بصعوبة'},{v:3,l:'بصعوبة خفيفة'},{v:4,l:'بسهولة نسبية'},{v:5,l:'بسهولة تامة'}] },
+      { id:'q5', text:'كم مرة مارست تمارين التوازن أسبوعياً؟', note:'التاي تشي، الوقوف على قدم واحدة، اليوغا، تمارين التوازن الموجهة — WHO توصي بـ 3+ مرات', tag:'⚖️ توازن',
+        opts:[{v:1,l:'لا أمارسها'},{v:2,l:'مرة واحدة'},{v:3,l:'مرتان'},{v:4,l:'3 مرات'},{v:5,l:'4+ مرات'}] },
+      { id:'q6', text:'هل سقطت مرة أو أكثر خلال الأشهر الستة الماضية؟', note:'السقوط مؤشر خطر مهم — وجوده يستدعي تمارين توازن مكثفة', tag:'⚖️ سلامة',
+        opts:[{v:5,l:'لا — لم أسقط أبداً'},{v:4,l:'مرة واحدة خفيفة'},{v:3,l:'مرة مع ألم'},{v:2,l:'مرتان فأكثر'},{v:1,l:'سقطت وأُصبت'}] },
+      { id:'q7', text:'هل تشعر بثقة في توازنك أثناء المشي والحركة؟', note:'الخوف من السقوط يُقلّص النشاط تلقائياً — تعزيز الثقة يزيد الاستقلالية', tag:'⚖️ ثقة',
+        opts:[{v:1,l:'أخاف كثيراً'},{v:2,l:'أخاف أحياناً'},{v:3,l:'محايد'},{v:4,l:'واثق نسبياً'},{v:5,l:'واثق تماماً'}] },
+      { id:'q8', text:'هل تستطيع المشي لمسافة 400 متر دون توقف؟', note:'قياس القدرة الهوائية الوظيفية — مهم للاستقلالية في التنقل اليومي', tag:'🖐️ وظيفة',
+        opts:[{v:1,l:'غير قادر'},{v:2,l:'بصعوبة شديدة'},{v:3,l:'بصعوبة متوسطة'},{v:4,l:'بصعوبة خفيفة'},{v:5,l:'بلا صعوبة'}] },
+      { id:'q9', text:'هل تستطيع صعود درج (دور كامل) دون مساعدة؟', note:'مؤشر وظيفي مهم للقوة والقدرة القلبية', tag:'🖐️ وظيفة',
+        opts:[{v:1,l:'غير قادر'},{v:2,l:'بصعوبة شديدة'},{v:3,l:'بصعوبة'},{v:4,l:'بصعوبة خفيفة'},{v:5,l:'بلا صعوبة'}] },
+      { id:'q10', text:'هل تستطيع القيام بأنشطة ترفيهية أو اجتماعية تتطلب حركة؟', note:'التنزه، الرياضة الخفيفة، النشاطات الاجتماعية — مؤشر الاستقلالية الاجتماعية', tag:'🌿 استقلالية',
+        opts:[{v:1,l:'لا — محدودية كبيرة'},{v:2,l:'بصعوبة'},{v:3,l:'مع بعض القيود'},{v:4,l:'بسهولة نسبية'},{v:5,l:'بسهولة تامة'}] },
+      { id:'q11', text:'هل تشارك في برامج نشاط بدني موجهة لكبار السن؟', note:'برامج متخصصة توفر أماناً أعلى وتحفيزاً اجتماعياً — نوادي المشي، حصص اليوغا، التاي تشي', tag:'🌿 برامج',
+        opts:[{v:1,l:'لا أبداً'},{v:2,l:'نادراً'},{v:3,l:'أحياناً'},{v:4,l:'بانتظام'},{v:5,l:'أسبوعياً منتظم'}] },
+      { id:'q12', text:'هل تشعر بأن نشاطك البدني يحافظ على طاقتك ومزاجك؟', note:'العلاقة بين النشاط والصحة النفسية قوية جداً في كبار السن', tag:'💙 جودة الحياة',
+        opts:[{v:1,l:'لا تأثير إيجابي'},{v:2,l:'تأثير ضئيل'},{v:3,l:'تأثير متوسط'},{v:4,l:'تأثير جيد'},{v:5,l:'تأثير ممتاز'}] },
+    ],
+    levels: [
+      { min:52, cls:'green', level:'نشاط ممتاز لفئتك العمرية 🏆', desc:'نشاطك يتجاوز توصيات WHO لكبار السن — أنت نموذج يُحتذى به في الحفاظ على الحيوية.' },
+      { min:40, cls:'blue',  level:'نشاط جيد — يستوفي معظم التوصيات', desc:'تلتزم بالأساسيات بشكل جيد. تعزيز تمارين التوازن سيقلل خطر السقوط أكثر.' },
+      { min:26, cls:'amber', level:'نشاط متوسط — يحتاج تطوير آمن', desc:'مستواك أقل من الموصى به. الزيادة التدريجية والآمنة ستحسن استقلاليتك ومزاجك.' },
+      { min:0,  cls:'red',   level:'نشاط منخفض — يستلزم متابعة طبية', desc:'مستواك المنخفض يُعرّضك لمخاطر السقوط وفقدان الاستقلالية. ابدأ بمساعدة متخصص.' },
+    ],
+    recs: {
+      green: [{i:'⚖️',t:'واصل تمارين التوازن 3 مرات أسبوعياً — الوقاية من السقوط أولوية قصوى'},{i:'💪',t:'حافظ على تمارين القوة — تمنع Sarcopenia (ضمور العضلة مع التقدم في العمر)'},{i:'👥',t:'شارك في برامج كبار السن — الجانب الاجتماعي يضاعف الفائدة'}],
+      blue:  [{i:'⚖️',t:'أضف تمارين توازن 3 مرات أسبوعياً — التاي تشي أو الوقوف على قدم واحدة'},{i:'🚶',t:'زد مدة المشي تدريجياً — استهدف 30 دقيقة يومياً'},{i:'💪',t:'تأكد من تمارين القوة مرتين أسبوعياً — حزام المقاومة آمن وفعال'}],
+      amber: [{i:'🩺',t:'استشر طبيبك أولاً — برنامج نشاط مخصص لحالتك الصحية أكثر أماناً'},{i:'🚶',t:'ابدأ بالمشي 15 دقيقة يومياً وزد بـ 5 دقائق كل أسبوع'},{i:'⚖️',t:'تمارين التوازن حتى وأنت جالس — رفع الأرجل والدوران برأسك تحسّن التوازن'}],
+      red:   [{i:'🚨',t:'تقييم طبي عاجل — تحديد القدرة الآمنة للنشاط ضروري'},{i:'🏥',t:'العلاج الطبيعي قد يكون الخطوة الأولى المناسبة'},{i:'👨‍👩‍👧',t:'تحدث مع عائلتك — الدعم الاجتماعي عامل محوري في الاستمرار'}],
+    },
+  },
+};
+
+// ── SELECT AGE ──
+function selectAge(age) {
+  selectedAge = age;
+  const cfg = AGE_CONFIG[age];
+
+  // Update theme
+  document.body.className = age + '-theme';
+  document.documentElement.style.setProperty('--ac', cfg.color);
+  document.documentElement.style.setProperty('--ac-mid', cfg.colorMid);
+  document.documentElement.style.setProperty('--ac-light', cfg.colorLight);
+  document.documentElement.style.setProperty('--ac-pale', cfg.colorPale);
+  document.body.style.background = age === 'young' ? '#EDE8F8' : age === 'adult' ? '#E5F0F8' : '#E5F0EC';
+
+  // Highlight selected
+  ['young','adult','older'].forEach(a => {
+    const btn = document.getElementById('btn-' + a);
+    btn.className = 'age-btn' + (a === age ? ' active-' + a : '');
+  });
+
+  // Guidelines box
+  const glBox = document.getElementById('gl-box');
+  glBox.style.background = cfg.colorPale;
+  glBox.style.border = '1px solid ' + cfg.colorLight;
+  glBox.classList.add('show');
+  document.getElementById('gl-title').innerHTML = `<span style="color:${cfg.colorMid}">${cfg.guidelineTitle}</span>`;
+  document.getElementById('gl-title').style.cssText = `font-size:13px;font-weight:700;margin-bottom:12px;`;
+  document.getElementById('gl-items').innerHTML = cfg.guidelines.map(g =>
+    `<div class="gl-item"><div class="gl-dot" style="background:${g.dot}"></div><div class="gl-txt" style="font-size:13px;color:var(--ink-mid);line-height:1.6;">${g.txt}</div></div>`
+  ).join('');
+
+  // Build questions
+  document.getElementById('intro-txt').textContent = cfg.intro;
+  buildQuestions(cfg, age);
+
+  // Submit button color
+  const sb = document.getElementById('submit-btn');
+  sb.style.background = `linear-gradient(135deg, ${cfg.color}, ${cfg.colorMid})`;
+  sb.style.boxShadow  = `0 6px 24px ${cfg.color}55`;
+
+  // Retry button
+  const rb = document.getElementById('retry-btn');
+  rb.style.color       = cfg.color;
+  rb.style.borderColor = cfg.colorLight;
+
+  // Progress color
+  document.getElementById('prog-fill').style.background = `linear-gradient(90deg, ${cfg.color}, ${cfg.colorLight})`;
+  document.querySelector('.progress-count').style.color  = cfg.colorMid;
+
+  document.getElementById('form-section').style.display = 'block';
+  Object.keys(answers).forEach(k => delete answers[k]);
+  updateProgress(cfg.totalQ);
+}
+
+function buildQuestions(cfg, age) {
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+
+  cfg.criteria.forEach((crit, ci) => {
+    const divider = document.createElement('div');
+    divider.className = 'sec-div';
+    divider.innerHTML = `<div class="sec-div-line"></div><div class="sec-div-lbl">${crit.icon} ${crit.name}</div><div class="sec-div-line"></div>`;
+    container.appendChild(divider);
+
+    crit.qs.forEach(qid => {
+      const qDef = cfg.questions.find(q => q.id === qid);
+      if (!qDef) return;
+      const idx = qDef.id.replace('q','');
+
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      card.id = 'qc' + idx;
+
+      const opts = qDef.opts.map(o =>
+        `<label class="opt-lbl"><input type="radio" name="${qDef.id}_${age}" value="${o.v}" onchange="pick('${qDef.id}',${o.v},'${age}')"><span class="opt-btn">${o.l}</span></label>`
+      ).join('');
+
+      card.innerHTML = `
+        <div class="q-num-row">
+          <div class="q-num" style="background:${AGE_CONFIG[age].colorPale};color:${AGE_CONFIG[age].color};">${idx}</div>
+          <div class="q-text">${qDef.text}
+            <span class="note">${qDef.note}</span>
+            <span class="age-tag" style="background:${AGE_CONFIG[age].colorPale};color:${AGE_CONFIG[age].color};">${qDef.tag}</span>
+          </div>
+        </div>
+        <div class="options">${opts}</div>`;
+      container.appendChild(card);
+    });
+  });
+}
+
+function pick(name, val, age) {
+  answers[name] = parseInt(val);
+  const card = document.getElementById('qc' + name.replace('q',''));
+  if (card) {
+    card.classList.add('answered');
+    card.style.borderColor = AGE_CONFIG[age].colorLight;
+    card.style.boxShadow   = `0 2px 12px ${AGE_CONFIG[age].color}22`;
+  }
+  updateProgress(AGE_CONFIG[age].totalQ);
+}
+
+function updateProgress(total) {
+  const done = Object.keys(answers).length;
+  const pct  = Math.round((done / total) * 100);
+  document.getElementById('prog-count').textContent = done + ' / ' + total;
+  document.getElementById('prog-fill').style.width  = pct + '%';
+  document.getElementById('submit-note').textContent =
+    done === total ? '✅ جميع الأسئلة مكتملة — اضغط لعرض نتيجتك' : (total - done) + ' سؤال متبقي';
+}
+
+function showResult() {
+  if (!selectedAge) return;
+  const cfg = AGE_CONFIG[selectedAge];
+  const missing = cfg.questions.filter(q => answers[q.id] === undefined);
+  if (missing.length > 0) {
+    document.getElementById('warn-msg').classList.add('show');
+    const c = document.getElementById('qc' + missing[0].id.replace('q',''));
+    if (c) { c.style.borderColor = '#E8A020'; c.scrollIntoView({behavior:'smooth',block:'center'}); }
+    return;
+  }
+
+  let total = 0;
+  cfg.questions.forEach(q => { total += answers[q.id] || 0; });
+  const maxScore = cfg.questions.length * 5;
+
+  // Level
+  const lvl = cfg.levels.find(l => total >= l.min) || cfg.levels[cfg.levels.length - 1];
+  const colorMap = { green: cfg.color, blue: '#1565C0', amber: '#C07A00', red: '#B03A2E' };
+  const paleMap  = { green: cfg.colorPale, blue: '#E3F2FD', amber: '#FEF3E2', red: '#FDEDEC' };
+  const lc = colorMap[lvl.cls];
+  const lp = paleMap[lvl.cls];
+
+  // Header
+  document.getElementById('age-badge').style.cssText = `background:${cfg.colorPale};color:${cfg.color};display:inline-block;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;margin-bottom:14px;`;
+  document.getElementById('age-badge').textContent = cfg.icon + ' ' + cfg.label;
+  document.getElementById('score-circle').style.color      = lc;
+  document.getElementById('score-circle').style.background = lp;
+  document.getElementById('score-num').textContent  = total;
+  document.getElementById('score-max').textContent  = 'من ' + maxScore;
+  document.getElementById('result-level').textContent = lvl.level;
+  document.getElementById('result-level').style.color = lc;
+  document.getElementById('result-desc').textContent  = lvl.desc;
+  document.getElementById('retry-btn').style.color       = cfg.color;
+  document.getElementById('retry-btn').style.borderColor = cfg.colorLight;
+
+  // Criteria breakdown
+  const cg = document.getElementById('criteria-grid');
+  cg.innerHTML = cfg.criteria.map(c => {
+    let s = 0;
+    c.qs.forEach(q => { s += answers[q] || 0; });
+    const pct = Math.round((s / c.max) * 100);
+    const bc  = pct >= 80 ? cfg.color : pct >= 60 ? cfg.colorMid : pct >= 40 ? '#C07A00' : '#B03A2E';
+    return `<div class="cr-box">
+      <div class="cr-header"><div class="cr-icon">${c.icon}</div><div class="cr-name">${c.name}</div></div>
+      <div class="cr-score">${s}<span class="mx"> / ${c.max}</span></div>
+      <div class="cr-bar-wrap"><div class="cr-bar" style="width:${pct}%;background:${bc}"></div></div>
+    </div>`;
+  }).join('');
+
+  // Recs
+  const recs = cfg.recs[lvl.cls];
+  document.getElementById('recs-list').innerHTML = recs.map(r =>
+    `<div class="rec-item">
+      <div class="rec-icon" style="background:${cfg.colorPale}">${r.i}</div>
+      <div class="rec-txt">${r.t}</div>
+    </div>`
+  ).join('');
+
+  document.getElementById('form-section').style.display   = 'none';
+  document.getElementById('result-section').style.display = 'block';
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function resetAll() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.q-card').forEach(c => {
+    c.classList.remove('answered');
+    c.style.borderColor = '';
+    c.style.boxShadow   = '';
+  });
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('form-section').style.display   = 'block';
+  document.getElementById('warn-msg').classList.remove('show');
+  if (selectedAge) updateProgress(AGE_CONFIG[selectedAge].totalQ);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
