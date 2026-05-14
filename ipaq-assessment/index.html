@@ -3,26 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تقييم النظام الغذائي DASH</title>
+<title>تقييم النشاط البدني — IPAQ-SF</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --blue:#1A4A8A; --blue-mid:#2563B0; --blue-light:#5B9BD5;
-  --blue-pale:#EBF2FB; --blue-glow:rgba(37,99,176,0.12);
-  --sky:#0891B2; --sky-pale:#E0F2F7;
-  --green:#1A6B4A; --green-pale:#E8F5EE;
+  --blue:#1A3A8A; --blue-mid:#2952B8; --blue-light:#5B82D5;
+  --blue-pale:#EBF0FB; --blue-glow:rgba(41,82,184,0.12);
+  --green:#1A7A4A; --green-pale:#E5F5EC;
   --amber:#C07A00; --amber-pale:#FEF3E2;
   --red:#B03A2E; --red-pale:#FDEDEC;
+  --purple:#6B3FA0; --purple-pale:#F0EBF8;
   --ink:#1A2332; --ink-mid:#3D4F63; --ink-light:#6B7C93;
   --border:#DDE4EC; --surface:#F6F8FA; --white:#fff;
   --radius:14px; --radius-sm:8px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Tajawal',sans-serif;background:#EDF2F8;color:var(--ink);min-height:100vh;direction:rtl;}
+body{font-family:'Tajawal',sans-serif;background:#EBF0F8;color:var(--ink);min-height:100vh;direction:rtl;}
 .page{max-width:780px;margin:0 auto;padding:32px 16px 60px;}
 
 /* HERO */
-.hero{background:linear-gradient(135deg,#0F2D5C 0%,#1A4A8A 55%,#2563B0 100%);border-radius:20px;padding:36px 36px 32px;margin-bottom:28px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(15,45,92,0.35);}
+.hero{background:linear-gradient(135deg,#0A1F5C 0%,#1A3A8A 55%,#2952B8 100%);border-radius:20px;padding:36px 36px 32px;margin-bottom:28px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(10,31,92,0.35);}
 .hero::before{content:'';position:absolute;top:-60px;left:-40px;width:220px;height:220px;border:40px solid rgba(255,255,255,0.05);border-radius:50%;}
 .hero::after{content:'';position:absolute;bottom:-80px;right:-30px;width:260px;height:260px;border:50px solid rgba(255,255,255,0.04);border-radius:50%;}
 .hero-badge{display:inline-block;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.22);color:rgba(255,255,255,0.92);font-size:11px;font-weight:500;letter-spacing:2px;padding:4px 14px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;}
@@ -33,12 +33,13 @@ body{font-family:'Tajawal',sans-serif;background:#EDF2F8;color:var(--ink);min-he
 .hero-meta-item{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,0.82);}
 .hero-meta-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.45);flex-shrink:0;}
 
-/* NUTRIENT TARGETS STRIP */
-.targets-strip{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
-.target-chip{background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 12px;flex:1;min-width:120px;text-align:center;}
-.tc-icon{font-size:18px;margin-bottom:3px;}
-.tc-name{font-size:10px;font-weight:700;color:var(--ink-light);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
-.tc-val{font-size:12px;color:var(--ink-mid);line-height:1.4;}
+/* MET EXPLAINER */
+.met-strip{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
+.met-box{flex:1;min-width:130px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center;}
+.met-icon{font-size:22px;margin-bottom:5px;}
+.met-name{font-size:11px;font-weight:700;color:var(--ink-light);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.met-val{font-size:13px;font-weight:700;margin-bottom:2px;}
+.met-ex{font-size:11px;color:var(--ink-light);line-height:1.4;}
 
 /* INTRO */
 .intro-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px 26px;margin-bottom:24px;}
@@ -46,10 +47,6 @@ body{font-family:'Tajawal',sans-serif;background:#EDF2F8;color:var(--ink);min-he
 .intro-card h2::before{content:'';width:4px;height:20px;background:var(--blue-mid);border-radius:2px;display:inline-block;flex-shrink:0;}
 .intro-card p{font-size:14px;color:var(--ink-mid);line-height:1.85;margin-bottom:10px;}
 .intro-card p:last-child{margin-bottom:0;}
-.servings-legend{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;}
-.sl-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center;}
-.sl-num{font-size:16px;font-weight:800;margin-bottom:2px;}
-.sl-lbl{font-size:11px;color:var(--ink-light);line-height:1.3;}
 
 /* PROGRESS */
 .progress-wrap{margin-bottom:24px;}
@@ -63,37 +60,46 @@ body{font-family:'Tajawal',sans-serif;background:#EDF2F8;color:var(--ink);min-he
 .sec-div{margin:24px 0 14px;display:flex;align-items:center;gap:12px;}
 .sec-div-line{flex:1;height:1px;background:var(--border);}
 .sec-div-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--ink-light);white-space:nowrap;padding:4px 12px;background:var(--surface);border:1px solid var(--border);border-radius:20px;}
-.sec-div-lbl.encouraged{color:var(--blue);border-color:#AED6F1;background:var(--blue-pale);}
-.sec-div-lbl.limited{color:var(--red);border-color:#F5B8A0;background:var(--red-pale);}
 
 /* QUESTION CARD */
 .q-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
 .q-card.answered{border-color:var(--blue-light);box-shadow:0 2px 12px var(--blue-glow);}
-.q-card.enc-card{border-right:4px solid var(--blue-mid);}
-.q-card.lim-card{border-right:4px solid var(--red);}
 .q-num-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;}
-.q-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;}
-.q-num.enc{background:var(--blue-pale);color:var(--blue);}
-.q-num.lim{background:var(--red-pale);color:var(--red);}
+.q-num{width:28px;height:28px;background:var(--blue-pale);color:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;}
 .q-text{font-size:14.5px;font-weight:500;color:var(--ink);line-height:1.6;}
 .q-text .note{display:block;font-size:12px;font-weight:400;color:var(--ink-light);margin-top:4px;}
-.q-text .target{display:inline-block;margin-top:5px;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;}
-.q-text .target.enc{background:var(--blue-pale);color:var(--blue);}
-.q-text .target.lim{background:var(--red-pale);color:var(--red);}
+.intensity-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;margin-top:5px;letter-spacing:1px;}
+.tag-vig{background:#FEE8E8;color:#8B1A1A;}
+.tag-mod{background:#FEF3E2;color:var(--amber);}
+.tag-walk{background:var(--green-pale);color:var(--green);}
+.tag-sit{background:#F0EBF8;color:var(--purple);}
 
-/* OPTIONS */
-.options{display:flex;gap:7px;flex-wrap:wrap;}
-.opt-lbl{flex:1;min-width:90px;cursor:pointer;}
-.opt-lbl input[type="radio"]{display:none;}
-.opt-btn{display:block;padding:9px 8px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:400;color:var(--ink-mid);text-align:center;cursor:pointer;transition:all .18s;line-height:1.4;user-select:none;}
-.enc-card .opt-lbl input:checked + .opt-btn{background:var(--blue-pale);border-color:var(--blue-light);color:var(--blue);font-weight:600;}
-.lim-card .opt-lbl input:checked + .opt-btn{background:var(--red-pale);border-color:#E07060;color:var(--red);font-weight:600;}
-.opt-btn:hover{border-color:var(--blue-light);background:#f0f5fb;}
+/* INPUT GROUPS */
+.input-group{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;}
+.input-wrap{flex:1;min-width:140px;}
+.input-wrap label{display:block;font-size:12px;font-weight:600;color:var(--ink-mid);margin-bottom:6px;}
+.num-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'Tajawal',sans-serif;font-size:15px;color:var(--ink);text-align:center;outline:none;transition:border-color .18s;}
+.num-input:focus{border-color:var(--blue-light);background:#fff;}
+.num-input::placeholder{color:var(--ink-light);font-size:13px;}
+.unit-hint{font-size:11px;color:var(--ink-light);margin-top:4px;text-align:center;}
+
+/* YES/NO toggle */
+.yn-row{display:flex;gap:10px;margin-top:10px;}
+.yn-lbl{flex:1;cursor:pointer;}
+.yn-lbl input{display:none;}
+.yn-btn{display:block;padding:10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:500;color:var(--ink-mid);text-align:center;cursor:pointer;transition:all .18s;user-select:none;}
+.yn-lbl input:checked + .yn-btn.yes{background:var(--blue-pale);border-color:var(--blue-light);color:var(--blue);font-weight:700;}
+.yn-lbl input:checked + .yn-btn.no{background:#F8F0F0;border-color:#E07060;color:var(--red);font-weight:700;}
+.yn-btn:hover{border-color:var(--blue-light);}
+
+/* sub-fields */
+.sub-fields{display:none;margin-top:14px;padding:14px;background:var(--surface);border-radius:10px;border:1px solid var(--border);}
+.sub-fields.show{display:block;}
 
 /* SUBMIT */
 .submit-wrap{text-align:center;margin-top:32px;}
-.submit-btn{display:inline-block;background:linear-gradient(135deg,#0F2D5C,#1A4A8A);color:#fff;font-family:'Tajawal',sans-serif;font-size:17px;font-weight:700;padding:16px 52px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(15,45,92,0.3);transition:all .2s;}
-.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(15,45,92,0.4);}
+.submit-btn{display:inline-block;background:linear-gradient(135deg,#0A1F5C,#1A3A8A);color:#fff;font-family:'Tajawal',sans-serif;font-size:17px;font-weight:700;padding:16px 52px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(10,31,92,0.3);transition:all .2s;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(10,31,92,0.4);}
 .submit-note{font-size:13px;color:var(--ink-light);margin-top:10px;}
 .warn-msg{display:none;margin-top:14px;background:var(--amber-pale);border:1px solid #E8B060;border-radius:10px;padding:12px 16px;font-size:13px;color:#7A4800;}
 .warn-msg.show{display:block;}
@@ -102,30 +108,36 @@ body{font-family:'Tajawal',sans-serif;background:#EDF2F8;color:var(--ink);min-he
 #result-section{display:none;margin-top:28px;}
 .result-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.08);}
 .result-header{padding:32px 30px 26px;text-align:center;}
-.score-circle{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 18px;border:4px solid currentColor;}
-.score-num{font-size:40px;font-weight:800;line-height:1;}
-.score-max{font-size:13px;font-weight:400;opacity:.7;margin-top:2px;}
-.result-level{font-size:20px;font-weight:800;margin-bottom:8px;}
+
+/* MET GAUGE */
+.met-gauge{max-width:460px;margin:0 auto 20px;}
+.gauge-track{height:22px;border-radius:11px;background:linear-gradient(90deg,#E74C3C 0%,#E67E22 25%,#F1C40F 50%,#2ECC71 75%,#1A7A4A 100%);position:relative;overflow:visible;}
+.gauge-needle{position:absolute;top:50%;transform:translate(-50%,-50%);width:4px;height:32px;background:var(--ink);border-radius:2px;transition:left .7s ease;}
+.gauge-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink-light);margin-top:6px;}
+
+.met-result-row{display:flex;justify-content:center;gap:20px;margin:16px 0;flex-wrap:wrap;}
+.met-result-box{text-align:center;padding:12px 18px;border-radius:10px;border:1px solid var(--border);background:var(--surface);}
+.mrb-val{font-size:26px;font-weight:800;line-height:1;}
+.mrb-lbl{font-size:11px;color:var(--ink-light);margin-top:3px;}
+
+.result-level{font-size:22px;font-weight:800;margin:10px 0 8px;}
 .result-desc{font-size:14px;color:var(--ink-mid);line-height:1.75;max-width:500px;margin:0 auto;}
 
-.level-high .score-circle{color:var(--blue);background:var(--blue-pale);}
-.level-high .result-level{color:var(--blue);}
-.level-good .score-circle{color:var(--green);background:var(--green-pale);}
-.level-good .result-level{color:var(--green);}
-.level-mod .score-circle{color:var(--amber);background:var(--amber-pale);}
-.level-mod .result-level{color:var(--amber);}
-.level-low .score-circle{color:var(--red);background:var(--red-pale);}
+.level-high .result-level{color:var(--green);}
+.level-mod .result-level{color:var(--blue-mid);}
 .level-low .result-level{color:var(--red);}
 
 .result-body{padding:24px 28px 28px;border-top:1px solid var(--border);background:var(--surface);}
-.components-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
-.comp-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
-.comp-icon{font-size:20px;margin-bottom:4px;}
-.comp-name{font-size:10px;font-weight:600;color:var(--ink-light);margin-bottom:5px;line-height:1.3;}
-.comp-score{font-size:18px;font-weight:800;}
-.comp-score .mx{font-size:11px;color:var(--ink-light);font-weight:400;}
-.comp-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden;}
-.comp-bar{height:100%;border-radius:2px;}
+
+/* Breakdown bars */
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
+.bd-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.bd-icon{font-size:20px;margin-bottom:4px;}
+.bd-name{font-size:10px;font-weight:700;color:var(--ink-light);margin-bottom:5px;}
+.bd-met{font-size:18px;font-weight:800;color:var(--ink);}
+.bd-min{font-size:11px;color:var(--ink-light);margin-top:2px;}
+.bd-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden;}
+.bd-bar{height:100%;border-radius:2px;}
 
 .recs-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;}
 .rec-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
@@ -138,11 +150,10 @@ body{font-family:'Tajawal',sans-serif;background:#EDF2F8;color:var(--ink);min-he
 
 @media(max-width:600px){
   .hero{padding:28px 22px 24px;} .hero h1{font-size:21px;}
-  .components-grid{grid-template-columns:repeat(2,1fr);}
-  .targets-strip{flex-direction:column;}
-  .options{flex-direction:column;} .opt-lbl{min-width:100%;}
+  .breakdown-grid{grid-template-columns:1fr 1fr;}
+  .met-strip{flex-direction:column;}
+  .input-group{flex-direction:column;}
   .page{padding:20px 12px 48px;}
-  .servings-legend{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
@@ -151,44 +162,54 @@ body{font-family:'Tajawal',sans-serif;background:#EDF2F8;color:var(--ink);min-he
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">أداة تقييم علمية · DASH Diet Adherence Screener</div>
-  <h1>تقييم التوافق مع نظام DASH الغذائي</h1>
-  <p class="hero-sub">نظام غذائي طُوِّر لعلاج ارتفاع ضغط الدم — ثم ثبت أنه يُحسّن صحة القلب والكلى والدماغ. معتمد من المعهد الوطني للقلب والرئة والدم (NHLBI) والـ USDA.</p>
-  <div class="hero-ref">Appel LJ et al. · NEJM 1997 · National Heart, Lung, and Blood Institute</div>
+  <div class="hero-badge">أداة تقييم علمية · IPAQ-SF — WHO Endorsed</div>
+  <h1>تقييم مستوى النشاط البدني العام</h1>
+  <p class="hero-sub">الاستبيان الدولي للنشاط البدني — النسخة المختصرة (IPAQ-SF) — الأداة الأكثر استخداماً عالمياً لتقييم النشاط البدني، معتمدة من منظمة الصحة العالمية ومُوثَّقة في أكثر من 100 دولة</p>
+  <div class="hero-ref">Craig CL et al. · Medicine & Science in Sports & Exercise 2003 · IPAQ Group / WHO</div>
   <div class="hero-meta">
-    <div class="hero-meta-item"><div class="dot"></div>16 سؤالاً</div>
-    <div class="hero-meta-item"><div class="dot"></div>8 مكونات غذائية</div>
-    <div class="hero-meta-item"><div class="dot"></div>5–7 دقائق</div>
-    <div class="hero-meta-item"><div class="dot"></div>نتيجة فورية</div>
+    <div class="hero-meta-item"><div class="dot"></div>7 أسئلة</div>
+    <div class="hero-meta-item"><div class="dot"></div>آخر 7 أيام</div>
+    <div class="hero-meta-item"><div class="dot"></div>يحسب MET-min/week</div>
+    <div class="hero-meta-item"><div class="dot"></div>3–5 دقائق</div>
   </div>
 </div>
 
-<!-- TARGETS -->
-<div class="targets-strip">
-  <div class="target-chip"><div class="tc-icon">🥦</div><div class="tc-name">خضروات</div><div class="tc-val">4–5 حصص يومياً</div></div>
-  <div class="target-chip"><div class="tc-icon">🍎</div><div class="tc-name">فواكه</div><div class="tc-val">4–5 حصص يومياً</div></div>
-  <div class="target-chip"><div class="tc-icon">🌾</div><div class="tc-name">حبوب كاملة</div><div class="tc-val">6–8 حصص يومياً</div></div>
-  <div class="target-chip"><div class="tc-icon">🥛</div><div class="tc-name">ألبان قليلة الدسم</div><div class="tc-val">2–3 حصص يومياً</div></div>
-  <div class="target-chip"><div class="tc-icon">🥩</div><div class="tc-name">لحوم ودواجن</div><div class="tc-val">أقل من 6 حصص يومياً</div></div>
-  <div class="target-chip"><div class="tc-icon">🧂</div><div class="tc-name">الصوديوم</div><div class="tc-val">أقل من 2300 ملغ يومياً</div></div>
+<!-- MET EXPLAINER -->
+<div class="met-strip">
+  <div class="met-box">
+    <div class="met-icon">🏃</div>
+    <div class="met-name">نشاط مكثف</div>
+    <div class="met-val" style="color:#C0392B;">8.0 MET</div>
+    <div class="met-ex">الجري، السباحة السريعة، ركوب الدراجة بسرعة</div>
+  </div>
+  <div class="met-box">
+    <div class="met-icon">🚶</div>
+    <div class="met-name">نشاط معتدل</div>
+    <div class="met-val" style="color:var(--amber);">4.0 MET</div>
+    <div class="met-ex">المشي السريع، ركوب الدراجة العادي، اليوغا النشطة</div>
+  </div>
+  <div class="met-box">
+    <div class="met-icon">👣</div>
+    <div class="met-name">المشي العادي</div>
+    <div class="met-val" style="color:var(--green);">3.3 MET</div>
+    <div class="met-ex">المشي اليومي العادي بأي وتيرة</div>
+  </div>
 </div>
 
 <!-- INTRO -->
 <div class="intro-card">
-  <h2>كيف تُجيب بشكل صحيح؟</h2>
-  <p>أجب بناءً على عاداتك الغذائية الفعلية خلال <strong>الأسبوعين الماضيين</strong>. لكل مجموعة غذائية هدف يومي أو أسبوعي — إجابتك تعكس مدى قربك من هذا الهدف.</p>
-  <div class="servings-legend">
-    <div class="sl-item"><div class="sl-num" style="color:var(--red);">١</div><div class="sl-lbl">نادراً — بعيد عن الهدف</div></div>
-    <div class="sl-item"><div class="sl-num" style="color:var(--amber);">٢</div><div class="sl-lbl">أحياناً — قريب جزئياً</div></div>
-    <div class="sl-item"><div class="sl-num" style="color:var(--green);">٣</div><div class="sl-lbl">دائماً — يحقق الهدف</div></div>
-  </div>
+  <h2>تعليمات التقييم</h2>
+  <p>يسألك هذا التقييم عن نشاطك البدني خلال <strong>الأيام السبعة الماضية</strong> فقط — لا عن عاداتك المعتادة. أجب بدقة عن الأيام الفعلية والوقت الفعلي الذي قضيته في كل نشاط.</p>
+  <p><strong>النشاط المكثف:</strong> يجعلك تتنفس بصعوبة ويرفع ضربات قلبك بشكل ملحوظ — الجري، رفع الأثقال، كرة القدم، السباحة السريعة.</p>
+  <p><strong>النشاط المعتدل:</strong> يرفع تنفسك قليلاً لكن يمكنك الكلام — المشي السريع، الدراجة العادية، العمل المنزلي الخفيف، البستنة.</p>
+  <p><strong>المشي:</strong> أي مشي — للعمل، للتسوق، للترفيه — حتى المشي البطيء.</p>
 </div>
 
 <!-- PROGRESS -->
 <div class="progress-wrap">
   <div class="progress-top">
     <span class="progress-label">تقدم التقييم</span>
-    <span class="progress-count" id="prog-count">0 / 16</span>
+    <span class="progress-count" id="prog-count">0 / 7</span>
   </div>
   <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
 </div>
@@ -196,257 +217,235 @@ body{font-family:'Tajawal',sans-serif;background:#EDF2F8;color:var(--ink);min-he
 <!-- FORM -->
 <div id="form-section">
 
-  <!-- ENCOURAGED -->
-  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl encouraged">✅ الأطعمة المُشجَّع عليها في DASH</div><div class="sec-div-line"></div></div>
+  <!-- SECTION 1: VIGOROUS -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">النشاط المكثف — 8.0 MET</div><div class="sec-div-line"></div></div>
 
-  <!-- Q1 VEGETABLES -->
-  <div class="q-card enc-card" id="qc1">
-    <div class="q-num-row"><div class="q-num enc">١</div>
-      <div class="q-text">الخضروات بجميع أنواعها
-        <span class="note">الهدف: 4 إلى 5 حصص يومياً — الحصة = كوب خضار نيئة أو نصف كوب مطبوخة</span>
-        <span class="target enc">الهدف: 4–5 حصص / يوم</span>
+  <!-- Q1 -->
+  <div class="q-card" id="qc1">
+    <div class="q-num-row"><div class="q-num">١</div>
+      <div class="q-text">هل مارست أي نشاط بدني مكثف خلال الأيام السبعة الماضية؟
+        <span class="note">نشاط يجعلك تتنفس بصعوبة — الجري، السباحة السريعة، ركوب الدراجة بسرعة، رفع الأثقال، كرة القدم</span>
+        <span class="note">يجب أن يكون النشاط لمدة 10 دقائق متواصلة على الأقل</span>
+        <span class="intensity-tag tag-vig">مكثف — 8 MET</span>
       </div>
     </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q1" value="1" onchange="pick('q1',1)"><span class="opt-btn">نادراً<br><small>1–2 حصة</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q1" value="2" onchange="pick('q1',2)"><span class="opt-btn">أحياناً<br><small>2–3 حصص</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q1" value="3" onchange="pick('q1',3)"><span class="opt-btn">دائماً<br><small>4–5 حصص فأكثر</small></span></label>
+    <div class="yn-row">
+      <label class="yn-lbl"><input type="radio" name="q1yn" value="yes" onchange="toggleSub('sub1',true);markAnswered('q1')"><span class="yn-btn yes">نعم</span></label>
+      <label class="yn-lbl"><input type="radio" name="q1yn" value="no" onchange="toggleSub('sub1',false);setZero('vig');markAnswered('q1')"><span class="yn-btn no">لا</span></label>
+    </div>
+    <div class="sub-fields" id="sub1">
+      <div class="input-group">
+        <div class="input-wrap">
+          <label>كم يوماً في الأسبوع؟</label>
+          <input class="num-input" type="number" id="vig_days" min="1" max="7" placeholder="1–7" oninput="calcVig()">
+          <div class="unit-hint">أيام / أسبوع</div>
+        </div>
+        <div class="input-wrap">
+          <label>كم دقيقة في اليوم الواحد؟</label>
+          <input class="num-input" type="number" id="vig_mins" min="10" max="480" placeholder="دقائق" oninput="calcVig()">
+          <div class="unit-hint">دقيقة / يوم</div>
+        </div>
+      </div>
+      <div id="vig_preview" style="margin-top:10px;font-size:12px;color:var(--blue);font-weight:600;"></div>
     </div>
   </div>
 
-  <!-- Q2 FRUITS -->
-  <div class="q-card enc-card" id="qc2">
-    <div class="q-num-row"><div class="q-num enc">٢</div>
-      <div class="q-text">الفواكه الطازجة أو المجففة
-        <span class="note">الهدف: 4 إلى 5 حصص يومياً — الحصة = فاكهة متوسطة أو نصف كوب مقطعة أو ربع كوب مجففة</span>
-        <span class="target enc">الهدف: 4–5 حصص / يوم</span>
+  <!-- SECTION 2: MODERATE -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">النشاط المعتدل — 4.0 MET</div><div class="sec-div-line"></div></div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="qc2">
+    <div class="q-num-row"><div class="q-num">٢</div>
+      <div class="q-text">هل مارست أي نشاط بدني معتدل خلال الأيام السبعة الماضية؟
+        <span class="note">نشاط يرفع تنفسك قليلاً — المشي السريع، ركوب الدراجة العادي، اليوغا، العمل المنزلي المجهد، البستنة</span>
+        <span class="note">لا تشمل المشي العادي — يُحسب في القسم التالي — ولا يقل عن 10 دقائق متواصلة</span>
+        <span class="intensity-tag tag-mod">معتدل — 4 MET</span>
       </div>
     </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q2" value="1" onchange="pick('q2',1)"><span class="opt-btn">نادراً<br><small>1–2 حصة</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q2" value="2" onchange="pick('q2',2)"><span class="opt-btn">أحياناً<br><small>2–3 حصص</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q2" value="3" onchange="pick('q2',3)"><span class="opt-btn">دائماً<br><small>4–5 حصص فأكثر</small></span></label>
+    <div class="yn-row">
+      <label class="yn-lbl"><input type="radio" name="q2yn" value="yes" onchange="toggleSub('sub2',true);markAnswered('q2')"><span class="yn-btn yes">نعم</span></label>
+      <label class="yn-lbl"><input type="radio" name="q2yn" value="no" onchange="toggleSub('sub2',false);setZero('mod');markAnswered('q2')"><span class="yn-btn no">لا</span></label>
+    </div>
+    <div class="sub-fields" id="sub2">
+      <div class="input-group">
+        <div class="input-wrap">
+          <label>كم يوماً في الأسبوع؟</label>
+          <input class="num-input" type="number" id="mod_days" min="1" max="7" placeholder="1–7" oninput="calcMod()">
+          <div class="unit-hint">أيام / أسبوع</div>
+        </div>
+        <div class="input-wrap">
+          <label>كم دقيقة في اليوم الواحد؟</label>
+          <input class="num-input" type="number" id="mod_mins" min="10" max="480" placeholder="دقائق" oninput="calcMod()">
+          <div class="unit-hint">دقيقة / يوم</div>
+        </div>
+      </div>
+      <div id="mod_preview" style="margin-top:10px;font-size:12px;color:var(--amber);font-weight:600;"></div>
     </div>
   </div>
 
-  <!-- Q3 WHOLE GRAINS -->
-  <div class="q-card enc-card" id="qc3">
-    <div class="q-num-row"><div class="q-num enc">٣</div>
-      <div class="q-text">الحبوب الكاملة
-        <span class="note">الشوفان، الأرز البني، الخبز الأسمر، البرغل، الكينوا — الهدف: 6 إلى 8 حصص يومياً</span>
-        <span class="target enc">الهدف: 6–8 حصص / يوم</span>
+  <!-- SECTION 3: WALKING -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">المشي — 3.3 MET</div><div class="sec-div-line"></div></div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="qc3">
+    <div class="q-num-row"><div class="q-num">٣</div>
+      <div class="q-text">هل مشيت خلال الأيام السبعة الماضية؟
+        <span class="note">أي مشي — للعمل، للتسوق، للترفيه، أثناء استراحة الغداء — بما فيه المشي في المنزل لمدة 10 دقائق فأكثر</span>
+        <span class="intensity-tag tag-walk">مشي — 3.3 MET</span>
       </div>
     </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q3" value="1" onchange="pick('q3',1)"><span class="opt-btn">نادراً<br><small>أقل من 3</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q3" value="2" onchange="pick('q3',2)"><span class="opt-btn">أحياناً<br><small>3–5 حصص</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q3" value="3" onchange="pick('q3',3)"><span class="opt-btn">دائماً<br><small>6 حصص فأكثر</small></span></label>
+    <div class="yn-row">
+      <label class="yn-lbl"><input type="radio" name="q3yn" value="yes" onchange="toggleSub('sub3',true);markAnswered('q3')"><span class="yn-btn yes">نعم</span></label>
+      <label class="yn-lbl"><input type="radio" name="q3yn" value="no" onchange="toggleSub('sub3',false);setZero('walk');markAnswered('q3')"><span class="yn-btn no">لا</span></label>
+    </div>
+    <div class="sub-fields" id="sub3">
+      <div class="input-group">
+        <div class="input-wrap">
+          <label>كم يوماً في الأسبوع؟</label>
+          <input class="num-input" type="number" id="walk_days" min="1" max="7" placeholder="1–7" oninput="calcWalk()">
+          <div class="unit-hint">أيام / أسبوع</div>
+        </div>
+        <div class="input-wrap">
+          <label>كم دقيقة في اليوم الواحد؟</label>
+          <input class="num-input" type="number" id="walk_mins" min="10" max="480" placeholder="دقائق" oninput="calcWalk()">
+          <div class="unit-hint">دقيقة / يوم</div>
+        </div>
+      </div>
+      <div id="walk_preview" style="margin-top:10px;font-size:12px;color:var(--green);font-weight:600;"></div>
     </div>
   </div>
 
-  <!-- Q4 LOW FAT DAIRY -->
-  <div class="q-card enc-card" id="qc4">
-    <div class="q-num-row"><div class="q-num enc">٤</div>
-      <div class="q-text">منتجات الألبان قليلة أو منزوعة الدسم
-        <span class="note">الحليب خالي الدسم، الزبادي قليل الدسم، الجبن القريش — الهدف: 2 إلى 3 حصص يومياً — مصدر الكالسيوم والبوتاسيوم</span>
-        <span class="target enc">الهدف: 2–3 حصص / يوم</span>
+  <!-- SECTION 4: SITTING -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">وقت الجلوس — السلوك الخامل</div><div class="sec-div-line"></div></div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="qc4">
+    <div class="q-num-row"><div class="q-num">٤</div>
+      <div class="q-text">كم ساعة تقريباً تقضي جالساً في اليوم العادي؟
+        <span class="note">يشمل: الجلوس في العمل، أثناء قيادة السيارة، أثناء مشاهدة التلفاز، الجلوس للقراءة أو الكمبيوتر — في أيام العمل والإجازة</span>
+        <span class="intensity-tag tag-sit">سلوك خامل — مؤشر مستقل</span>
       </div>
     </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q4" value="1" onchange="pick('q4',1)"><span class="opt-btn">نادراً<br><small>نادراً أو أبداً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q4" value="2" onchange="pick('q4',2)"><span class="opt-btn">أحياناً<br><small>1 حصة يومياً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q4" value="3" onchange="pick('q4',3)"><span class="opt-btn">دائماً<br><small>2–3 حصص يومياً</small></span></label>
+    <div class="input-group" style="margin-top:10px;">
+      <div class="input-wrap">
+        <label>ساعات الجلوس في يوم عمل عادي</label>
+        <input class="num-input" type="number" id="sit_work" min="0" max="16" placeholder="ساعات" oninput="markAnswered('q4')">
+        <div class="unit-hint">ساعة / يوم عمل</div>
+      </div>
+      <div class="input-wrap">
+        <label>ساعات الجلوس في يوم إجازة</label>
+        <input class="num-input" type="number" id="sit_rest" min="0" max="16" placeholder="ساعات" oninput="markAnswered('q4')">
+        <div class="unit-hint">ساعة / يوم إجازة</div>
+      </div>
     </div>
   </div>
 
-  <!-- Q5 LEGUMES NUTS -->
-  <div class="q-card enc-card" id="qc5">
-    <div class="q-num-row"><div class="q-num enc">٥</div>
-      <div class="q-text">البقوليات والمكسرات والبذور
-        <span class="note">العدس، الحمص، الفول، الفاصوليا، الجوز، اللوز، بذور الكتان — الهدف: 4 إلى 5 مرات أسبوعياً</span>
-        <span class="target enc">الهدف: 4–5 مرات / أسبوع</span>
+  <!-- Q5 STRENGTH -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">تمارين القوة والمرونة</div><div class="sec-div-line"></div></div>
+
+  <div class="q-card" id="qc5">
+    <div class="q-num-row"><div class="q-num">٥</div>
+      <div class="q-text">هل مارست تمارين القوة أو المقاومة خلال الأيام السبعة الماضية؟
+        <span class="note">الأثقال، تمارين الجسم (تمارين البطن، الضغط، السكوات)، أجهزة الجيم، اليوغا المقاومة — توصيات WHO تشترط مرتين أسبوعياً</span>
+        <span class="intensity-tag tag-mod">مكمل ضروري</span>
       </div>
     </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q5" value="1" onchange="pick('q5',1)"><span class="opt-btn">نادراً<br><small>1–2 مرة</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q5" value="2" onchange="pick('q5',2)"><span class="opt-btn">أحياناً<br><small>2–3 مرات</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q5" value="3" onchange="pick('q5',3)"><span class="opt-btn">دائماً<br><small>4–5 مرات فأكثر</small></span></label>
+    <div class="yn-row">
+      <label class="yn-lbl"><input type="radio" name="q5yn" value="yes" onchange="toggleSub('sub5',true);markAnswered('q5')"><span class="yn-btn yes">نعم</span></label>
+      <label class="yn-lbl"><input type="radio" name="q5yn" value="no" onchange="toggleSub('sub5',false);markAnswered('q5')"><span class="yn-btn no">لا</span></label>
+    </div>
+    <div class="sub-fields" id="sub5">
+      <div class="input-wrap" style="max-width:200px;">
+        <label>كم مرة في الأسبوع؟</label>
+        <input class="num-input" type="number" id="str_days" min="1" max="7" placeholder="1–7">
+        <div class="unit-hint">مرة / أسبوع</div>
+      </div>
     </div>
   </div>
 
-  <!-- Q6 LEAN PROTEIN -->
-  <div class="q-card enc-card" id="qc6">
-    <div class="q-num-row"><div class="q-num enc">٦</div>
-      <div class="q-text">البروتين الخفيف — الدواجن والأسماك
-        <span class="note">الدجاج (بدون جلد)، الديك الرومي، الأسماك — بديل صحي عن اللحوم الحمراء في DASH</span>
-        <span class="target enc">يُفضَّل بديلاً للحوم الحمراء</span>
+  <!-- Q6 SPORT TYPE -->
+  <div class="q-card" id="qc6">
+    <div class="q-num-row"><div class="q-num">٦</div>
+      <div class="q-text">ما هو نوع نشاطك البدني الرئيسي؟
+        <span class="note">الخيار الأقرب لما تفعله فعلاً في معظم الأوقات</span>
       </div>
     </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q6" value="1" onchange="pick('q6',1)"><span class="opt-btn">نادراً<br><small>أقل من مرة أسبوعياً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q6" value="2" onchange="pick('q6',2)"><span class="opt-btn">أحياناً<br><small>1–2 مرة أسبوعياً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q6" value="3" onchange="pick('q6',3)"><span class="opt-btn">دائماً<br><small>3 مرات فأكثر</small></span></label>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q6type" value="walk" onchange="markAnswered('q6')" style="accent-color:var(--blue);width:16px;height:16px;">
+        المشي وحده (بدون رياضة منتظمة)
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q6type" value="light" onchange="markAnswered('q6')" style="accent-color:var(--blue);width:16px;height:16px;">
+        تمارين خفيفة منتظمة (يوغا، مشي سريع، تمدد)
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q6type" value="cardio" onchange="markAnswered('q6')" style="accent-color:var(--blue);width:16px;height:16px;">
+        تمارين كارديو (جري، دراجة، سباحة)
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q6type" value="strength" onchange="markAnswered('q6')" style="accent-color:var(--blue);width:16px;height:16px;">
+        تمارين قوة ومقاومة (صالة، أثقال)
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q6type" value="mixed" onchange="markAnswered('q6')" style="accent-color:var(--blue);width:16px;height:16px;">
+        مزيج من الكارديو والقوة
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q6type" value="sport" onchange="markAnswered('q6')" style="accent-color:var(--blue);width:16px;height:16px;">
+        رياضة جماعية (كرة قدم، كرة سلة، تنس)
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q6type" value="none" onchange="markAnswered('q6')" style="accent-color:var(--blue);width:16px;height:16px;">
+        لا أمارس أي نشاط منتظم
+      </label>
     </div>
   </div>
 
-  <!-- Q7 FIBER -->
-  <div class="q-card enc-card" id="qc7">
-    <div class="q-num-row"><div class="q-num enc">٧</div>
-      <div class="q-text">الألياف الغذائية الكافية
-        <span class="note">الهدف: 30 غرام يومياً — مصادرها: الخضروات والفواكه والحبوب الكاملة والبقوليات — مؤشر التزام بـ DASH</span>
-        <span class="target enc">الهدف: 30 غرام ألياف / يوم</span>
+  <!-- Q7 BARRIERS -->
+  <div class="q-card" id="qc7">
+    <div class="q-num-row"><div class="q-num">٧</div>
+      <div class="q-text">ما أكبر عائق يمنعك من ممارسة النشاط البدني الكافي؟
+        <span class="note">اختر العائق الأكثر تأثيراً في حياتك الآن</span>
       </div>
     </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q7" value="1" onchange="pick('q7',1)"><span class="opt-btn">نادراً<br><small>أكل قليل الألياف</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q7" value="2" onchange="pick('q7',2)"><span class="opt-btn">أحياناً<br><small>أحياناً عالي الألياف</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q7" value="3" onchange="pick('q7',3)"><span class="opt-btn">دائماً<br><small>وجبات غنية بالألياف</small></span></label>
-    </div>
-  </div>
-
-  <!-- Q8 POTASSIUM MAGNESIUM -->
-  <div class="q-card enc-card" id="qc8">
-    <div class="q-num-row"><div class="q-num enc">٨</div>
-      <div class="q-text">الأطعمة الغنية بالبوتاسيوم والمغنيسيوم
-        <span class="note">الأفوكادو، الموز، البطاطا الحلوة، السبانخ، المكسرات — DASH يُركز على هذين المعدنين لخفض ضغط الدم</span>
-        <span class="target enc">أساسي لخفض ضغط الدم</span>
-      </div>
-    </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q8" value="1" onchange="pick('q8',1)"><span class="opt-btn">نادراً<br><small>نادراً في طعامي</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q8" value="2" onchange="pick('q8',2)"><span class="opt-btn">أحياناً<br><small>بعض الأيام</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q8" value="3" onchange="pick('q8',3)"><span class="opt-btn">دائماً<br><small>جزء يومي من وجباتي</small></span></label>
-    </div>
-  </div>
-
-  <!-- LIMITED -->
-  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl limited">⚠️ الأطعمة المحدودة في DASH</div><div class="sec-div-line"></div></div>
-
-  <!-- Q9 RED MEAT -->
-  <div class="q-card lim-card" id="qc9">
-    <div class="q-num-row"><div class="q-num lim">٩</div>
-      <div class="q-text">اللحوم الحمراء بكميات كبيرة
-        <span class="note">DASH يُحدد: أقل من 6 حصص يومياً من اللحوم والدواجن مجتمعة — الحصة = 30 غرام</span>
-        <span class="target lim">الحد: أقل من 170 غرام يومياً</span>
-      </div>
-    </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q9" value="3" onchange="pick('q9',3)"><span class="opt-btn">نادراً<br><small>مرة أو مرتين أسبوعياً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q9" value="2" onchange="pick('q9',2)"><span class="opt-btn">أحياناً<br><small>3–4 مرات أسبوعياً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q9" value="1" onchange="pick('q9',1)"><span class="opt-btn">يومياً<br><small>كل يوم بكميات كبيرة</small></span></label>
-    </div>
-  </div>
-
-  <!-- Q10 SODIUM SALT -->
-  <div class="q-card lim-card" id="qc10">
-    <div class="q-num-row"><div class="q-num lim">١٠</div>
-      <div class="q-text">الملح والأطعمة العالية الصوديوم
-        <span class="note">الهدف: أقل من 2300 ملغ يومياً — يشمل: المعلبات، الصلصات الجاهزة، الشيبس، إضافة الملح على الطعام</span>
-        <span class="target lim">الحد: أقل من 2300 ملغ صوديوم / يوم</span>
-      </div>
-    </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q10" value="3" onchange="pick('q10',3)"><span class="opt-btn">نادراً<br><small>أقيد الملح بوعي</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q10" value="2" onchange="pick('q10',2)"><span class="opt-btn">أحياناً<br><small>أحاول التقليل</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q10" value="1" onchange="pick('q10',1)"><span class="opt-btn">يومياً<br><small>لا أُقيّد الملح</small></span></label>
-    </div>
-  </div>
-
-  <!-- Q11 SATURATED FAT -->
-  <div class="q-card lim-card" id="qc11">
-    <div class="q-num-row"><div class="q-num lim">١١</div>
-      <div class="q-text">الدهون المشبعة والكوليسترول المرتفع
-        <span class="note">DASH يُحدد: أقل من 6% من السعرات من الدهون المشبعة — الزبدة، الشحم، الجبن الدسم، الكريمة بكثرة</span>
-        <span class="target lim">الحد: أقل من 6% من السعرات</span>
-      </div>
-    </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q11" value="3" onchange="pick('q11',3)"><span class="opt-btn">نادراً<br><small>أتجنبها</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q11" value="2" onchange="pick('q11',2)"><span class="opt-btn">أحياناً<br><small>باعتدال</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q11" value="1" onchange="pick('q11',1)"><span class="opt-btn">يومياً<br><small>بكميات كبيرة</small></span></label>
-    </div>
-  </div>
-
-  <!-- Q12 SWEETS SUGAR -->
-  <div class="q-card lim-card" id="qc12">
-    <div class="q-num-row"><div class="q-num lim">١٢</div>
-      <div class="q-text">الحلويات والسكريات المضافة
-        <span class="note">DASH يُحدد: أقل من 5 حصص أسبوعياً — الكيك، الكوكيز، السكر في المشروبات، العصائر المحلاة</span>
-        <span class="target lim">الحد: أقل من 5 حصص / أسبوع</span>
-      </div>
-    </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q12" value="3" onchange="pick('q12',3)"><span class="opt-btn">نادراً<br><small>نادراً أو أبداً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q12" value="2" onchange="pick('q12',2)"><span class="opt-btn">أحياناً<br><small>2–4 مرات أسبوعياً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q12" value="1" onchange="pick('q12',1)"><span class="opt-btn">يومياً<br><small>يومياً أو أكثر</small></span></label>
-    </div>
-  </div>
-
-  <!-- Q13 SUGAR DRINKS -->
-  <div class="q-card lim-card" id="qc13">
-    <div class="q-num-row"><div class="q-num lim">١٣</div>
-      <div class="q-text">المشروبات المحلاة بالسكر
-        <span class="note">المشروبات الغازية، عصائر الفواكه المصنعة، مشروبات الطاقة — DASH يُوصي بالحد الشديد منها</span>
-        <span class="target lim">الحد: أقل من 5 حصص / أسبوع</span>
-      </div>
-    </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q13" value="3" onchange="pick('q13',3)"><span class="opt-btn">نادراً<br><small>نادراً أو أبداً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q13" value="2" onchange="pick('q13',2)"><span class="opt-btn">أحياناً<br><small>2–4 مرات أسبوعياً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q13" value="1" onchange="pick('q13',1)"><span class="opt-btn">يومياً<br><small>يومياً أو أكثر</small></span></label>
-    </div>
-  </div>
-
-  <!-- Q14 PROCESSED MEATS -->
-  <div class="q-card lim-card" id="qc14">
-    <div class="q-num-row"><div class="q-num lim">١٤</div>
-      <div class="q-text">اللحوم المصنّعة والمعلبة
-        <span class="note">النقانق، اللانشون، اللحم المعلب — عالية الصوديوم والدهون المشبعة — من أكثر ما يُعاكس DASH</span>
-        <span class="target lim">يُوصى بتجنبها تماماً</span>
-      </div>
-    </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q14" value="3" onchange="pick('q14',3)"><span class="opt-btn">نادراً<br><small>نادراً أو أبداً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q14" value="2" onchange="pick('q14',2)"><span class="opt-btn">أحياناً<br><small>1–2 مرة أسبوعياً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q14" value="1" onchange="pick('q14',1)"><span class="opt-btn">يومياً<br><small>كثيراً</small></span></label>
-    </div>
-  </div>
-
-  <!-- Q15 FULL FAT DAIRY -->
-  <div class="q-card lim-card" id="qc15">
-    <div class="q-num-row"><div class="q-num lim">١٥</div>
-      <div class="q-text">منتجات الألبان كاملة الدسم
-        <span class="note">الحليب كامل الدسم، الأجبان الدسمة، الكريمة، الزبدة — يُفضَّل استبدالها بالنسخ قليلة الدسم في DASH</span>
-        <span class="target lim">يُفضَّل استبدالها بقليلة الدسم</span>
-      </div>
-    </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q15" value="3" onchange="pick('q15',3)"><span class="opt-btn">نادراً<br><small>أستخدم قليلة الدسم</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q15" value="2" onchange="pick('q15',2)"><span class="opt-btn">أحياناً<br><small>مزيج من النوعين</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q15" value="1" onchange="pick('q15',1)"><span class="opt-btn">دائماً<br><small>كاملة الدسم دائماً</small></span></label>
-    </div>
-  </div>
-
-  <!-- Q16 RESTAURANT FAST FOOD -->
-  <div class="q-card lim-card" id="qc16">
-    <div class="q-num-row"><div class="q-num lim">١٦</div>
-      <div class="q-text">الوجبات السريعة والمطاعم بكثرة
-        <span class="note">الوجبات خارج المنزل عادةً عالية الصوديوم والدهون المشبعة — DASH يُشجع على الطبخ المنزلي</span>
-        <span class="target lim">الطبخ المنزلي هو الأساس</span>
-      </div>
-    </div>
-    <div class="options">
-      <label class="opt-lbl"><input type="radio" name="q16" value="3" onchange="pick('q16',3)"><span class="opt-btn">نادراً<br><small>مرة أو مرتين أسبوعياً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q16" value="2" onchange="pick('q16',2)"><span class="opt-btn">أحياناً<br><small>3–4 مرات أسبوعياً</small></span></label>
-      <label class="opt-lbl"><input type="radio" name="q16" value="1" onchange="pick('q16',1)"><span class="opt-btn">يومياً<br><small>معظم وجباتي خارج المنزل</small></span></label>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q7barrier" value="time" onchange="markAnswered('q7')" style="accent-color:var(--blue);width:16px;height:16px;">
+        ضيق الوقت
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q7barrier" value="energy" onchange="markAnswered('q7')" style="accent-color:var(--blue);width:16px;height:16px;">
+        قلة الطاقة أو الإرهاق
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q7barrier" value="motivation" onchange="markAnswered('q7')" style="accent-color:var(--blue);width:16px;height:16px;">
+        قلة الدافعية
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q7barrier" value="pain" onchange="markAnswered('q7')" style="accent-color:var(--blue);width:16px;height:16px;">
+        الألم أو إعاقة جسدية
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q7barrier" value="facility" onchange="markAnswered('q7')" style="accent-color:var(--blue);width:16px;height:16px;">
+        عدم توفر المكان أو المرفق المناسب
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q7barrier" value="weather" onchange="markAnswered('q7')" style="accent-color:var(--blue);width:16px;height:16px;">
+        الطقس (الحر في السعودية)
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--ink-mid);">
+        <input type="radio" name="q7barrier" value="none" onchange="markAnswered('q7')" style="accent-color:var(--blue);width:16px;height:16px;">
+        لا يوجد عائق — أنا نشيط كما يجب
+      </label>
     </div>
   </div>
 
   <!-- SUBMIT -->
   <div class="submit-wrap">
-    <button class="submit-btn" onclick="showResult()">احسب نتيجتي</button>
+    <button class="submit-btn" onclick="showResult()">احسب مستوى نشاطي</button>
     <p class="submit-note" id="submit-note">أجب على جميع الأسئلة ثم اضغط الزر</p>
-    <div class="warn-msg" id="warn-msg">⚠️ يرجى الإجابة على جميع الأسئلة — الأسئلة الناقصة مُحددة باللون البرتقالي</div>
+    <div class="warn-msg" id="warn-msg">⚠️ يرجى الإجابة على جميع الأسئلة</div>
   </div>
 
 </div>
@@ -455,24 +454,49 @@ body{font-family:'Tajawal',sans-serif;background:#EDF2F8;color:var(--ink);min-he
 <div id="result-section">
   <div class="result-card">
     <div class="result-header" id="result-header">
-      <div class="score-circle" id="score-circle">
-        <div class="score-num" id="score-num">0</div>
-        <div class="score-max">من 48</div>
+
+      <!-- MET GAUGE -->
+      <div class="met-gauge">
+        <div class="gauge-track">
+          <div class="gauge-needle" id="gauge-needle" style="left:0%"></div>
+        </div>
+        <div class="gauge-labels">
+          <span style="color:var(--red)">خامل</span>
+          <span style="color:var(--amber)">منخفض</span>
+          <span style="color:#2ECC71">معتدل</span>
+          <span style="color:var(--green)">عالٍ</span>
+        </div>
       </div>
+
+      <div class="met-result-row">
+        <div class="met-result-box">
+          <div class="mrb-val" id="total-met" style="color:var(--blue-mid)">0</div>
+          <div class="mrb-lbl">MET-min / أسبوع</div>
+        </div>
+        <div class="met-result-box">
+          <div class="mrb-val" id="total-mins">0</div>
+          <div class="mrb-lbl">دقيقة نشاط / أسبوع</div>
+        </div>
+        <div class="met-result-box">
+          <div class="mrb-val" id="sit-avg">0</div>
+          <div class="mrb-lbl">ساعة جلوس / يوم</div>
+        </div>
+      </div>
+
       <div class="result-level" id="result-level"></div>
       <p class="result-desc" id="result-desc"></p>
       <button class="retry-btn" onclick="resetAll()">إعادة التقييم</button>
     </div>
+
     <div class="result-body">
-      <div class="components-grid" id="components-grid"></div>
+      <div class="breakdown-grid" id="breakdown-grid"></div>
       <div class="recs-title">توصيات مبنية على نتيجتك</div>
       <div id="recs-list"></div>
       <div class="source-note">
-        مبني على نظام DASH الغذائي ومؤشر Mellen للالتزام بـ DASH<br>
-        المرجع الأساسي: Appel LJ et al. <em>New England Journal of Medicine</em> 1997;336:1117–1124<br>
-        مؤشر التقييم: Mellen PB et al. <em>American Journal of Epidemiology</em> 2008;168(6):694–700<br>
-        التحقق من الأداة: Kwan MW et al. <em>Journal of Nutrition</em> 2025 · doi:10.1016/j.tjnut.2025.06.012<br>
-        <strong>ملاحظة:</strong> هذا التقييم للتوعية الذاتية ولا يُغني عن استشارة طبيب أو أخصائي تغذية.
+        مبني على الاستبيان الدولي للنشاط البدني — النسخة المختصرة (IPAQ-SF)<br>
+        المرجع الأساسي: Craig CL et al. <em>Medicine & Science in Sports & Exercise</em> 2003;35(8):1381–1395<br>
+        بروتوكول التسجيل: IPAQ Research Committee. <em>Guidelines for Data Processing and Analysis of IPAQ</em>. Revised November 2005<br>
+        <strong>ملاحظة:</strong> IPAQ-SF يعتمد على التقييم الذاتي — قد يختلف عن القياسات الموضوعية بجهاز تتبع الحركة.
       </div>
     </div>
   </div>
@@ -481,118 +505,206 @@ body{font-family:'Tajawal',sans-serif;background:#EDF2F8;color:var(--ink);min-he
 </div>
 
 <script>
-const answers = {};
-const ALL_Q  = Array.from({length:16}, (_,i) => 'q'+(i+1));
-const ENC_Q  = ['q1','q2','q3','q4','q5','q6','q7','q8'];
-const LIM_Q  = ['q9','q10','q11','q12','q13','q14','q15','q16'];
+// State
+let vigMET = 0, modMET = 0, walkMET = 0;
+let vigMins = 0, modMins = 0, walkMins = 0;
+const answered = new Set();
 
-const COMPONENTS = [
-  { key:'veg',   icon:'🥦', label:'الخضروات',           qs:['q1'],         max:3,  color:'#2D6A4F' },
-  { key:'fruit', icon:'🍎', label:'الفواكه',             qs:['q2'],         max:3,  color:'#C0392B' },
-  { key:'grain', icon:'🌾', label:'الحبوب الكاملة',      qs:['q3'],         max:3,  color:'#B7950B' },
-  { key:'dairy', icon:'🥛', label:'الألبان قليلة الدسم', qs:['q4','q15'],   max:6,  color:'#2471A3' },
-  { key:'leg',   icon:'🫘', label:'البقوليات والمكسرات', qs:['q5'],         max:3,  color:'#8E44AD' },
-  { key:'sodium',icon:'🧂', label:'الصوديوم المحدود',    qs:['q10'],        max:3,  color:'#1A4A8A' },
-  { key:'fat',   icon:'🧈', label:'الدهون المحدودة',     qs:['q11'],        max:3,  color:'#D4720A' },
-  { key:'sugar', icon:'🍬', label:'السكريات المحدودة',   qs:['q12','q13'],  max:6,  color:'#B03A2E' },
-];
-
-function pick(name, val) {
-  answers[name] = parseInt(val);
-  const card = document.getElementById('qc' + name.replace('q',''));
-  if (card) { card.classList.add('answered'); card.style.borderColor = ''; }
+function markAnswered(id) {
+  answered.add(id);
+  const card = document.getElementById('qc' + id.replace('q',''));
+  if (card) card.classList.add('answered');
   updateProgress();
 }
 
 function updateProgress() {
-  const done = Object.keys(answers).length;
-  const pct  = Math.round((done / 16) * 100);
-  document.getElementById('prog-count').textContent = done + ' / 16';
+  const total = 7;
+  const done  = answered.size;
+  const pct   = Math.round((done / total) * 100);
+  document.getElementById('prog-count').textContent = done + ' / ' + total;
   document.getElementById('prog-fill').style.width  = pct + '%';
   document.getElementById('submit-note').textContent =
-    done === 16 ? '✅ جميع الأسئلة مكتملة — اضغط لعرض نتيجتك' : (16 - done) + ' سؤال متبقي';
+    done === total ? '✅ جميع الأسئلة مكتملة — اضغط لعرض نتيجتك' : (total - done) + ' سؤال متبقي';
+}
+
+function toggleSub(id, show) {
+  document.getElementById(id).classList.toggle('show', show);
+  if (!show) {
+    // clear inputs
+    const inputs = document.getElementById(id).querySelectorAll('input[type="number"]');
+    inputs.forEach(i => i.value = '');
+  }
+}
+
+function setZero(type) {
+  if (type === 'vig')  { vigMET  = 0; vigMins  = 0; }
+  if (type === 'mod')  { modMET  = 0; modMins  = 0; }
+  if (type === 'walk') { walkMET = 0; walkMins = 0; }
+}
+
+function calcVig() {
+  const d = parseFloat(document.getElementById('vig_days').value) || 0;
+  const m = parseFloat(document.getElementById('vig_mins').value) || 0;
+  vigMET  = Math.round(8.0 * m * d);
+  vigMins = d * m;
+  const p = document.getElementById('vig_preview');
+  if (d > 0 && m > 0) {
+    p.textContent = '= ' + vigMET + ' MET-دقيقة / أسبوع (' + Math.round(vigMins) + ' دقيقة)';
+    markAnswered('q1');
+  } else { p.textContent = ''; }
+}
+
+function calcMod() {
+  const d = parseFloat(document.getElementById('mod_days').value) || 0;
+  const m = parseFloat(document.getElementById('mod_mins').value) || 0;
+  modMET  = Math.round(4.0 * m * d);
+  modMins = d * m;
+  const p = document.getElementById('mod_preview');
+  if (d > 0 && m > 0) {
+    p.textContent = '= ' + modMET + ' MET-دقيقة / أسبوع (' + Math.round(modMins) + ' دقيقة)';
+    markAnswered('q2');
+  } else { p.textContent = ''; }
+}
+
+function calcWalk() {
+  const d = parseFloat(document.getElementById('walk_days').value) || 0;
+  const m = parseFloat(document.getElementById('walk_mins').value) || 0;
+  walkMET  = Math.round(3.3 * m * d);
+  walkMins = d * m;
+  const p = document.getElementById('walk_preview');
+  if (d > 0 && m > 0) {
+    p.textContent = '= ' + walkMET + ' MET-دقيقة / أسبوع (' + Math.round(walkMins) + ' دقيقة)';
+    markAnswered('q3');
+  } else { p.textContent = ''; }
 }
 
 function showResult() {
-  const missing = ALL_Q.filter(q => answers[q] === undefined);
-  if (missing.length > 0) {
+  // validate all 7 answered
+  if (answered.size < 7) {
     document.getElementById('warn-msg').classList.add('show');
-    missing.forEach(q => {
-      const c = document.getElementById('qc' + q.replace('q',''));
-      if (c) c.style.borderColor = '#E8A020';
-    });
-    document.getElementById('qc' + missing[0].replace('q','')).scrollIntoView({behavior:'smooth',block:'center'});
+    for (let i = 1; i <= 7; i++) {
+      if (!answered.has('q' + i)) {
+        const c = document.getElementById('qc' + i);
+        if (c) { c.style.borderColor = '#E8A020'; c.scrollIntoView({behavior:'smooth',block:'center'}); }
+        break;
+      }
+    }
     return;
   }
 
-  let total = 0;
-  ALL_Q.forEach(q => { total += parseInt(answers[q]) || 0; });
+  const totalMET  = vigMET + modMET + walkMET;
+  const totalMins = vigMins + modMins + walkMins;
+  const sitWork   = parseFloat(document.getElementById('sit_work').value) || 0;
+  const sitRest   = parseFloat(document.getElementById('sit_rest').value) || 0;
+  const sitAvg    = Math.round(((sitWork * 5) + (sitRest * 2)) / 7 * 10) / 10;
+  const strDays   = parseFloat(document.getElementById('str_days').value) || 0;
+  const barrier   = document.querySelector('input[name="q7barrier"]:checked')?.value || '';
 
-  const compScores = {};
-  COMPONENTS.forEach(c => {
-    let s = 0;
-    c.qs.forEach(q => { s += parseInt(answers[q]) || 0; });
-    compScores[c.key] = s;
-  });
+  // IPAQ categories
+  // HIGH: vigorous ≥3 days + ≥1500 MET-min/week OR ≥7 days combination ≥3000 MET-min/week
+  // MODERATE: vigorous ≥3days ≥20min OR moderate/walk ≥5days ≥30min OR ≥5days combo ≥600 MET-min/week
+  // LOW: everything else
+
+  const vigDays = parseFloat(document.getElementById('vig_days').value) || 0;
+  const vigMinDay = parseFloat(document.getElementById('vig_mins').value) || 0;
+  const modDays = parseFloat(document.getElementById('mod_days').value) || 0;
+  const modMinDay = parseFloat(document.getElementById('mod_mins').value) || 0;
+  const walkDays = parseFloat(document.getElementById('walk_days').value) || 0;
+  const walkMinDay = parseFloat(document.getElementById('walk_mins').value) || 0;
+  const q1Yes = document.querySelector('input[name="q1yn"]:checked')?.value === 'yes';
+  const q2Yes = document.querySelector('input[name="q2yn"]:checked')?.value === 'yes';
+  const q3Yes = document.querySelector('input[name="q3yn"]:checked')?.value === 'yes';
+
+  let category;
+  const highVig   = q1Yes && vigDays >= 3 && totalMET >= 1500;
+  const highCombo = (vigDays + modDays + walkDays) >= 7 && totalMET >= 3000;
+  const modVig    = q1Yes && vigDays >= 3 && vigMinDay >= 20;
+  const modMod    = (q2Yes || q3Yes) && (modDays + walkDays) >= 5 && (modMinDay >= 30 || walkMinDay >= 30);
+  const modCombo  = (vigDays + modDays + walkDays) >= 5 && totalMET >= 600;
+
+  if (highVig || highCombo) category = 'high';
+  else if (modVig || modMod || modCombo) category = 'moderate';
+  else category = 'low';
+
+  // needle position (0-3000+ MET range mapped to 0-100%)
+  const maxMET = 3000;
+  const needlePct = Math.min(98, Math.max(2, (totalMET / maxMET) * 100));
+  document.getElementById('gauge-needle').style.left = needlePct + '%';
+
+  document.getElementById('total-met').textContent = totalMET.toLocaleString();
+  document.getElementById('total-mins').textContent = Math.round(totalMins);
+  document.getElementById('sit-avg').textContent = sitAvg;
 
   let lvl;
-  if (total >= 40) lvl = {
-    cls:'level-high', level:'التزام عالٍ بنظام DASH — ممتاز',
-    desc:'نمطك الغذائي يتوافق بشكل كبير مع توصيات DASH. هذا المستوى مرتبط بانخفاض ملحوظ في ضغط الدم وخطر أمراض القلب والكلى.',
+  if (category === 'high') lvl = {
+    cls:'level-high', level:'مستوى عالٍ — ممتاز',
+    desc:'نشاطك البدني يتجاوز الحد الأدنى الموصى به بشكل واضح. هذا المستوى يضعك في الفئة الأكثر استفادة من الفوائد الصحية للنشاط البدني.',
     recs:[
-      {i:'🩺',t:'تابع ضغط الدم بانتظام — إذا كنت على دواء قد يحتاج طبيبك لمراجعة الجرعة مع تحسن DASH'},
-      {i:'🧂',t:'إذا لديك ضغط مرتفع — فكر في DASH المعدّل بصوديوم 1500 ملغ يومياً بدل 2300'},
-      {i:'🏃',t:'DASH يعمل بشكل تآزري مع النشاط البدني المنتظم — الجمع بينهما يضاعف الفائدة'},
+      {i:'💪',t:'واصل هذا المستوى — لكن تأكد من التوازن بين الكارديو وتمارين القوة'},
+      {i:'😴',t:'الانتعاش والنوم بقدر أهمية التدريب — التعافي جزء من البرنامج'},
+      {i:'📊',t:'فكر في قياس لياقتك الوظيفية (VO2max) للتقييم الأكثر دقة'},
     ]
   };
-  else if (total >= 31) lvl = {
-    cls:'level-good', level:'التزام جيد — مع فرص للتطوير',
-    desc:'نمطك يحتوي على عناصر DASH جيدة. تحسين بعض المحاور الضعيفة سيُحقق فوائد صحية إضافية واضحة.',
+  else if (category === 'moderate') lvl = {
+    cls:'level-mod', level:'مستوى معتدل — جيد',
+    desc:'تستوفي الحد الأدنى من التوصيات الصحية. تحسين بسيط في الكمية أو الكثافة سيرفعك للفئة العليا.',
     recs:[
-      {i:'🥦',t:'زد الخضروات إلى 4–5 حصص يومياً — أضف سلطة لكل وجبة رئيسية كخطوة أولى'},
-      {i:'🧂',t:'راجع استهلاك الصوديوم — اقرأ ملصقات الأطعمة المعلبة والجاهزة'},
-      {i:'🫘',t:'أضف البقوليات 4 مرات أسبوعياً بدلاً من اللحوم في بعض الوجبات'},
+      {i:'⏱️',t:'أضف 10 دقائق لكل جلسة نشاط حالية — التراكم التدريجي أكثر استدامة من القفز'},
+      {i:'🏋️',t:strDays < 2 ? 'أضف تمارين القوة مرتين أسبوعياً — هذا من توصيات WHO الأساسية' : 'ممتاز على تمارين القوة — واصل مرتين أو أكثر أسبوعياً'},
+      {i:'🚶',t:'استبدل 10 دقائق من الجلوس بالمشي السريع يومياً — أسهل طريقة لرفع المجموع'},
     ]
   };
-  else if (total >= 22) lvl = {
-    cls:'level-mod', level:'التزام متوسط — يحتاج توجيهاً',
-    desc:'نمطك الغذائي يختلف في محاور عدة عن توصيات DASH. التغييرات التدريجية ستُظهر أثراً على ضغط الدم خلال 4–8 أسابيع.',
-    recs:[
-      {i:'🧂',t:'الصوديوم أولاً — قلل الملح المضاف وتجنب المعلبات والوجبات الجاهزة العالية الملح'},
-      {i:'🥦',t:'ابدأ بإضافة حصة خضار إضافية يومياً — السبانخ والبروكلي غنيتان بالبوتاسيوم'},
-      {i:'🥛',t:'استبدل منتجات الألبان كاملة الدسم بالنسخ قليلة الدسم — مصدر مهم للكالسيوم'},
-      {i:'🍬',t:'قلل المشروبات المحلاة بشكل تدريجي — استبدل واحداً يومياً بالماء'},
-    ]
-  };
-  else lvl = {
-    cls:'level-low', level:'التزام منخفض — فرصة للتغيير',
-    desc:'نمطك الغذائي الحالي يختلف كثيراً عن توصيات DASH. البدء بتغيير واحد أسبوعياً يبني الأساس الصحيح.',
-    recs:[
-      {i:'🎯',t:'خطوة واحدة هذا الأسبوع: استبدل الملح على الطاولة بالأعشاب والبهارات'},
-      {i:'🥦',t:'أضف خضاراً لكل وجبة — حتى إضافة طماطم أو خيار بسيطة تُحدث فرقاً'},
-      {i:'🧂',t:'اقرأ ملصقات المنتجات — أي شيء أكثر من 600 ملغ صوديوم في الحصة يُعد عالياً'},
-      {i:'🍎',t:'ضع فاكهة طازجة كوجبة خفيفة بدلاً من الحلويات أو الشيبس'},
-      {i:'👨‍⚕️',t:'إذا لديك ضغط مرتفع — استشر طبيبك لبرنامج DASH متدرج مع متابعة منتظمة'},
-    ]
-  };
+  else {
+    const barrierRec = {
+      time:    {i:'⏰',t:'حل مشكلة الوقت: 3 جلسات 10 دقائق تعادل 30 دقيقة واحدة — لا تحتاج وقتاً كبيراً'},
+      energy:  {i:'⚡',t:'النشاط البدني يزيد الطاقة لا يستهلكها — ابدأ بـ 10 دقائق مشي فقط وستلاحظ الفرق'},
+      motivation:{i:'🎯',t:'اربط النشاط بهدف شخصي واضح — وجد شريك تدريب يضاعف الالتزام'},
+      pain:    {i:'🩺',t:'استشر طبيبك لتمارين مناسبة لحالتك — حتى مع الألم المزمن يوجد نشاط مناسب'},
+      facility:{i:'🏠',t:'لا تحتاج صالة رياضية — المشي والتمارين المنزلية تكفي لتحقيق التوصيات'},
+      weather: {i:'🌡️',t:'في الحر: المشي داخل المراكز التجارية، السباحة، الصالات المكيفة — حلول عملية للبيئة السعودية'},
+    }[barrier] || {i:'🎯',t:'ابدأ بهدف صغير جداً — 10 دقائق مشي يومياً — وزد تدريجياً كل أسبوع'};
 
-  const hdr = document.getElementById('result-header');
-  hdr.className = 'result-header ' + lvl.cls;
-  document.getElementById('score-num').textContent   = total;
+    lvl = {
+      cls:'level-low', level:'مستوى منخفض — يحتاج تحسيناً',
+      desc:'مستواك الحالي أقل من التوصيات الصحية. البداية الصغيرة والمستمرة أقوى بكثير من البداية المتحمسة والمتقطعة.',
+      recs:[
+        barrierRec,
+        {i:'🚶',t:'الهدف الأول: 150 دقيقة مشي أسبوعياً — أي 22 دقيقة يومياً — قبل التفكير في الرياضة'},
+        {i:'📱',t:'استخدم تطبيق عداد الخطوات — الهدف الأول 7000 خطوة يومياً ثم 10000'},
+        {i:'🪑',t:'قاطع الجلوس كل 30 دقيقة بالوقوف أو المشي 2–3 دقائق — الجلوس المطوّل خطر مستقل'},
+      ]
+    };
+  }
+
+  document.getElementById('result-header').className = 'result-header ' + lvl.cls;
   document.getElementById('result-level').textContent = lvl.level;
   document.getElementById('result-desc').textContent  = lvl.desc;
 
-  const cg = document.getElementById('components-grid');
-  cg.innerHTML = COMPONENTS.map(c => {
-    const s   = compScores[c.key];
-    const pct = Math.round((s / c.max) * 100);
-    return `<div class="comp-box">
-      <div class="comp-icon">${c.icon}</div>
-      <div class="comp-name">${c.label}</div>
-      <div class="comp-score">${s}<span class="mx"> / ${c.max}</span></div>
-      <div class="comp-bar-wrap"><div class="comp-bar" style="width:${pct}%;background:${c.color}"></div></div>
-    </div>`;
-  }).join('');
+  // Breakdown
+  const maxBD = Math.max(totalMET, 600);
+  document.getElementById('breakdown-grid').innerHTML = `
+    <div class="bd-box">
+      <div class="bd-icon">🏃</div>
+      <div class="bd-name">نشاط مكثف</div>
+      <div class="bd-met">${vigMET}</div>
+      <div class="bd-min">MET-min/week</div>
+      <div class="bd-bar-wrap"><div class="bd-bar" style="width:${Math.min(100,vigMET/maxBD*100)}%;background:#C0392B"></div></div>
+    </div>
+    <div class="bd-box">
+      <div class="bd-icon">🚶</div>
+      <div class="bd-name">نشاط معتدل</div>
+      <div class="bd-met">${modMET}</div>
+      <div class="bd-min">MET-min/week</div>
+      <div class="bd-bar-wrap"><div class="bd-bar" style="width:${Math.min(100,modMET/maxBD*100)}%;background:${getComputedStyle(document.documentElement).getPropertyValue('--amber')||'#C07A00'}"></div></div>
+    </div>
+    <div class="bd-box">
+      <div class="bd-icon">👣</div>
+      <div class="bd-name">المشي</div>
+      <div class="bd-met">${walkMET}</div>
+      <div class="bd-min">MET-min/week</div>
+      <div class="bd-bar-wrap"><div class="bd-bar" style="width:${Math.min(100,walkMET/maxBD*100)}%;background:#1A7A4A"></div></div>
+    </div>
+  `;
 
   document.getElementById('recs-list').innerHTML = lvl.recs.map(r =>
     `<div class="rec-item"><div class="rec-icon">${r.i}</div><div class="rec-txt">${r.t}</div></div>`
@@ -604,9 +716,14 @@ function showResult() {
 }
 
 function resetAll() {
-  Object.keys(answers).forEach(k => delete answers[k]);
+  answered.clear();
+  vigMET = modMET = walkMET = 0;
+  vigMins = modMins = walkMins = 0;
   document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('input[type="number"]').forEach(i => i.value = '');
+  document.querySelectorAll('.sub-fields').forEach(s => s.classList.remove('show'));
   document.querySelectorAll('.q-card').forEach(c => { c.classList.remove('answered'); c.style.borderColor=''; });
+  ['vig_preview','mod_preview','walk_preview'].forEach(id => { document.getElementById(id).textContent=''; });
   document.getElementById('result-section').style.display = 'none';
   document.getElementById('form-section').style.display   = 'block';
   document.getElementById('warn-msg').classList.remove('show');
