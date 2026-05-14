@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقييم السلوك الخامل — SBQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --slate:#2C3E6B; --slate-mid:#3D5299; --slate-light:#6B80C4;
+  --slate-pale:#EEF1FA; --slate-glow:rgba(61,82,153,0.12);
+  --purple:#6B3FA0; --purple-pale:#F0EBF8;
+  --amber:#C07A00; --amber-pale:#FEF3E2;
+  --green:#1A7A4A; --green-pale:#E5F5EC;
+  --red:#B03A2E; --red-pale:#FDEDEC;
+  --ink:#1A2332; --ink-mid:#3D4F63; --ink-light:#6B7C93;
+  --border:#DDE4EC; --surface:#F6F8FA; --white:#fff;
+  --radius:14px; --radius-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Tajawal',sans-serif;background:#ECEEF5;color:var(--ink);min-height:100vh;direction:rtl;}
+.page{max-width:780px;margin:0 auto;padding:32px 16px 60px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#141E3C 0%,#2C3E6B 55%,#3D5299 100%);border-radius:20px;padding:36px 36px 32px;margin-bottom:28px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(20,30,60,0.35);}
+.hero::before{content:'';position:absolute;top:-60px;left:-40px;width:220px;height:220px;border:40px solid rgba(255,255,255,0.05);border-radius:50%;}
+.hero::after{content:'';position:absolute;bottom:-80px;right:-30px;width:260px;height:260px;border:50px solid rgba(255,255,255,0.04);border-radius:50%;}
+.hero-badge{display:inline-block;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.22);color:rgba(255,255,255,0.92);font-size:11px;font-weight:500;letter-spacing:2px;padding:4px 14px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;}
+.hero h1{font-size:26px;font-weight:800;color:#fff;line-height:1.35;margin-bottom:10px;position:relative;z-index:1;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.75;position:relative;z-index:1;}
+.hero-ref{display:inline-block;margin-top:14px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:7px 14px;font-size:12px;color:rgba(255,255,255,0.85);position:relative;z-index:1;}
+.hero-meta{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap;position:relative;z-index:1;}
+.hero-meta-item{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,0.82);}
+.hero-meta-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.45);flex-shrink:0;}
+
+/* KSA STAT BOX */
+.stat-box{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:24px;display:flex;gap:16px;align-items:center;}
+.stat-num{font-size:36px;font-weight:800;color:var(--red);flex-shrink:0;line-height:1;}
+.stat-txt{font-size:13px;color:var(--ink-mid);line-height:1.7;}
+.stat-txt strong{color:var(--ink);font-weight:600;}
+
+/* INTRO */
+.intro-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px 26px;margin-bottom:24px;}
+.intro-card h2{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.intro-card h2::before{content:'';width:4px;height:20px;background:var(--slate-mid);border-radius:2px;display:inline-block;flex-shrink:0;}
+.intro-card p{font-size:14px;color:var(--ink-mid);line-height:1.85;margin-bottom:10px;}
+.intro-card p:last-child{margin-bottom:0;}
+
+/* DOMAIN LEGEND */
+.domain-legend{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
+.dl-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;gap:10px;align-items:center;}
+.dl-icon{font-size:20px;flex-shrink:0;}
+.dl-txt{font-size:12px;color:var(--ink-mid);line-height:1.4;}
+.dl-txt strong{color:var(--ink);display:block;margin-bottom:2px;}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:24px;}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-size:12px;color:var(--ink-light);}
+.progress-count{font-size:13px;font-weight:700;color:var(--slate-mid);}
+.progress-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--slate) 0%,var(--slate-light) 100%);border-radius:3px;transition:width .4s ease;width:0%;}
+
+/* SEC DIVIDER */
+.sec-div{margin:24px 0 14px;display:flex;align-items:center;gap:12px;}
+.sec-div-line{flex:1;height:1px;background:var(--border);}
+.sec-div-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--ink-light);white-space:nowrap;padding:4px 12px;background:var(--surface);border:1px solid var(--border);border-radius:20px;}
+
+/* QUESTION CARD */
+.q-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
+.q-card.answered{border-color:var(--slate-light);box-shadow:0 2px 12px var(--slate-glow);}
+.q-num-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;}
+.q-num{width:28px;height:28px;background:var(--slate-pale);color:var(--slate);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:14.5px;font-weight:500;color:var(--ink);line-height:1.6;}
+.q-text .note{display:block;font-size:12px;font-weight:400;color:var(--ink-light);margin-top:4px;}
+.domain-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;margin-top:5px;letter-spacing:1px;background:var(--slate-pale);color:var(--slate);}
+
+/* TIME OPTIONS */
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;}
+.time-lbl{cursor:pointer;}
+.time-lbl input{display:none;}
+.time-btn{display:block;padding:8px 4px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'Tajawal',sans-serif;font-size:12px;color:var(--ink-mid);text-align:center;cursor:pointer;transition:all .15s;user-select:none;line-height:1.4;}
+.time-lbl input:checked + .time-btn{background:var(--slate-pale);border-color:var(--slate-light);color:var(--slate);font-weight:600;}
+.time-btn:hover{border-color:var(--slate-light);}
+
+/* WEEKEND TOGGLE */
+.day-toggle{display:flex;gap:6px;margin-bottom:14px;}
+.day-btn{padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface);font-family:'Tajawal',sans-serif;font-size:12px;color:var(--ink-mid);cursor:pointer;transition:all .15s;}
+.day-btn.active{background:var(--slate-pale);border-color:var(--slate-light);color:var(--slate);font-weight:600;}
+
+/* SUBMIT */
+.submit-wrap{text-align:center;margin-top:32px;}
+.submit-btn{display:inline-block;background:linear-gradient(135deg,#141E3C,#2C3E6B);color:#fff;font-family:'Tajawal',sans-serif;font-size:17px;font-weight:700;padding:16px 52px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(20,30,60,0.3);transition:all .2s;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(20,30,60,0.4);}
+.submit-note{font-size:13px;color:var(--ink-light);margin-top:10px;}
+.warn-msg{display:none;margin-top:14px;background:var(--amber-pale);border:1px solid #E8B060;border-radius:10px;padding:12px 16px;font-size:13px;color:#7A4800;}
+.warn-msg.show{display:block;}
+
+/* RESULT */
+#result-section{display:none;margin-top:28px;}
+.result-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.08);}
+.result-header{padding:32px 30px 26px;text-align:center;}
+
+/* CHAIR VISUAL */
+.chair-visual{margin:0 auto 20px;max-width:400px;}
+.chair-track{height:24px;border-radius:12px;background:linear-gradient(90deg,#1A7A4A 0%,#F1C40F 40%,#E67E22 65%,#C0392B 100%);position:relative;}
+.chair-needle{position:absolute;top:50%;transform:translate(-50%,-50%);width:4px;height:34px;background:var(--ink);border-radius:2px;transition:left .7s ease;}
+.chair-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink-light);margin-top:6px;}
+
+.sit-result-row{display:flex;justify-content:center;gap:20px;margin:16px 0;flex-wrap:wrap;}
+.sit-box{text-align:center;padding:12px 18px;border-radius:10px;border:1px solid var(--border);background:var(--surface);}
+.sit-val{font-size:28px;font-weight:800;line-height:1;}
+.sit-lbl{font-size:11px;color:var(--ink-light);margin-top:3px;}
+
+.result-level{font-size:20px;font-weight:800;margin:10px 0 8px;}
+.result-desc{font-size:14px;color:var(--ink-mid);line-height:1.75;max-width:500px;margin:0 auto;}
+.level-low .result-level{color:var(--green);}
+.level-mod .result-level{color:var(--amber);}
+.level-high .result-level{color:var(--red);}
+
+.result-body{padding:24px 28px 28px;border-top:1px solid var(--border);background:var(--surface);}
+
+/* DOMAIN BREAKDOWN */
+.domain-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.dom-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:13px 14px;}
+.dom-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.dom-icon{font-size:18px;}
+.dom-name{font-size:12px;font-weight:600;color:var(--ink-mid);}
+.dom-time{font-size:16px;font-weight:800;color:var(--ink);}
+.dom-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden;}
+.dom-bar{height:100%;border-radius:2px;background:var(--slate-mid);}
+.dom-bar.high-bar{background:var(--red);}
+.dom-bar.mod-bar{background:var(--amber);}
+
+.ksa-compare{background:var(--slate-pale);border:1px solid #B0BCE0;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:var(--slate);line-height:1.7;}
+.ksa-compare strong{color:var(--slate);}
+
+.recs-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;}
+.rec-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
+.rec-item:last-child{border-bottom:none;}
+.rec-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--slate-pale);}
+.rec-txt{font-size:13.5px;color:var(--ink-mid);line-height:1.6;flex:1;}
+.source-note{font-size:11px;color:var(--ink-light);margin-top:16px;padding-top:12px;border-top:1px solid var(--border);line-height:1.7;text-align:center;}
+.retry-btn{display:inline-block;margin-top:20px;background:#fff;color:var(--slate);border:1.5px solid var(--slate-light);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:600;padding:10px 28px;border-radius:10px;cursor:pointer;transition:all .18s;}
+.retry-btn:hover{background:var(--slate-pale);}
+
+@media(max-width:600px){
+  .hero{padding:28px 22px 24px;} .hero h1{font-size:21px;}
+  .time-grid{grid-template-columns:repeat(3,1fr);}
+  .domain-grid{grid-template-columns:1fr;}
+  .domain-legend{grid-template-columns:1fr;}
+  .page{padding:20px 12px 48px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">أداة تقييم علمية · SBQ — Sedentary Behavior Questionnaire</div>
+  <h1>تقييم السلوك الخامل — وقت الجلوس اليومي</h1>
+  <p class="hero-sub">الجلوس المطوّل خطر صحي مستقل حتى لو كنت تمارس الرياضة يومياً. هذه الأداة تُفصّل أين تقضي وقتك جالساً عبر تسعة سياقات مختلفة في حياتك اليومية</p>
+  <div class="hero-ref">Rosenberg DE et al. · Journal of Physical Activity and Health 2010 · University of California San Diego</div>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="dot"></div>9 سلوكيات خاملة</div>
+    <div class="hero-meta-item"><div class="dot"></div>أيام العمل والإجازة</div>
+    <div class="hero-meta-item"><div class="dot"></div>يحسب ساعات الخمول</div>
+    <div class="hero-meta-item"><div class="dot"></div>5–7 دقائق</div>
+  </div>
+</div>
+
+<!-- KSA STAT -->
+<div class="stat-box">
+  <div class="stat-num">9.56</div>
+  <div class="stat-txt">
+    <strong>ساعة جلوس يومياً — المتوسط السعودي</strong>
+    المسح الوطني السعودي 2019 (أكثر من 9000 أسرة) — المملكة العربية السعودية من أعلى الدول في معدلات السلوك الخامل عالمياً. أين أنت من هذا المتوسط؟
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="intro-card">
+  <h2>لماذا نقيس الجلوس بشكل مستقل؟</h2>
+  <p>الشخص الذي يتمرن ساعة يومياً لكنه يجلس 10 ساعات يبقى أمامه مخاطر صحية مرتبطة بالجلوس تحديداً — رفع ضغط الدم، السكري، أمراض القلب، آلام الظهر، وتراجع الصحة النفسية. الحل ليس التمرين أكثر بل مقاطعة الجلوس بانتظام.</p>
+  <p>أجب بصدق عن <strong>يوم عمل عادي</strong> ثم <strong>يوم إجازة عادي</strong> — الفرق بينهما مهم.</p>
+  <div class="domain-legend">
+    <div class="dl-item"><div class="dl-icon">📺</div><div class="dl-txt"><strong>وقت الشاشة</strong>تلفاز، كمبيوتر، ألعاب</div></div>
+    <div class="dl-item"><div class="dl-icon">🚗</div><div class="dl-txt"><strong>التنقل</strong>سيارة، حافلة، مترو</div></div>
+    <div class="dl-item"><div class="dl-icon">💼</div><div class="dl-txt"><strong>العمل</strong>مكتب، اجتماعات، دراسة</div></div>
+    <div class="dl-item"><div class="dl-icon">📱</div><div class="dl-txt"><strong>الترفيه</strong>هاتف، قراءة، موسيقى</div></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-top">
+    <span class="progress-label">تقدم التقييم</span>
+    <span class="progress-count" id="prog-count">0 / 9</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- DAY TYPE TOGGLE -->
+<div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;">
+  <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:10px;">أجب أولاً عن:</div>
+  <div class="day-toggle">
+    <button class="day-btn active" id="btn-work" onclick="setDay('work')">📅 يوم عمل عادي</button>
+    <button class="day-btn" id="btn-rest" onclick="setDay('rest')">🏖️ يوم إجازة عادي</button>
+  </div>
+  <div style="font-size:12px;color:var(--ink-light);" id="day-hint">أجب الآن عن يوم عملك العادي</div>
+</div>
+
+<!-- FORM -->
+<div id="form-section">
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">وقت الشاشة — Screen Time</div><div class="sec-div-line"></div></div>
+
+  <!-- Q1 TV -->
+  <div class="q-card" id="qc1">
+    <div class="q-num-row"><div class="q-num">١</div>
+      <div class="q-text">مشاهدة التلفاز أو الفيديو
+        <span class="note">يشمل: التلفاز التقليدي، Netflix، YouTube، البث المباشر — أي محتوى مرئي وأنت جالس</span>
+        <span class="domain-tag">📺 وقت الشاشة</span>
+      </div>
+    </div>
+    <div class="time-grid">
+      <label class="time-lbl"><input type="radio" name="q1" value="0" onchange="pick('q1',0)"><span class="time-btn">لا شيء</span></label>
+      <label class="time-lbl"><input type="radio" name="q1" value="0.25" onchange="pick('q1',0.25)"><span class="time-btn">15 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q1" value="0.5" onchange="pick('q1',0.5)"><span class="time-btn">30 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q1" value="1" onchange="pick('q1',1)"><span class="time-btn">ساعة</span></label>
+      <label class="time-lbl"><input type="radio" name="q1" value="2" onchange="pick('q1',2)"><span class="time-btn">ساعتان</span></label>
+      <label class="time-lbl"><input type="radio" name="q1" value="3" onchange="pick('q1',3)"><span class="time-btn">3 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q1" value="4" onchange="pick('q1',4)"><span class="time-btn">4 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q1" value="6" onchange="pick('q1',6)"><span class="time-btn">6+ ساعات</span></label>
+    </div>
+  </div>
+
+  <!-- Q2 COMPUTER GAMES -->
+  <div class="q-card" id="qc2">
+    <div class="q-num-row"><div class="q-num">٢</div>
+      <div class="q-text">ألعاب الكمبيوتر أو الجوال أو الألعاب الإلكترونية
+        <span class="note">PlayStation، Xbox، ألعاب الجوال، ألعاب الكمبيوتر — أي لعبة إلكترونية وأنت جالس أو مستلقٍ</span>
+        <span class="domain-tag">🎮 ألعاب إلكترونية</span>
+      </div>
+    </div>
+    <div class="time-grid">
+      <label class="time-lbl"><input type="radio" name="q2" value="0" onchange="pick('q2',0)"><span class="time-btn">لا شيء</span></label>
+      <label class="time-lbl"><input type="radio" name="q2" value="0.25" onchange="pick('q2',0.25)"><span class="time-btn">15 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q2" value="0.5" onchange="pick('q2',0.5)"><span class="time-btn">30 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q2" value="1" onchange="pick('q2',1)"><span class="time-btn">ساعة</span></label>
+      <label class="time-lbl"><input type="radio" name="q2" value="2" onchange="pick('q2',2)"><span class="time-btn">ساعتان</span></label>
+      <label class="time-lbl"><input type="radio" name="q2" value="3" onchange="pick('q2',3)"><span class="time-btn">3 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q2" value="4" onchange="pick('q2',4)"><span class="time-btn">4 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q2" value="6" onchange="pick('q2',6)"><span class="time-btn">6+ ساعات</span></label>
+    </div>
+  </div>
+
+  <!-- Q3 COMPUTER WORK -->
+  <div class="q-card" id="qc3">
+    <div class="q-num-row"><div class="q-num">٣</div>
+      <div class="q-text">العمل أو الدراسة على الكمبيوتر أو الجوال
+        <span class="note">العمل المكتبي، البريد الإلكتروني، الدراسة، تصفح الإنترنت، وسائل التواصل الاجتماعي — كل استخدام للشاشة لأغراض غير الترفيه والألعاب</span>
+        <span class="domain-tag">💼 عمل ودراسة</span>
+      </div>
+    </div>
+    <div class="time-grid">
+      <label class="time-lbl"><input type="radio" name="q3" value="0" onchange="pick('q3',0)"><span class="time-btn">لا شيء</span></label>
+      <label class="time-lbl"><input type="radio" name="q3" value="0.25" onchange="pick('q3',0.25)"><span class="time-btn">15 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q3" value="0.5" onchange="pick('q3',0.5)"><span class="time-btn">30 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q3" value="1" onchange="pick('q3',1)"><span class="time-btn">ساعة</span></label>
+      <label class="time-lbl"><input type="radio" name="q3" value="2" onchange="pick('q3',2)"><span class="time-btn">ساعتان</span></label>
+      <label class="time-lbl"><input type="radio" name="q3" value="3" onchange="pick('q3',3)"><span class="time-btn">3 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q3" value="4" onchange="pick('q3',4)"><span class="time-btn">4 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q3" value="6" onchange="pick('q3',6)"><span class="time-btn">6+ ساعات</span></label>
+    </div>
+  </div>
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">التنقل والجلوس في وسائل النقل</div><div class="sec-div-line"></div></div>
+
+  <!-- Q4 TRANSPORT -->
+  <div class="q-card" id="qc4">
+    <div class="q-num-row"><div class="q-num">٤</div>
+      <div class="q-text">الجلوس في وسائل النقل — السيارة، الحافلة، الطائرة
+        <span class="note">وقت القيادة + وقت الركوب كراكب — ذهاباً وإياباً مجتمعَين</span>
+        <span class="domain-tag">🚗 تنقل</span>
+      </div>
+    </div>
+    <div class="time-grid">
+      <label class="time-lbl"><input type="radio" name="q4" value="0" onchange="pick('q4',0)"><span class="time-btn">لا شيء</span></label>
+      <label class="time-lbl"><input type="radio" name="q4" value="0.25" onchange="pick('q4',0.25)"><span class="time-btn">15 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q4" value="0.5" onchange="pick('q4',0.5)"><span class="time-btn">30 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q4" value="1" onchange="pick('q4',1)"><span class="time-btn">ساعة</span></label>
+      <label class="time-lbl"><input type="radio" name="q4" value="2" onchange="pick('q4',2)"><span class="time-btn">ساعتان</span></label>
+      <label class="time-lbl"><input type="radio" name="q4" value="3" onchange="pick('q4',3)"><span class="time-btn">3 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q4" value="4" onchange="pick('q4',4)"><span class="time-btn">4 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q4" value="6" onchange="pick('q4',6)"><span class="time-btn">6+ ساعات</span></label>
+    </div>
+  </div>
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">الترفيه والاسترخاء</div><div class="sec-div-line"></div></div>
+
+  <!-- Q5 PHONE MUSIC -->
+  <div class="q-card" id="qc5">
+    <div class="q-num-row"><div class="q-num">٥</div>
+      <div class="q-text">الجلوس أثناء الاستماع للموسيقى أو البودكاست أو المكالمات الصوتية
+        <span class="note">الاستماع للموسيقى جالساً، البودكاست، المكالمات الهاتفية وأنت جالس أو مستلقٍ</span>
+        <span class="domain-tag">🎧 استماع وترفيه</span>
+      </div>
+    </div>
+    <div class="time-grid">
+      <label class="time-lbl"><input type="radio" name="q5" value="0" onchange="pick('q5',0)"><span class="time-btn">لا شيء</span></label>
+      <label class="time-lbl"><input type="radio" name="q5" value="0.25" onchange="pick('q5',0.25)"><span class="time-btn">15 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q5" value="0.5" onchange="pick('q5',0.5)"><span class="time-btn">30 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q5" value="1" onchange="pick('q5',1)"><span class="time-btn">ساعة</span></label>
+      <label class="time-lbl"><input type="radio" name="q5" value="2" onchange="pick('q5',2)"><span class="time-btn">ساعتان</span></label>
+      <label class="time-lbl"><input type="radio" name="q5" value="3" onchange="pick('q5',3)"><span class="time-btn">3 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q5" value="4" onchange="pick('q5',4)"><span class="time-btn">4 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q5" value="6" onchange="pick('q5',6)"><span class="time-btn">6+ ساعات</span></label>
+    </div>
+  </div>
+
+  <!-- Q6 READING -->
+  <div class="q-card" id="qc6">
+    <div class="q-num-row"><div class="q-num">٦</div>
+      <div class="q-text">القراءة جالساً — كتب، مجلات، أخبار
+        <span class="note">قراءة الكتب الورقية والإلكترونية، المجلات، الصحف، الأخبار — بشكل ساكن دون حركة</span>
+        <span class="domain-tag">📚 قراءة</span>
+      </div>
+    </div>
+    <div class="time-grid">
+      <label class="time-lbl"><input type="radio" name="q6" value="0" onchange="pick('q6',0)"><span class="time-btn">لا شيء</span></label>
+      <label class="time-lbl"><input type="radio" name="q6" value="0.25" onchange="pick('q6',0.25)"><span class="time-btn">15 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q6" value="0.5" onchange="pick('q6',0.5)"><span class="time-btn">30 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q6" value="1" onchange="pick('q6',1)"><span class="time-btn">ساعة</span></label>
+      <label class="time-lbl"><input type="radio" name="q6" value="2" onchange="pick('q6',2)"><span class="time-btn">ساعتان</span></label>
+      <label class="time-lbl"><input type="radio" name="q6" value="3" onchange="pick('q6',3)"><span class="time-btn">3 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q6" value="4" onchange="pick('q6',4)"><span class="time-btn">4 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q6" value="6" onchange="pick('q6',6)"><span class="time-btn">6+ ساعات</span></label>
+    </div>
+  </div>
+
+  <!-- Q7 SOCIAL SITTING -->
+  <div class="q-card" id="qc7">
+    <div class="q-num-row"><div class="q-num">٧</div>
+      <div class="q-text">الجلوس الاجتماعي — جلسات، زيارات، مطاعم
+        <span class="note">الجلوس مع العائلة أو الأصدقاء، الزيارات الاجتماعية، الجلوس في المطاعم والكافيهات، الاجتماعات غير الرسمية</span>
+        <span class="domain-tag">👥 تواصل اجتماعي</span>
+      </div>
+    </div>
+    <div class="time-grid">
+      <label class="time-lbl"><input type="radio" name="q7" value="0" onchange="pick('q7',0)"><span class="time-btn">لا شيء</span></label>
+      <label class="time-lbl"><input type="radio" name="q7" value="0.25" onchange="pick('q7',0.25)"><span class="time-btn">15 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q7" value="0.5" onchange="pick('q7',0.5)"><span class="time-btn">30 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q7" value="1" onchange="pick('q7',1)"><span class="time-btn">ساعة</span></label>
+      <label class="time-lbl"><input type="radio" name="q7" value="2" onchange="pick('q7',2)"><span class="time-btn">ساعتان</span></label>
+      <label class="time-lbl"><input type="radio" name="q7" value="3" onchange="pick('q7',3)"><span class="time-btn">3 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q7" value="4" onchange="pick('q7',4)"><span class="time-btn">4 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q7" value="6" onchange="pick('q7',6)"><span class="time-btn">6+ ساعات</span></label>
+    </div>
+  </div>
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">نمط الجلوس في العمل والدراسة</div><div class="sec-div-line"></div></div>
+
+  <!-- Q8 DESK WORK -->
+  <div class="q-card" id="qc8">
+    <div class="q-num-row"><div class="q-num">٨</div>
+      <div class="q-text">العمل المكتبي والدراسة الأكاديمية جالساً
+        <span class="note">الكتابة، المحاضرات، الاجتماعات الرسمية، الدراسة على الطاولة — النشاط المهني والأكاديمي الساكن</span>
+        <span class="domain-tag">🏢 عمل مكتبي</span>
+      </div>
+    </div>
+    <div class="time-grid">
+      <label class="time-lbl"><input type="radio" name="q8" value="0" onchange="pick('q8',0)"><span class="time-btn">لا شيء</span></label>
+      <label class="time-lbl"><input type="radio" name="q8" value="0.25" onchange="pick('q8',0.25)"><span class="time-btn">15 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q8" value="0.5" onchange="pick('q8',0.5)"><span class="time-btn">30 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q8" value="1" onchange="pick('q8',1)"><span class="time-btn">ساعة</span></label>
+      <label class="time-lbl"><input type="radio" name="q8" value="2" onchange="pick('q8',2)"><span class="time-btn">ساعتان</span></label>
+      <label class="time-lbl"><input type="radio" name="q8" value="3" onchange="pick('q8',3)"><span class="time-btn">3 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q8" value="4" onchange="pick('q8',4)"><span class="time-btn">4 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q8" value="6" onchange="pick('q8',6)"><span class="time-btn">6+ ساعات</span></label>
+    </div>
+  </div>
+
+  <!-- Q9 EATING SITTING -->
+  <div class="q-card" id="qc9">
+    <div class="q-num-row"><div class="q-num">٩</div>
+      <div class="q-text">الجلوس أثناء تناول الطعام والشراب
+        <span class="note">وقت الوجبات الثلاث مجتمعاً — الإفطار والغداء والعشاء — جالساً على الطاولة أو الأريكة أو السيارة</span>
+        <span class="domain-tag">🍽️ وجبات</span>
+      </div>
+    </div>
+    <div class="time-grid">
+      <label class="time-lbl"><input type="radio" name="q9" value="0" onchange="pick('q9',0)"><span class="time-btn">لا شيء</span></label>
+      <label class="time-lbl"><input type="radio" name="q9" value="0.25" onchange="pick('q9',0.25)"><span class="time-btn">15 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q9" value="0.5" onchange="pick('q9',0.5)"><span class="time-btn">30 دقيقة</span></label>
+      <label class="time-lbl"><input type="radio" name="q9" value="1" onchange="pick('q9',1)"><span class="time-btn">ساعة</span></label>
+      <label class="time-lbl"><input type="radio" name="q9" value="2" onchange="pick('q9',2)"><span class="time-btn">ساعتان</span></label>
+      <label class="time-lbl"><input type="radio" name="q9" value="3" onchange="pick('q9',3)"><span class="time-btn">3 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q9" value="4" onchange="pick('q9',4)"><span class="time-btn">4 ساعات</span></label>
+      <label class="time-lbl"><input type="radio" name="q9" value="6" onchange="pick('q9',6)"><span class="time-btn">6+ ساعات</span></label>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <button class="submit-btn" onclick="showResult()">احسب وقت جلوسي</button>
+    <p class="submit-note" id="submit-note">أجب على جميع الأسئلة ثم اضغط الزر</p>
+    <div class="warn-msg" id="warn-msg">⚠️ يرجى الإجابة على جميع الأسئلة</div>
+  </div>
+
+</div>
+
+<!-- RESULT -->
+<div id="result-section">
+  <div class="result-card">
+    <div class="result-header" id="result-header">
+
+      <!-- CHAIR VISUAL -->
+      <div class="chair-visual">
+        <div class="chair-track">
+          <div class="chair-needle" id="chair-needle" style="left:0%"></div>
+        </div>
+        <div class="chair-labels">
+          <span style="color:var(--green);">نشيط (4h أو أقل)</span>
+          <span style="color:var(--amber);">متوسط (6h)</span>
+          <span style="color:var(--red);">خامل (8h+)</span>
+        </div>
+      </div>
+
+      <div class="sit-result-row">
+        <div class="sit-box">
+          <div class="sit-val" id="total-hrs" style="color:var(--slate-mid)">0</div>
+          <div class="sit-lbl">ساعة جلوس / يوم</div>
+        </div>
+        <div class="sit-box">
+          <div class="sit-val" id="screen-hrs">0</div>
+          <div class="sit-lbl">ساعة شاشة / يوم</div>
+        </div>
+        <div class="sit-box">
+          <div class="sit-val" id="ksa-diff">—</div>
+          <div class="sit-lbl">مقارنة بالمتوسط السعودي</div>
+        </div>
+      </div>
+
+      <div class="result-level" id="result-level"></div>
+      <p class="result-desc" id="result-desc"></p>
+      <button class="retry-btn" onclick="resetAll()">إعادة التقييم</button>
+    </div>
+
+    <div class="result-body">
+      <div class="ksa-compare" id="ksa-compare"></div>
+      <div class="domain-grid" id="domain-grid"></div>
+      <div class="recs-title">توصيات لتقليل السلوك الخامل</div>
+      <div id="recs-list"></div>
+      <div class="source-note">
+        مبني على استبيان السلوك الخامل (SBQ) — Rosenberg et al. 2010<br>
+        المرجع: Rosenberg DE et al. <em>Journal of Physical Activity and Health</em> 2010;7(6):697–705<br>
+        بيانات السعودية: المسح الوطني السعودي 2019 · <em>An Arabic Sedentary Behaviors Questionnaire (ASBQ)</em> · PMC9220100<br>
+        <strong>ملاحظة:</strong> يعتمد هذا التقييم على التقدير الذاتي — الأجهزة الوُصفية أكثر دقة للقياس الموضوعي.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const answers = {};
+const domains = [
+  { key:'q1', icon:'📺', name:'التلفاز والفيديو' },
+  { key:'q2', icon:'🎮', name:'الألعاب الإلكترونية' },
+  { key:'q3', icon:'💼', name:'العمل والدراسة على الشاشة' },
+  { key:'q4', icon:'🚗', name:'التنقل بالمركبات' },
+  { key:'q5', icon:'🎧', name:'الاستماع والمكالمات' },
+  { key:'q6', icon:'📚', name:'القراءة' },
+  { key:'q7', icon:'👥', name:'الجلوس الاجتماعي' },
+  { key:'q8', icon:'🏢', name:'العمل المكتبي' },
+  { key:'q9', icon:'🍽️', name:'وقت الوجبات' },
+];
+
+function pick(name, val) {
+  answers[name] = parseFloat(val);
+  const idx = name.replace('q','');
+  const card = document.getElementById('qc' + idx);
+  if (card) { card.classList.add('answered'); card.style.borderColor = ''; }
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = Object.keys(answers).length;
+  const pct  = Math.round((done / 9) * 100);
+  document.getElementById('prog-count').textContent = done + ' / 9';
+  document.getElementById('prog-fill').style.width  = pct + '%';
+  document.getElementById('submit-note').textContent =
+    done === 9 ? '✅ جميع الأسئلة مكتملة — اضغط لعرض نتيجتك' : (9 - done) + ' سؤال متبقي';
+}
+
+function setDay(type) {
+  document.getElementById('btn-work').classList.toggle('active', type === 'work');
+  document.getElementById('btn-rest').classList.toggle('active', type === 'rest');
+  document.getElementById('day-hint').textContent =
+    type === 'work' ? 'أجب الآن عن يوم عملك العادي' : 'أجب الآن عن يوم إجازتك العادي';
+}
+
+function showResult() {
+  const missing = Object.keys(answers).length < 9;
+  if (missing) {
+    document.getElementById('warn-msg').classList.add('show');
+    for (let i = 1; i <= 9; i++) {
+      if (answers['q' + i] === undefined) {
+        const c = document.getElementById('qc' + i);
+        if (c) { c.style.borderColor = '#E8A020'; c.scrollIntoView({behavior:'smooth',block:'center'}); }
+        break;
+      }
+    }
+    return;
+  }
+
+  let total = 0;
+  domains.forEach(d => { total += answers[d.key] || 0; });
+  const screenHrs = (answers.q1||0) + (answers.q2||0) + (answers.q3||0);
+  const ksaAvg    = 9.56;
+  const diff      = Math.round((total - ksaAvg) * 10) / 10;
+  const diffTxt   = diff > 0 ? '+' + diff + 'h أعلى' : diff < 0 ? Math.abs(diff) + 'h أقل' : 'مساوٍ';
+
+  // Needle (0-16h range)
+  const needlePct = Math.min(98, Math.max(2, (total / 16) * 100));
+  document.getElementById('chair-needle').style.left = needlePct + '%';
+
+  document.getElementById('total-hrs').textContent = total;
+  document.getElementById('total-hrs').style.color = total >= 8 ? 'var(--red)' : total >= 6 ? 'var(--amber)' : 'var(--green)';
+  document.getElementById('screen-hrs').textContent = Math.round(screenHrs * 10) / 10;
+  document.getElementById('ksa-diff').textContent   = diffTxt;
+  document.getElementById('ksa-diff').style.color   = diff > 0 ? 'var(--red)' : 'var(--green)';
+
+  let lvl;
+  if (total <= 4) lvl = {
+    cls:'level-low', level:'سلوك خامل منخفض — ممتاز',
+    desc:'وقت جلوسك اليومي ضمن النطاق الصحي. هذا يعني أنك تتحرك بشكل كافٍ عبر اليوم حتى في غياب التمرين المنظم.',
+    recs:[
+      {i:'⏰',t:'حافظ على مقاطعة الجلوس كل 30–45 دقيقة بالوقوف أو المشي قصير'},
+      {i:'📺',t:'وقت الشاشة لديك ' + Math.round(screenHrs*10)/10 + ' ساعات — ' + (screenHrs <= 2 ? 'ممتاز' : 'يمكن تقليله أكثر')},
+      {i:'💡',t:'فكر في مكتب قابل للرفع (Standing Desk) إذا كان عملك مكتبياً — يصنع فرقاً كبيراً على المدى البعيد'},
+    ]
+  };
+  else if (total <= 7) lvl = {
+    cls:'level-mod', level:'سلوك خامل متوسط — يحتاج انتباهاً',
+    desc:'وقت جلوسك مقبول لكن يمكن تحسينه. التوصيات تشير إلى أن تقليل الجلوس لـ 4 ساعات يومياً يُحسّن المؤشرات الأيضية.',
+    recs:[
+      {i:'⏱️',t:'ضع منبهاً كل 30 دقيقة للوقوف والمشي دقيقتين — هذا وحده يكسر تأثير الجلوس المطوّل'},
+      {i:'📱',t:'حوّل بعض مكالماتك الهاتفية إلى مكالمات أثناء المشي — تقلل الجلوس دون مجهود إضافي'},
+      {i:'🚗',t:'وقت تنقلك ' + (answers.q4||0) + ' ساعات — انظر إمكانية المشي أو استخدام التنقل النشط لجزء من الطريق'},
+    ]
+  };
+  else lvl = {
+    cls:'level-high', level:'سلوك خامل مرتفع — يستوجب تغييراً',
+    desc:'وقت جلوسك يتجاوز الحد الصحي. الدراسات تُظهر أن الجلوس أكثر من 8 ساعات يومياً يرفع خطر الوفاة المبكرة بنسبة 10–20% حتى مع ممارسة الرياضة.',
+    recs:[
+      {i:'🎯',t:'الهدف الأول: تقليل الجلوس بـ ساعة واحدة يومياً — اختر أكبر مصدر وقلّصه'},
+      {i:'📺',t:'وقت الشاشة الترفيهية لديك ' + (answers.q1||0) + ' ساعات تلفاز + ' + (answers.q2||0) + ' ألعاب — هذا أسهل ما يمكن تقليله'},
+      {i:'🚶',t:'قف وامشِ 2–3 دقائق كل 30 دقيقة — حتى هذا القدر الصغير يُحسّن وظيفة الأوعية الدموية'},
+      {i:'🏢',t:'اطلب اجتماعات المشي بدلاً من الجلوس — أو استخدم مكتباً واقفاً بعض الوقت'},
+      {i:'🩺',t:'اقرأ بصوت عالٍ أو تحدث في الهاتف أثناء الوقوف — أصغر تغيير يبدأ العادة'},
+    ]
+  };
+
+  document.getElementById('result-header').className = 'result-header ' + lvl.cls;
+  document.getElementById('result-level').textContent = lvl.level;
+  document.getElementById('result-desc').textContent  = lvl.desc;
+
+  // KSA compare
+  document.getElementById('ksa-compare').innerHTML =
+    `<strong>مقارنتك بالمتوسط السعودي:</strong> أنت تجلس <strong>${total} ساعة</strong> يومياً — المتوسط الوطني <strong>9.56 ساعة</strong> (المسح الوطني 2019). ${diff > 0 ? 'أنت أعلى من المتوسط بـ ' + Math.abs(diff) + ' ساعة.' : diff < 0 ? 'أنت أقل من المتوسط بـ ' + Math.abs(diff) + ' ساعة — إيجابي.' : 'أنت مساوٍ للمتوسط الوطني.'}`;
+
+  // Domain breakdown
+  const maxDom = Math.max(...domains.map(d => answers[d.key] || 0), 1);
+  document.getElementById('domain-grid').innerHTML = domains.map(d => {
+    const h   = answers[d.key] || 0;
+    const pct = Math.round((h / maxDom) * 100);
+    const barCls = h >= 4 ? 'high-bar' : h >= 2 ? 'mod-bar' : '';
+    return `<div class="dom-box">
+      <div class="dom-header"><div class="dom-icon">${d.icon}</div><div class="dom-name">${d.name}</div></div>
+      <div class="dom-time">${h} <span style="font-size:12px;font-weight:400;color:var(--ink-light)">ساعة</span></div>
+      <div class="dom-bar-wrap"><div class="dom-bar ${barCls}" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('recs-list').innerHTML = lvl.recs.map(r =>
+    `<div class="rec-item"><div class="rec-icon">${r.i}</div><div class="rec-txt">${r.t}</div></div>`
+  ).join('');
+
+  document.getElementById('form-section').style.display   = 'none';
+  document.getElementById('result-section').style.display = 'block';
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function resetAll() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.q-card').forEach(c => { c.classList.remove('answered'); c.style.borderColor=''; });
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('form-section').style.display   = 'block';
+  document.getElementById('warn-msg').classList.remove('show');
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+updateProgress();
+</script>
+</body>
+</html>
