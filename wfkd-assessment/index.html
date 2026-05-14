@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقييم النظام الكيتوني المتكامل — WFKD</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:#B85C00; --orange-mid:#D4720A; --orange-light:#F0900A;
+  --orange-pale:#FEF3E2; --orange-glow:rgba(212,114,10,0.12);
+  --purple:#5B2D8E; --purple-pale:#F3EEF9;
+  --green:#1A6B4A; --green-pale:#E8F5EE;
+  --red:#B03A2E; --red-pale:#FDEDEC;
+  --blue:#1A5276; --blue-pale:#EAF4FB;
+  --ink:#1A2332; --ink-mid:#3D4F63; --ink-light:#6B7C93;
+  --border:#DDE4EC; --surface:#F6F8FA; --white:#fff;
+  --radius:14px; --radius-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Tajawal',sans-serif;background:#F5F0E8;color:var(--ink);min-height:100vh;direction:rtl;}
+.page{max-width:780px;margin:0 auto;padding:32px 16px 60px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#7A3800 0%,#B85C00 55%,#D4720A 100%);border-radius:20px;padding:36px 36px 32px;margin-bottom:28px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(120,56,0,0.32);}
+.hero::before{content:'';position:absolute;top:-60px;left:-40px;width:220px;height:220px;border:40px solid rgba(255,255,255,0.06);border-radius:50%;}
+.hero::after{content:'';position:absolute;bottom:-80px;right:-30px;width:260px;height:260px;border:50px solid rgba(255,255,255,0.04);border-radius:50%;}
+.hero-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.92);font-size:11px;font-weight:500;letter-spacing:2px;padding:4px 14px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;}
+.hero h1{font-size:26px;font-weight:800;color:#fff;line-height:1.35;margin-bottom:10px;position:relative;z-index:1;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.75;position:relative;z-index:1;}
+.hero-authors{display:flex;gap:14px;margin-top:18px;flex-wrap:wrap;position:relative;z-index:1;}
+.author-pill{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:7px 14px;font-size:12px;color:rgba(255,255,255,0.9);}
+.author-pill strong{display:block;font-size:13px;color:#fff;}
+.hero-meta{display:flex;gap:20px;margin-top:16px;flex-wrap:wrap;position:relative;z-index:1;}
+.hero-meta-item{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,0.8);}
+.hero-meta-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.5);flex-shrink:0;}
+
+/* INTRO */
+.intro-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px 26px;margin-bottom:24px;}
+.intro-card h2{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.intro-card h2::before{content:'';width:4px;height:20px;background:var(--orange-mid);border-radius:2px;display:inline-block;flex-shrink:0;}
+.intro-card p{font-size:14px;color:var(--ink-mid);line-height:1.85;margin-bottom:10px;}
+.intro-card p:last-child{margin-bottom:0;}
+
+/* SCALES LEGEND */
+.scale-legend{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.scale-pill{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 14px;flex:1;min-width:130px;}
+.scale-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.scale-txt{font-size:12px;color:var(--ink-mid);line-height:1.4;}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:24px;}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-size:12px;color:var(--ink-light);}
+.progress-count{font-size:13px;font-weight:700;color:var(--orange-mid);}
+.progress-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--orange) 0%,var(--orange-light) 100%);border-radius:3px;transition:width .4s ease;width:0%;}
+
+/* SEC DIVIDER */
+.sec-div{margin:24px 0 16px;display:flex;align-items:center;gap:12px;}
+.sec-div-line{flex:1;height:1px;background:var(--border);}
+.sec-div-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--ink-light);white-space:nowrap;padding:4px 12px;background:var(--surface);border:1px solid var(--border);border-radius:20px;}
+
+/* QUESTION CARD */
+.q-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
+.q-card.answered{border-color:var(--orange-light);box-shadow:0 2px 12px var(--orange-glow);}
+.q-num-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;}
+.q-num{width:28px;height:28px;background:var(--orange-pale);color:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:14.5px;font-weight:500;color:var(--ink);line-height:1.6;}
+.q-text .note{display:block;font-size:12px;font-weight:400;color:var(--ink-light);margin-top:4px;}
+.q-text .criterion{display:inline-block;margin-top:6px;background:var(--orange-pale);color:var(--orange);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;}
+
+/* OPTIONS 3-POINT */
+.options{display:flex;gap:8px;flex-wrap:wrap;}
+.opt-lbl{flex:1;min-width:120px;cursor:pointer;}
+.opt-lbl input[type="radio"]{display:none;}
+.opt-btn{display:block;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'Tajawal',sans-serif;font-size:13px;font-weight:400;color:var(--ink-mid);text-align:center;cursor:pointer;transition:all .18s;line-height:1.4;user-select:none;}
+.opt-lbl input:checked + .opt-btn{background:var(--orange-pale);border-color:var(--orange-light);color:var(--orange);font-weight:600;}
+.opt-btn:hover{border-color:var(--orange-light);background:#fff8f0;}
+
+/* YES/NO */
+.opts-yn{display:flex;gap:10px;}
+.opt-yn{flex:1;cursor:pointer;}
+.opt-yn input[type="radio"]{display:none;}
+.opt-yn-btn{display:block;padding:12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:500;color:var(--ink-mid);text-align:center;cursor:pointer;transition:all .18s;user-select:none;}
+.opt-yn input:checked + .opt-yn-btn.yes-btn{background:var(--green-pale);border-color:#4CAF7D;color:var(--green);font-weight:700;}
+.opt-yn input:checked + .opt-yn-btn.no-btn{background:var(--red-pale);border-color:#E07060;color:var(--red);font-weight:700;}
+.opt-yn-btn:hover{border-color:var(--orange-light);background:#fff8f0;}
+
+/* SUBMIT */
+.submit-wrap{text-align:center;margin-top:32px;}
+.submit-btn{display:inline-block;background:linear-gradient(135deg,#7A3800,#B85C00);color:#fff;font-family:'Tajawal',sans-serif;font-size:17px;font-weight:700;padding:16px 52px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(120,56,0,0.3);transition:all .2s;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(120,56,0,0.4);}
+.submit-note{font-size:13px;color:var(--ink-light);margin-top:10px;}
+.warn-msg{display:none;margin-top:14px;background:#FEF3E2;border:1px solid #E8A020;border-radius:10px;padding:12px 16px;font-size:13px;color:#7A4800;}
+.warn-msg.show{display:block;}
+
+/* RESULT */
+#result-section{display:none;margin-top:28px;}
+.result-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.08);}
+.result-header{padding:32px 30px 26px;text-align:center;}
+.score-circle{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 18px;border:4px solid currentColor;}
+.score-num{font-size:40px;font-weight:800;line-height:1;}
+.score-max{font-size:13px;font-weight:400;opacity:.7;margin-top:2px;}
+.result-level{font-size:20px;font-weight:800;margin-bottom:8px;}
+.result-desc{font-size:14px;color:var(--ink-mid);line-height:1.75;max-width:500px;margin:0 auto;}
+
+.level-optimal .score-circle{color:var(--green);background:var(--green-pale);}
+.level-optimal .result-level{color:var(--green);}
+.level-good .score-circle{color:var(--orange);background:var(--orange-pale);}
+.level-good .result-level{color:var(--orange);}
+.level-partial .score-circle{color:#1565C0;background:#E3F2FD;}
+.level-partial .result-level{color:#1565C0;}
+.level-low .score-circle{color:var(--red);background:var(--red-pale);}
+.level-low .result-level{color:var(--red);}
+
+.result-body{padding:24px 28px 28px;border-top:1px solid var(--border);background:var(--surface);}
+
+/* PILLAR BARS */
+.pillars-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.pillar-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;}
+.pillar-name{font-size:11px;font-weight:700;color:var(--ink-light);margin-bottom:6px;}
+.pillar-score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.pillar-score{font-size:18px;font-weight:800;color:var(--ink);}
+.pillar-max{font-size:12px;color:var(--ink-light);}
+.pillar-bar-wrap{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.pillar-bar{height:100%;border-radius:3px;}
+
+.recs-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;}
+.rec-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
+.rec-item:last-child{border-bottom:none;}
+.rec-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--orange-pale);}
+.rec-txt{font-size:13.5px;color:var(--ink-mid);line-height:1.6;flex:1;}
+.source-note{font-size:11px;color:var(--ink-light);margin-top:16px;padding-top:12px;border-top:1px solid var(--border);line-height:1.7;text-align:center;}
+.retry-btn{display:inline-block;margin-top:20px;background:#fff;color:var(--orange);border:1.5px solid var(--orange-light);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:600;padding:10px 28px;border-radius:10px;cursor:pointer;transition:all .18s;}
+.retry-btn:hover{background:var(--orange-pale);}
+
+@media(max-width:600px){
+  .hero{padding:28px 22px 24px;} .hero h1{font-size:21px;}
+  .pillars-grid{grid-template-columns:1fr;}
+  .options{flex-direction:column;} .opt-lbl{min-width:100%;}
+  .page{padding:20px 12px 48px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">تقييم علمي · Well-Formulated Ketogenic Diet</div>
+  <h1>تقييم النظام الكيتوني المتكامل — WFKD</h1>
+  <p class="hero-sub">مبني على معايير Phinney & Volek للنظام الكيتوني المتكامل — الذي يحقق الكيتوز الغذائي بأمان وفاعلية واستدامة</p>
+  <div class="hero-authors">
+    <div class="author-pill"><strong>Dr. Stephen Phinney</strong>Virta Health — UC Davis</div>
+    <div class="author-pill"><strong>Dr. Jeff Volek</strong>The Ohio State University</div>
+  </div>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="dot"></div>16 سؤالاً</div>
+    <div class="hero-meta-item"><div class="dot"></div>5 محاور رئيسية</div>
+    <div class="hero-meta-item"><div class="dot"></div>5–7 دقائق</div>
+    <div class="hero-meta-item"><div class="dot"></div>نتيجة فورية</div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="intro-card">
+  <h2>كيف تُجيب بشكل صحيح؟</h2>
+  <p>أجب بناءً على عاداتك الفعلية في <strong>الأسبوع الماضي</strong>. إذا لم تكن تتّبع النظام الكيتوني بعد، أجب عن وضعك الحالي — ستُظهر النتيجة المحاور التي تحتاج البناء عليها.</p>
+  <p>بعض الأسئلة بإجابات <strong>نعم / لا</strong>، وبعضها بثلاثة خيارات تعكس مدى الالتزام.</p>
+  <div class="scale-legend">
+    <div class="scale-pill"><div class="scale-num" style="background:#C0392B;">١</div><div class="scale-txt"><strong>نادراً / أبداً</strong><br>لا أطبق هذا</div></div>
+    <div class="scale-pill"><div class="scale-num" style="background:#D4720A;">٢</div><div class="scale-txt"><strong>أحياناً</strong><br>أطبق جزئياً</div></div>
+    <div class="scale-pill"><div class="scale-num" style="background:#1A6B4A;">٣</div><div class="scale-txt"><strong>دائماً / معظم الوقت</strong><br>أطبق باستمرار</div></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-top">
+    <span class="progress-label">تقدم التقييم</span>
+    <span class="progress-count" id="prog-count">0 / 16</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- FORM -->
+<div id="form-section">
+
+  <!-- PILLAR 1: CARBS -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">١ — تقييد الكربوهيدرات (الهدف الأساسي)</div><div class="sec-div-line"></div></div>
+
+  <div class="q-card" id="qc1">
+    <div class="q-num-row"><div class="q-num">١</div>
+      <div class="q-text">هل تُقيّد كربوهيدراتك إلى أقل من 50 غراماً يومياً؟
+        <span class="note">المعيار المثالي عند Phinney & Volek: 20–30 غرام يومياً — أو الكمية التي تحقق لك الكيتوز</span>
+        <span class="criterion">المعيار: أقل من 50 غرام يومياً</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q1" value="1" onchange="pick('q1',1)"><span class="opt-btn">نادراً<br><small>50 غرام فأكثر</small></span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="2" onchange="pick('q1',2)"><span class="opt-btn">أحياناً<br><small>30–50 غرام</small></span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="3" onchange="pick('q1',3)"><span class="opt-btn">دائماً<br><small>أقل من 30 غرام</small></span></label>
+    </div>
+  </div>
+
+  <div class="q-card" id="qc2">
+    <div class="q-num-row"><div class="q-num">٢</div>
+      <div class="q-text">هل تتجنب الأطعمة التي ترفع نسبة السكر في الدم بشكل واضح؟
+        <span class="note">يشمل: الخبز، الأرز، المعكرونة، البطاطس، السكر، الفواكه عالية الكربوهيدرات، العصائر، المشروبات المحلاة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q2" value="1" onchange="pick('q2',1)"><span class="opt-btn">نادراً / أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="2" onchange="pick('q2',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="3" onchange="pick('q2',3)"><span class="opt-btn">دائماً</span></label>
+    </div>
+  </div>
+
+  <div class="q-card" id="qc3">
+    <div class="q-num-row"><div class="q-num">٣</div>
+      <div class="q-text">هل تقرأ ملصقات المنتجات للتحقق من الكربوهيدرات قبل الشراء؟
+        <span class="note">الكيتو المتكامل يتطلب وعياً دقيقاً بالمحتوى الكربوهيدراتي في جميع الأطعمة بما فيها الصلصات والتوابل</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q3" value="1" onchange="pick('q3',1)"><span class="opt-btn">نادراً / أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="2" onchange="pick('q3',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="3" onchange="pick('q3',3)"><span class="opt-btn">دائماً</span></label>
+    </div>
+  </div>
+
+  <!-- PILLAR 2: PROTEIN -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">٢ — البروتين المعتدل (لا كثيراً ولا قليلاً)</div><div class="sec-div-line"></div></div>
+
+  <div class="q-card" id="qc4">
+    <div class="q-num-row"><div class="q-num">٤</div>
+      <div class="q-text">هل تتناول البروتين بكميات معتدلة — لا مفرطة ولا منخفضة جداً؟
+        <span class="note">المعيار: 1.2 إلى 2.0 غرام بروتين لكل كيلوغرام من الكتلة العضلية — تجنب الإفراط في البروتين لأنه يُعيق الكيتوز</span>
+        <span class="criterion">البروتين المفرط يحوّل الأحماض الأمينية إلى جلوكوز (Gluconeogenesis)</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q4" value="1" onchange="pick('q4',1)"><span class="opt-btn">نادراً<br><small>كثير جداً أو قليل جداً</small></span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="2" onchange="pick('q4',2)"><span class="opt-btn">أحياناً<br><small>أحاول الاعتدال</small></span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="3" onchange="pick('q4',3)"><span class="opt-btn">دائماً<br><small>معتدل ومنتظم</small></span></label>
+    </div>
+  </div>
+
+  <div class="q-card" id="qc5">
+    <div class="q-num-row"><div class="q-num">٥</div>
+      <div class="q-text">هل تعتمد على مصادر بروتين عالية الجودة؟
+        <span class="note">المصادر المفضلة عند Volek & Phinney: اللحم البقري، الخروف، الدجاج، الأسماك الدهنية (سلمون، سردين)، البيض، الجبن الدسم</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q5" value="1" onchange="pick('q5',1)"><span class="opt-btn">نادراً / أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="2" onchange="pick('q5',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="3" onchange="pick('q5',3)"><span class="opt-btn">دائماً</span></label>
+    </div>
+  </div>
+
+  <!-- PILLAR 3: FAT QUALITY -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">٣ — جودة الدهون (المصدر الرئيسي للطاقة)</div><div class="sec-div-line"></div></div>
+
+  <div class="q-card" id="qc6">
+    <div class="q-num-row"><div class="q-num">٦</div>
+      <div class="q-text">هل تعتمد على الدهون الصحية بوصفها مصدرك الرئيسي للطاقة؟
+        <span class="note">الدهون المفضلة: زيت الزيتون، زيت جوز الهند، الزبدة، السمن، الأفوكادو، المكسرات، الكريمة الدسمة، الجبن — 60–75% من السعرات</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q6" value="1" onchange="pick('q6',1)"><span class="opt-btn">نادراً / أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="2" onchange="pick('q6',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="3" onchange="pick('q6',3)"><span class="opt-btn">دائماً</span></label>
+    </div>
+  </div>
+
+  <div class="q-card" id="qc7">
+    <div class="q-num-row"><div class="q-num">٧</div>
+      <div class="q-text">هل تتجنب الزيوت النباتية المهدرجة والمعالجة صناعياً؟
+        <span class="note">تجنب: زيت الذرة، فول الصويا، القطن، الكانولا المعالجة، السمنة النباتية — هذه تحتوي دهون أوميغا 6 التهابية</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q7" value="1" onchange="pick('q7',1)"><span class="opt-btn">نادراً / أبداً<br><small>أستخدمها كثيراً</small></span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="2" onchange="pick('q7',2)"><span class="opt-btn">أحياناً<br><small>أحاول التقليل</small></span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="3" onchange="pick('q7',3)"><span class="opt-btn">دائماً<br><small>لا أستخدمها</small></span></label>
+    </div>
+  </div>
+
+  <div class="q-card" id="qc8">
+    <div class="q-num-row"><div class="q-num">٨</div>
+      <div class="q-text">هل تتناول الخضروات غير النشوية بانتظام مع وجباتك الكيتونية؟
+        <span class="note">الخضروات المسموحة: الخضروات الورقية، البروكلي، القرنبيط، الكوسا، الخيار، الفلفل — توفر الألياف والمعادن الضرورية</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q8" value="1" onchange="pick('q8',1)"><span class="opt-btn">نادراً / أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="2" onchange="pick('q8',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="3" onchange="pick('q8',3)"><span class="opt-btn">دائماً</span></label>
+    </div>
+  </div>
+
+  <!-- PILLAR 4: ELECTROLYTES -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">٤ — الكهارل والإماهة (الركيزة الأهم عند Phinney)</div><div class="sec-div-line"></div></div>
+
+  <div class="q-card" id="qc9">
+    <div class="q-num-row"><div class="q-num">٩</div>
+      <div class="q-text">هل تضيف الصوديوم (الملح) بشكل مقصود لطعامك أو مشروباتك؟
+        <span class="note">المعيار: 2000–4000 ملغ صوديوم يومياً — في الكيتو يفقد الجسم الصوديوم أسرع — تجاهله يسبب "كيتو فلو"</span>
+        <span class="criterion">يُنصح بمرق العظام أو مرق الدجاج أو ملح البحر في الماء</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q9" value="1" onchange="pick('q9',1)"><span class="opt-btn">نادراً / أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="2" onchange="pick('q9',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="3" onchange="pick('q9',3)"><span class="opt-btn">دائماً</span></label>
+    </div>
+  </div>
+
+  <div class="q-card" id="qc10">
+    <div class="q-num-row"><div class="q-num">١٠</div>
+      <div class="q-text">هل تهتم بمستويات المغنيسيوم والبوتاسيوم؟
+        <span class="note">المغنيسيوم: 300–500 ملغ يومياً — البوتاسيوم: من الأفوكادو والخضروات الورقية — النقص يسبب تشنجات العضلات والإرهاق</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q10" value="1" onchange="pick('q10',1)"><span class="opt-btn">نادراً / أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="2" onchange="pick('q10',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="3" onchange="pick('q10',3)"><span class="opt-btn">دائماً</span></label>
+    </div>
+  </div>
+
+  <div class="q-card" id="qc11">
+    <div class="q-num-row"><div class="q-num">١١</div>
+      <div class="q-text">هل تشرب كميات كافية من الماء يومياً؟
+        <span class="note">النظام الكيتوني يزيد إدرار البول — تحتاج 2.5 إلى 3.5 لترات يومياً على الأقل لتعويض الفقد</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q11" value="1" onchange="pick('q11',1)"><span class="opt-btn">نادراً / أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q11" value="2" onchange="pick('q11',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q11" value="3" onchange="pick('q11',3)"><span class="opt-btn">دائماً</span></label>
+    </div>
+  </div>
+
+  <!-- PILLAR 5: FOOD QUALITY & SUSTAINABILITY -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">٥ — جودة الطعام والاستدامة</div><div class="sec-div-line"></div></div>
+
+  <div class="q-card" id="qc12">
+    <div class="q-num-row"><div class="q-num">١٢</div>
+      <div class="q-text">هل تعتمد على الأطعمة الكاملة غير المعالجة في معظم وجباتك؟
+        <span class="note">WFKD تُركز على Real Food — تجنب منتجات الكيتو المصنّعة والبدائل التجارية والحلويات الكيتونية المعبأة بكثرة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q12" value="1" onchange="pick('q12',1)"><span class="opt-btn">نادراً / أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q12" value="2" onchange="pick('q12',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q12" value="3" onchange="pick('q12',3)"><span class="opt-btn">دائماً</span></label>
+    </div>
+  </div>
+
+  <div class="q-card" id="qc13">
+    <div class="q-num-row"><div class="q-num">١٣</div>
+      <div class="q-text">هل تتناول سعرات حرارية كافية — لا تجويع صارماً؟
+        <span class="note">الحد الأدنى الموصى به: 1200 سعرة حرارية يومياً — الكيتو الجيد لا يعني التجويع بل الشبع بالدهون الصحية</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q13" value="1" onchange="pick('q13',1)"><span class="opt-btn">نادراً / أبداً<br><small>أقيد بشدة</small></span></label>
+      <label class="opt-lbl"><input type="radio" name="q13" value="2" onchange="pick('q13',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q13" value="3" onchange="pick('q13',3)"><span class="opt-btn">دائماً<br><small>آكل حتى الشبع</small></span></label>
+    </div>
+  </div>
+
+  <div class="q-card" id="qc14">
+    <div class="q-num-row"><div class="q-num">١٤</div>
+      <div class="q-text">هل تشعر بطاقة مستقرة خلال اليوم دون تذبذب في المزاج أو الجوع المفاجئ؟
+        <span class="note">الكيتو التكيّفي الناجح يُعطي طاقة مستقرة — التذبذب الشديد قد يعني أنك لم تصل بعد للتكيف الكامل (Keto-Adaptation)</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q14" value="1" onchange="pick('q14',1)"><span class="opt-btn">نادراً / أبداً<br><small>طاقتي متذبذبة</small></span></label>
+      <label class="opt-lbl"><input type="radio" name="q14" value="2" onchange="pick('q14',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q14" value="3" onchange="pick('q14',3)"><span class="opt-btn">دائماً<br><small>طاقة مستقرة</small></span></label>
+    </div>
+  </div>
+
+  <div class="q-card" id="qc15">
+    <div class="q-num-row"><div class="q-num">١٥</div>
+      <div class="q-text">هل تتجنب منتجات "الكيتو" التجارية المعبأة (حلويات كيتو، شوكولاتة كيتو، خبز كيتو)؟
+        <span class="note">Volek & Phinney يُحذران: هذه المنتجات كثيراً ما تحتوي كربوهيدرات مخفية أو مُحليات ترفع الأنسولين وتعيق الكيتوز</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q15" value="1" onchange="pick('q15',1)"><span class="opt-btn">نادراً / أبداً<br><small>أتناولها كثيراً</small></span></label>
+      <label class="opt-lbl"><input type="radio" name="q15" value="2" onchange="pick('q15',2)"><span class="opt-btn">أحياناً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q15" value="3" onchange="pick('q15',3)"><span class="opt-btn">دائماً<br><small>لا أعتمد عليها</small></span></label>
+    </div>
+  </div>
+
+  <div class="q-card" id="qc16">
+    <div class="q-num-row"><div class="q-num">١٦</div>
+      <div class="q-text">هل تتبع النظام باستمرار لأكثر من 4 أسابيع متواصلة؟
+        <span class="note">Keto-Adaptation يحتاج 3–6 أسابيع كاملة — الانقطاع والعودة يُعيدك لنقطة الصفر ويُطيل مرحلة التكيف</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q16" value="1" onchange="pick('q16',1)"><span class="opt-btn">نادراً / أبداً<br><small>أقل من أسبوعين</small></span></label>
+      <label class="opt-lbl"><input type="radio" name="q16" value="2" onchange="pick('q16',2)"><span class="opt-btn">أحياناً<br><small>2–4 أسابيع</small></span></label>
+      <label class="opt-lbl"><input type="radio" name="q16" value="3" onchange="pick('q16',3)"><span class="opt-btn">دائماً<br><small>أكثر من شهر</small></span></label>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <button class="submit-btn" onclick="showResult()">احسب نتيجتي</button>
+    <p class="submit-note" id="submit-note">أجب على جميع الأسئلة ثم اضغط الزر</p>
+    <div class="warn-msg" id="warn-msg">⚠️ يرجى الإجابة على جميع الأسئلة — الأسئلة الناقصة مُحددة باللون البرتقالي</div>
+  </div>
+
+</div>
+
+<!-- RESULT -->
+<div id="result-section">
+  <div class="result-card">
+    <div class="result-header" id="result-header">
+      <div class="score-circle"><div class="score-num" id="score-num">0</div><div class="score-max">من 48</div></div>
+      <div class="result-level" id="result-level"></div>
+      <p class="result-desc" id="result-desc"></p>
+      <button class="retry-btn" onclick="resetAll()">إعادة التقييم</button>
+    </div>
+    <div class="result-body">
+      <div class="pillars-grid" id="pillars-grid"></div>
+      <div class="recs-title">توصيات مبنية على نتيجتك</div>
+      <div id="recs-list"></div>
+      <div class="source-note">
+        مبني على معايير Well-Formulated Ketogenic Diet — Phinney & Volek<br>
+        المرجع: Phinney SD, Volek JS. <em>The Art and Science of Low Carbohydrate Living</em>. 2011<br>
+        Volek JS, Phinney SD. <em>The Art and Science of Low Carbohydrate Performance</em>. 2012<br>
+        Virta Health Clinical Guidelines — virtahealth.com<br>
+        <strong>ملاحظة:</strong> هذا التقييم للتوعية الذاتية — استشر طبيبك قبل البدء بأي نظام غذائي علاجي.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const answers = {};
+const ALL_Q = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14','q15','q16'];
+
+const PILLARS = [
+  { key:'carbs',  label:'تقييد الكربوهيدرات', qs:['q1','q2','q3'],          max:9,  color:'#C0392B' },
+  { key:'prot',   label:'البروتين المعتدل',    qs:['q4','q5'],               max:6,  color:'#8E44AD' },
+  { key:'fat',    label:'جودة الدهون',          qs:['q6','q7','q8'],          max:9,  color:'#D4720A' },
+  { key:'elec',   label:'الكهارل والإماهة',    qs:['q9','q10','q11'],        max:9,  color:'#2471A3' },
+  { key:'qual',   label:'جودة الطعام والاستدامة', qs:['q12','q13','q14','q15','q16'], max:15, color:'#1A6B4A' },
+];
+
+function pick(name, val) {
+  answers[name] = parseInt(val);
+  const card = document.getElementById('qc' + name.replace('q',''));
+  if (card) { card.classList.add('answered'); card.style.borderColor = ''; }
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = Object.keys(answers).length;
+  const pct  = Math.round((done / 16) * 100);
+  document.getElementById('prog-count').textContent = done + ' / 16';
+  document.getElementById('prog-fill').style.width  = pct + '%';
+  document.getElementById('submit-note').textContent =
+    done === 16 ? '✅ جميع الأسئلة مكتملة — اضغط لعرض نتيجتك' : (16 - done) + ' سؤال متبقي';
+}
+
+function showResult() {
+  const missing = ALL_Q.filter(q => answers[q] === undefined);
+  if (missing.length > 0) {
+    document.getElementById('warn-msg').classList.add('show');
+    missing.forEach(q => {
+      const c = document.getElementById('qc' + q.replace('q',''));
+      if (c) c.style.borderColor = '#E8A020';
+    });
+    document.getElementById('qc' + missing[0].replace('q','')).scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  let total = 0;
+  ALL_Q.forEach(q => { total += answers[q] || 0; });
+
+  const pillarScores = {};
+  PILLARS.forEach(p => {
+    let s = 0;
+    p.qs.forEach(q => { s += answers[q] || 0; });
+    pillarScores[p.key] = s;
+  });
+
+  let lvl;
+  if (total >= 42) lvl = {
+    cls:'level-optimal', level:'كيتو متكامل — مستوى ممتاز',
+    desc:'أنت تطبق WFKD بشكل متكامل وفق معايير Phinney & Volek. جسمك على الأرجح في حالة كيتوز تغذوي مستقر مع تكيف جيد.',
+    recs:[
+      {i:'🔬',t:'فكر في قياس الكيتونات دورياً (شرائط بول أو جهاز دم) للتأكد من بقائك في النطاق المثالي 0.5–4.0 ملي مول'},
+      {i:'🏋️',t:'إذا كنت رياضياً — طبّق مبادئ كتاب "The Art and Science of Low Carbohydrate Performance" لتحسين الأداء'},
+      {i:'🩺',t:'تابع مؤشراتك المخبرية (سكر الدم، الدهون الثلاثية، HDL) كل 3–6 أشهر'},
+    ]
+  };
+  else if (total >= 33) lvl = {
+    cls:'level-good', level:'كيتو جيد — مع فرص للتحسين',
+    desc:'تطبيقك جيد في معظم المحاور لكن هناك جوانب تحتاج ضبطاً دقيقاً لتحقق الكيتو المتكامل الكامل.',
+    recs:[
+      {i:'🧂',t:'تحقق من الكهارل — إذا تشعر بتعب أو تشنجات فالصوديوم هو الأولوية الأولى'},
+      {i:'📊',t:'راجع كمية الكربوهيدرات اليومية — حتى الكميات الصغيرة من المصادر المخفية (صلصات، توابل) تتراكم'},
+      {i:'🥩',t:'تأكد أن بروتينك ليس مفرطاً — الإفراط في البروتين يعيق الكيتوز عبر Gluconeogenesis'},
+    ]
+  };
+  else if (total >= 22) lvl = {
+    cls:'level-partial', level:'كيتو جزئي — تحتاج مراجعة شاملة',
+    desc:'تطبيقك يعكس بداية الطريق لكن لم تصل بعد لمعايير WFKD الكاملة. المحاور الضعيفة واضحة في نتائجك.',
+    recs:[
+      {i:'🎯',t:'ابدأ بالمحور الأضعف في نتيجتك — ركّز عليه أسبوعين قبل الانتقال للتالي'},
+      {i:'🧂',t:'الكهارل أولاً — معظم أعراض الكيتو السلبية سببها نقص الصوديوم والمغنيسيوم'},
+      {i:'📖',t:'اقرأ "The Art and Science of Low Carbohydrate Living" لفهم أعمق للمبادئ العلمية'},
+      {i:'👨‍⚕️',t:'استشر طبيباً أو أخصائي تغذية متخصص في الكيتو لوضع خطة مناسبة لك'},
+    ]
+  };
+  else lvl = {
+    cls:'level-low', level:'لم تبدأ WFKD بعد — نقطة الانطلاق',
+    desc:'نتيجتك تشير إلى أنك لم تبدأ تطبيق النظام الكيتوني المتكامل بعد، أو أنك في المراحل الأولى جداً.',
+    recs:[
+      {i:'📚',t:'ابدأ بتعلم الأساسيات — افهم ما هو الكيتوز الغذائي وكيف يعمل قبل البدء التطبيقي'},
+      {i:'🥩',t:'الخطوة الأولى: قلل الكربوهيدرات إلى 50 غرام يومياً وأضف الدهون الصحية تدريجياً'},
+      {i:'🧂',t:'اجهز الكهارل مسبقاً — الصوديوم والمغنيسيوم والبوتاسيوم لتجنب أعراض الكيتو فلو'},
+      {i:'👨‍⚕️',t:'استشر طبيبك خاصةً إذا كنت مصاباً بالسكري أو تتناول أدوية — الكيتو يغير جرعات الأدوية'},
+    ]
+  };
+
+  const hdr = document.getElementById('result-header');
+  hdr.className = 'result-header ' + lvl.cls;
+  document.getElementById('score-num').textContent   = total;
+  document.getElementById('result-level').textContent = lvl.level;
+  document.getElementById('result-desc').textContent  = lvl.desc;
+
+  const pg = document.getElementById('pillars-grid');
+  pg.innerHTML = PILLARS.map(p => {
+    const s   = pillarScores[p.key];
+    const pct = Math.round((s / p.max) * 100);
+    return `<div class="pillar-box">
+      <div class="pillar-name">${p.label}</div>
+      <div class="pillar-score-row">
+        <div class="pillar-score">${s}</div>
+        <div class="pillar-max">/ ${p.max}</div>
+      </div>
+      <div class="pillar-bar-wrap"><div class="pillar-bar" style="width:${pct}%;background:${p.color}"></div></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('recs-list').innerHTML = lvl.recs.map(r =>
+    `<div class="rec-item"><div class="rec-icon">${r.i}</div><div class="rec-txt">${r.t}</div></div>`
+  ).join('');
+
+  document.getElementById('form-section').style.display   = 'none';
+  document.getElementById('result-section').style.display = 'block';
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function resetAll() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.q-card').forEach(c => { c.classList.remove('answered'); c.style.borderColor=''; });
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('form-section').style.display   = 'block';
+  document.getElementById('warn-msg').classList.remove('show');
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+updateProgress();
+</script>
+</body>
+</html>
