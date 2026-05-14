@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقييم جودة النمط الغذائي النباتي — hPDI</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --leaf:#2D6A4F; --leaf-mid:#40916C; --leaf-light:#74C69D;
+  --leaf-pale:#D8F3DC; --leaf-glow:rgba(64,145,108,0.12);
+  --lime:#52B788; --lime-pale:#B7E4C7;
+  --amber:#C07A00; --amber-pale:#FEF3E2;
+  --red:#B03A2E; --red-pale:#FDEDEC;
+  --purple:#6B3FA0; --purple-pale:#F0EBF8;
+  --ink:#1A2332; --ink-mid:#3D4F63; --ink-light:#6B7C93;
+  --border:#DDE4EC; --surface:#F6F8FA; --white:#fff;
+  --radius:14px; --radius-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Tajawal',sans-serif;background:#EDF5EE;color:var(--ink);min-height:100vh;direction:rtl;}
+.page{max-width:780px;margin:0 auto;padding:32px 16px 60px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1B4332 0%,#2D6A4F 55%,#40916C 100%);border-radius:20px;padding:36px 36px 32px;margin-bottom:28px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(27,67,50,0.32);}
+.hero::before{content:'';position:absolute;top:-60px;left:-40px;width:220px;height:220px;border:40px solid rgba(255,255,255,0.06);border-radius:50%;}
+.hero::after{content:'';position:absolute;bottom:-80px;right:-30px;width:260px;height:260px;border:50px solid rgba(255,255,255,0.04);border-radius:50%;}
+.hero-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.92);font-size:11px;font-weight:500;letter-spacing:2px;padding:4px 14px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;}
+.hero h1{font-size:26px;font-weight:800;color:#fff;line-height:1.35;margin-bottom:10px;position:relative;z-index:1;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.75;position:relative;z-index:1;}
+.hero-ref{display:inline-block;margin-top:14px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:7px 14px;font-size:12px;color:rgba(255,255,255,0.85);position:relative;z-index:1;}
+.hero-meta{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap;position:relative;z-index:1;}
+.hero-meta-item{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,0.8);}
+.hero-meta-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.5);flex-shrink:0;}
+
+/* INTRO */
+.intro-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px 26px;margin-bottom:24px;}
+.intro-card h2{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.intro-card h2::before{content:'';width:4px;height:20px;background:var(--leaf-mid);border-radius:2px;display:inline-block;flex-shrink:0;}
+.intro-card p{font-size:14px;color:var(--ink-mid);line-height:1.85;margin-bottom:10px;}
+.intro-card p:last-child{margin-bottom:0;}
+.freq-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px;}
+.freq-pill{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center;}
+.freq-num{font-size:16px;font-weight:800;margin-bottom:3px;}
+.freq-lbl{font-size:11px;color:var(--ink-light);line-height:1.4;}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:24px;}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-size:12px;color:var(--ink-light);}
+.progress-count{font-size:13px;font-weight:700;color:var(--leaf-mid);}
+.progress-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--leaf) 0%,var(--leaf-light) 100%);border-radius:3px;transition:width .4s ease;width:0%;}
+
+/* SEC DIVIDER */
+.sec-div{margin:24px 0 14px;display:flex;align-items:center;gap:12px;}
+.sec-div-line{flex:1;height:1px;background:var(--border);}
+.sec-div-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--ink-light);white-space:nowrap;padding:4px 12px;background:var(--surface);border:1px solid var(--border);border-radius:20px;}
+
+/* QUESTION CARD */
+.q-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
+.q-card.answered{border-color:var(--leaf-light);box-shadow:0 2px 12px var(--leaf-glow);}
+.q-card.reverse{border-right:4px solid var(--amber);}
+.q-num-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;}
+.q-num{width:28px;height:28px;background:var(--leaf-pale);color:var(--leaf);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.q-num.rev{background:var(--amber-pale);color:var(--amber);}
+.q-text{font-size:14.5px;font-weight:500;color:var(--ink);line-height:1.6;}
+.q-text .note{display:block;font-size:12px;font-weight:400;color:var(--ink-light);margin-top:4px;}
+.rev-tag{display:inline-block;background:var(--amber-pale);color:var(--amber);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-top:5px;letter-spacing:1px;}
+
+/* OPTIONS */
+.options{display:flex;gap:6px;flex-wrap:wrap;}
+.opt-lbl{flex:1;min-width:80px;cursor:pointer;}
+.opt-lbl input[type="radio"]{display:none;}
+.opt-btn{display:block;padding:9px 8px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:400;color:var(--ink-mid);text-align:center;cursor:pointer;transition:all .18s;line-height:1.4;user-select:none;}
+.opt-lbl input:checked + .opt-btn{background:var(--leaf-pale);border-color:var(--leaf-light);color:var(--leaf);font-weight:600;}
+.q-card.reverse .opt-lbl input:checked + .opt-btn{background:var(--amber-pale);border-color:#E8B060;color:var(--amber);}
+.opt-btn:hover{border-color:var(--leaf-light);background:#f0faf2;}
+
+/* SUBMIT */
+.submit-wrap{text-align:center;margin-top:32px;}
+.submit-btn{display:inline-block;background:linear-gradient(135deg,#1B4332,#2D6A4F);color:#fff;font-family:'Tajawal',sans-serif;font-size:17px;font-weight:700;padding:16px 52px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(27,67,50,0.3);transition:all .2s;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(27,67,50,0.4);}
+.submit-note{font-size:13px;color:var(--ink-light);margin-top:10px;}
+.warn-msg{display:none;margin-top:14px;background:var(--amber-pale);border:1px solid #E8B060;border-radius:10px;padding:12px 16px;font-size:13px;color:#7A4800;}
+.warn-msg.show{display:block;}
+
+/* RESULT */
+#result-section{display:none;margin-top:28px;}
+.result-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.08);}
+.result-header{padding:32px 30px 26px;text-align:center;}
+.score-wrap{display:flex;justify-content:center;gap:20px;margin-bottom:18px;flex-wrap:wrap;}
+.score-circle{width:110px;height:110px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid currentColor;}
+.score-num{font-size:36px;font-weight:800;line-height:1;}
+.score-max{font-size:12px;font-weight:400;opacity:.7;margin-top:2px;}
+.score-label{font-size:11px;font-weight:600;margin-top:6px;text-align:center;}
+.result-level{font-size:20px;font-weight:800;margin-bottom:8px;}
+.result-desc{font-size:14px;color:var(--ink-mid);line-height:1.75;max-width:500px;margin:0 auto;}
+
+.level-high .score-circle{color:var(--leaf);background:var(--leaf-pale);}
+.level-high .result-level{color:var(--leaf);}
+.level-good .score-circle{color:#1565C0;background:#E3F2FD;}
+.level-good .result-level{color:#1565C0;}
+.level-mod .score-circle{color:var(--amber);background:var(--amber-pale);}
+.level-mod .result-level{color:var(--amber);}
+.level-low .score-circle{color:var(--red);background:var(--red-pale);}
+.level-low .result-level{color:var(--red);}
+
+.result-body{padding:24px 28px 28px;border-top:1px solid var(--border);background:var(--surface);}
+.groups-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.group-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
+.group-icon{font-size:20px;margin-bottom:5px;}
+.group-name{font-size:10px;font-weight:600;color:var(--ink-light);margin-bottom:5px;line-height:1.3;}
+.group-score{font-size:18px;font-weight:800;color:var(--ink);}
+.group-score .mx{font-size:11px;color:var(--ink-light);font-weight:400;}
+.group-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden;}
+.group-bar{height:100%;border-radius:2px;}
+.recs-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;}
+.rec-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
+.rec-item:last-child{border-bottom:none;}
+.rec-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--leaf-pale);}
+.rec-txt{font-size:13.5px;color:var(--ink-mid);line-height:1.6;flex:1;}
+.source-note{font-size:11px;color:var(--ink-light);margin-top:16px;padding-top:12px;border-top:1px solid var(--border);line-height:1.7;text-align:center;}
+.retry-btn{display:inline-block;margin-top:20px;background:#fff;color:var(--leaf);border:1.5px solid var(--leaf-light);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:600;padding:10px 28px;border-radius:10px;cursor:pointer;transition:all .18s;}
+.retry-btn:hover{background:var(--leaf-pale);}
+
+@media(max-width:600px){
+  .hero{padding:28px 22px 24px;} .hero h1{font-size:21px;}
+  .freq-legend{grid-template-columns:repeat(2,1fr);}
+  .groups-grid{grid-template-columns:repeat(2,1fr);}
+  .options{flex-direction:column;} .opt-lbl{min-width:100%;}
+  .page{padding:20px 12px 48px;}
+  .score-wrap{gap:12px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">أداة تقييم علمية · hPDI — Harvard T.H. Chan School of Public Health</div>
+  <h1>تقييم جودة النمط الغذائي النباتي</h1>
+  <p class="hero-sub">مبنية على مؤشر النظام الغذائي النباتي الصحي (hPDI) الذي طوّرته جامعة هارفارد — يُميّز بين النباتي الصحي والنباتي غير الصحي</p>
+  <div class="hero-ref">Satija et al. · PLOS Medicine 2016 · Harvard Chan School of Public Health</div>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="dot"></div>18 سؤالاً</div>
+    <div class="hero-meta-item"><div class="dot"></div>3 محاور رئيسية</div>
+    <div class="hero-meta-item"><div class="dot"></div>5–8 دقائق</div>
+    <div class="hero-meta-item"><div class="dot"></div>نتيجة فورية</div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="intro-card">
+  <h2>كيف يعمل هذا التقييم؟</h2>
+  <p>يقيس هذا المؤشر <strong>جودة</strong> نمطك الغذائي النباتي — ليس فقط <strong>كميته</strong>. فالبطاطس المقلية والعصير المحلى نباتيان، لكنهما لا يُحسبان لصالحك هنا. الأداة تُفرّق بين النباتي الصحي والنباتي غير الصحي.</p>
+  <p>أجب عن معدل تناولك لكل مجموعة غذائية خلال <strong>الأسبوع الماضي</strong> وفق المقياس التالي:</p>
+  <div class="freq-legend">
+    <div class="freq-pill"><div class="freq-num" style="color:#C0392B;">١</div><div class="freq-lbl">نادراً أو أبداً</div></div>
+    <div class="freq-pill"><div class="freq-num" style="color:#D4720A;">٢</div><div class="freq-lbl">1–2 مرة أسبوعياً</div></div>
+    <div class="freq-pill"><div class="freq-num" style="color:#2471A3;">٣</div><div class="freq-lbl">3–4 مرات أسبوعياً</div></div>
+    <div class="freq-pill"><div class="freq-num" style="color:#2D6A4F;">٤</div><div class="freq-lbl">يومياً أو أكثر</div></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-top">
+    <span class="progress-label">تقدم التقييم</span>
+    <span class="progress-count" id="prog-count">0 / 18</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- FORM -->
+<div id="form-section">
+
+  <!-- GROUP A: HEALTHY PLANT FOODS — positive scoring -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">أ — الأطعمة النباتية الصحية (تُضاف للدرجة)</div><div class="sec-div-line"></div></div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="qc1">
+    <div class="q-num-row"><div class="q-num">١</div>
+      <div class="q-text">الخضروات الورقية والملوّنة
+        <span class="note">السبانخ، الجرجير، البروكلي، الجزر، الفلفل، الطماطم، الخيار، الكوسا — حصة = كوب نيء أو نصف كوب مطبوخ</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q1" value="1" onchange="pick('q1',1)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="2" onchange="pick('q1',2)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="3" onchange="pick('q1',3)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="4" onchange="pick('q1',4)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="qc2">
+    <div class="q-num-row"><div class="q-num">٢</div>
+      <div class="q-text">الفواكه الطازجة
+        <span class="note">التفاح، البرتقال، الموز، العنب، التمر، التوت، الرمان — حصة = فاكهة متوسطة أو نصف كوب فاكهة مقطعة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q2" value="1" onchange="pick('q2',1)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="2" onchange="pick('q2',2)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="3" onchange="pick('q2',3)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="4" onchange="pick('q2',4)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="qc3">
+    <div class="q-num-row"><div class="q-num">٣</div>
+      <div class="q-text">الحبوب الكاملة
+        <span class="note">الشوفان، الأرز البني، الخبز الأسمر، البرغل، الكينوا، الشعير — حصة = نصف كوب مطبوخ أو شريحة خبز</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q3" value="1" onchange="pick('q3',1)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="2" onchange="pick('q3',2)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="3" onchange="pick('q3',3)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="4" onchange="pick('q3',4)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="qc4">
+    <div class="q-num-row"><div class="q-num">٤</div>
+      <div class="q-text">البقوليات
+        <span class="note">العدس، الفول، الحمص، الفاصوليا، اللوبياء، الفول السوداني — حصة = نصف كوب مطبوخ</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q4" value="1" onchange="pick('q4',1)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="2" onchange="pick('q4',2)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="3" onchange="pick('q4',3)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="4" onchange="pick('q4',4)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="qc5">
+    <div class="q-num-row"><div class="q-num">٥</div>
+      <div class="q-text">المكسرات والبذور
+        <span class="note">الجوز، اللوز، الكاجو، البندق، بذور الكتان، بذور الشيا، بذور اليقطين — حفنة صغيرة = 30 غرام</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q5" value="1" onchange="pick('q5',1)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="2" onchange="pick('q5',2)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="3" onchange="pick('q5',3)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="4" onchange="pick('q5',4)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="qc6">
+    <div class="q-num-row"><div class="q-num">٦</div>
+      <div class="q-text">الزيوت النباتية الصحية
+        <span class="note">زيت الزيتون، زيت الأفوكادو، زيت بذر الكتان — في الطبخ أو السلطات</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q6" value="1" onchange="pick('q6',1)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="2" onchange="pick('q6',2)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="3" onchange="pick('q6',3)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="4" onchange="pick('q6',4)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="qc7">
+    <div class="q-num-row"><div class="q-num">٧</div>
+      <div class="q-text">الشاي والقهوة بدون سكر أو بسكر محدود
+        <span class="note">الشاي الأخضر، الشاي الأسود، القهوة — غنية بمضادات الأكسدة — تُحسب إذا كانت بدون إضافات سكرية مفرطة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q7" value="1" onchange="pick('q7',1)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="2" onchange="pick('q7',2)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="3" onchange="pick('q7',3)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="4" onchange="pick('q7',4)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- GROUP B: LESS HEALTHY PLANT FOODS — reverse scoring -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">ب — الأطعمة النباتية الأقل صحية (تُخصم من الدرجة)</div><div class="sec-div-line"></div></div>
+
+  <!-- Q8 -->
+  <div class="q-card reverse" id="qc8">
+    <div class="q-num-row"><div class="q-num rev">٨</div>
+      <div class="q-text">الحبوب المكررة والخبز الأبيض
+        <span class="note">الأرز الأبيض، الخبز الأبيض، المعكرونة البيضاء، الطحين الأبيض — تكرارها المرتفع يُخفض درجتك</span>
+        <span class="rev-tag">نقاط معكوسة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q8" value="4" onchange="pick('q8',4)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="3" onchange="pick('q8',3)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="2" onchange="pick('q8',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="1" onchange="pick('q8',1)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card reverse" id="qc9">
+    <div class="q-num-row"><div class="q-num rev">٩</div>
+      <div class="q-text">البطاطس والنشويات المقلية أو المعالجة
+        <span class="note">البطاطس المقلية، الشيبس، البطاطا المهروسة الجاهزة — في hPDI تُصنّف ضمن الأطعمة الأقل صحية</span>
+        <span class="rev-tag">نقاط معكوسة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q9" value="4" onchange="pick('q9',4)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="3" onchange="pick('q9',3)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="2" onchange="pick('q9',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="1" onchange="pick('q9',1)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card reverse" id="qc10">
+    <div class="q-num-row"><div class="q-num rev">١٠</div>
+      <div class="q-text">المشروبات المحلاة بالسكر
+        <span class="note">المشروبات الغازية، عصائر الفواكه المضاف إليها سكر، مشروبات الطاقة، أي مشروب محلى</span>
+        <span class="rev-tag">نقاط معكوسة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q10" value="4" onchange="pick('q10',4)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="3" onchange="pick('q10',3)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="2" onchange="pick('q10',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="1" onchange="pick('q10',1)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="q-card reverse" id="qc11">
+    <div class="q-num-row"><div class="q-num rev">١١</div>
+      <div class="q-text">الحلويات والمعجنات والسكريات المضافة
+        <span class="note">الكيك، الكوكيز، الشوكولاتة بكميات كبيرة، الحلويات الشرقية، العسل والشراب بكميات مرتفعة</span>
+        <span class="rev-tag">نقاط معكوسة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q11" value="4" onchange="pick('q11',4)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q11" value="3" onchange="pick('q11',3)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q11" value="2" onchange="pick('q11',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q11" value="1" onchange="pick('q11',1)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- GROUP C: ANIMAL FOODS — reverse scoring -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">ج — الأطعمة الحيوانية (تُخصم من الدرجة)</div><div class="sec-div-line"></div></div>
+
+  <!-- Q12 -->
+  <div class="q-card reverse" id="qc12">
+    <div class="q-num-row"><div class="q-num rev">١٢</div>
+      <div class="q-text">اللحوم الحمراء
+        <span class="note">اللحم البقري، الغنم، الخروف، العجل — حصة = 100–150 غرام</span>
+        <span class="rev-tag">نقاط معكوسة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q12" value="4" onchange="pick('q12',4)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q12" value="3" onchange="pick('q12',3)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q12" value="2" onchange="pick('q12',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q12" value="1" onchange="pick('q12',1)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card reverse" id="qc13">
+    <div class="q-num-row"><div class="q-num rev">١٣</div>
+      <div class="q-text">اللحوم المصنّعة والمعالجة
+        <span class="note">النقانق، اللانشون، البرغر الجاهز، اللحم المفروم المصنّع، السجق — الأعلى ارتباطاً بالأمراض المزمنة</span>
+        <span class="rev-tag">نقاط معكوسة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q13" value="4" onchange="pick('q13',4)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q13" value="3" onchange="pick('q13',3)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q13" value="2" onchange="pick('q13',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q13" value="1" onchange="pick('q13',1)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card reverse" id="qc14">
+    <div class="q-num-row"><div class="q-num rev">١٤</div>
+      <div class="q-text">الدواجن
+        <span class="note">الدجاج، الديك الرومي، الحمام — تُحسب هنا كمصدر حيواني بصرف النظر عن نوعه</span>
+        <span class="rev-tag">نقاط معكوسة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q14" value="4" onchange="pick('q14',4)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q14" value="3" onchange="pick('q14',3)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q14" value="2" onchange="pick('q14',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q14" value="1" onchange="pick('q14',1)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card reverse" id="qc15">
+    <div class="q-num-row"><div class="q-num rev">١٥</div>
+      <div class="q-text">الأسماك والمأكولات البحرية
+        <span class="note">في hPDI تُصنّف كمصدر حيواني وتُخصم — لكنها تُعدّ من أفضل المصادر الحيوانية لمن يتناول البروتين الحيواني</span>
+        <span class="rev-tag">نقاط معكوسة — لكنها الأفضل بين الحيوانية</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q15" value="4" onchange="pick('q15',4)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q15" value="3" onchange="pick('q15',3)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q15" value="2" onchange="pick('q15',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q15" value="1" onchange="pick('q15',1)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="q-card reverse" id="qc16">
+    <div class="q-num-row"><div class="q-num rev">١٦</div>
+      <div class="q-text">البيض
+        <span class="note">البيض بأشكاله — مقلي، مسلوق، عجة — حصة = بيضة إلى بيضتين</span>
+        <span class="rev-tag">نقاط معكوسة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q16" value="4" onchange="pick('q16',4)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q16" value="3" onchange="pick('q16',3)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q16" value="2" onchange="pick('q16',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q16" value="1" onchange="pick('q16',1)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="q-card reverse" id="qc17">
+    <div class="q-num-row"><div class="q-num rev">١٧</div>
+      <div class="q-text">منتجات الألبان الكاملة الدسمة
+        <span class="note">الحليب كامل الدسم، الأجبان الدسمة، الكريمة، الزبادي كامل الدسم — الخيارات قليلة الدسم أقل تأثيراً</span>
+        <span class="rev-tag">نقاط معكوسة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q17" value="4" onchange="pick('q17',4)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q17" value="3" onchange="pick('q17',3)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q17" value="2" onchange="pick('q17',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q17" value="1" onchange="pick('q17',1)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="q-card reverse" id="qc18">
+    <div class="q-num-row"><div class="q-num rev">١٨</div>
+      <div class="q-text">الدهون الحيوانية المشبعة الصلبة
+        <span class="note">الزبدة، الشحم، السمن الحيواني، دهن اللحم — تُستخدم في الطبخ أو على الخبز</span>
+        <span class="rev-tag">نقاط معكوسة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q18" value="4" onchange="pick('q18',4)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q18" value="3" onchange="pick('q18',3)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q18" value="2" onchange="pick('q18',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q18" value="1" onchange="pick('q18',1)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <button class="submit-btn" onclick="showResult()">احسب نتيجتي</button>
+    <p class="submit-note" id="submit-note">أجب على جميع الأسئلة ثم اضغط الزر</p>
+    <div class="warn-msg" id="warn-msg">⚠️ يرجى الإجابة على جميع الأسئلة — الأسئلة الناقصة مُحددة باللون البرتقالي</div>
+  </div>
+
+</div>
+
+<!-- RESULT -->
+<div id="result-section">
+  <div class="result-card">
+    <div class="result-header" id="result-header">
+      <div class="score-wrap">
+        <div>
+          <div class="score-circle" id="score-circle-total"><div class="score-num" id="score-num">0</div><div class="score-max">من 72</div></div>
+          <div class="score-label" id="score-pct-lbl">الدرجة الكلية</div>
+        </div>
+      </div>
+      <div class="result-level" id="result-level"></div>
+      <p class="result-desc" id="result-desc"></p>
+      <button class="retry-btn" onclick="resetAll()">إعادة التقييم</button>
+    </div>
+    <div class="result-body">
+      <div class="groups-grid" id="groups-grid"></div>
+      <div class="recs-title">توصيات مبنية على نتيجتك</div>
+      <div id="recs-list"></div>
+      <div class="source-note">
+        مبنية على مؤشر النظام الغذائي النباتي الصحي (hPDI) — جامعة هارفارد<br>
+        المرجع الأساسي: Satija A et al. <em>PLOS Medicine</em> 2016;13(6):e1002039 · doi:10.1371/journal.pmed.1002039<br>
+        مراجعة شاملة: Hemler EC, Hu FB. <em>Advances in Nutrition</em> 2019;10(S4):S386–S396<br>
+        <strong>ملاحظة:</strong> هذه النسخة المبسطة للتوعية الذاتية — hPDI الأصلي يُحسب من استبيان تكرار غذائي تفصيلي (FFQ).
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const answers = {};
+const ALL_Q = Array.from({length:18}, (_,i) => 'q'+(i+1));
+
+const GROUPS = [
+  { key:'healthy', label:'الأطعمة النباتية الصحية', icon:'🥦', qs:['q1','q2','q3','q4','q5','q6','q7'], max:28, color:'#2D6A4F' },
+  { key:'unhealthy', label:'الأطعمة النباتية الأقل صحية', icon:'🍟', qs:['q8','q9','q10','q11'], max:16, color:'#C07A00' },
+  { key:'animal', label:'الأطعمة الحيوانية', icon:'🥩', qs:['q12','q13','q14','q15','q16','q17','q18'], max:28, color:'#B03A2E' },
+];
+
+function pick(name, val) {
+  answers[name] = parseInt(val);
+  const card = document.getElementById('qc' + name.replace('q',''));
+  if (card) { card.classList.add('answered'); card.style.borderColor = ''; }
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = Object.keys(answers).length;
+  const pct  = Math.round((done / 18) * 100);
+  document.getElementById('prog-count').textContent = done + ' / 18';
+  document.getElementById('prog-fill').style.width  = pct + '%';
+  document.getElementById('submit-note').textContent =
+    done === 18 ? '✅ جميع الأسئلة مكتملة — اضغط لعرض نتيجتك' : (18 - done) + ' سؤال متبقي';
+}
+
+function showResult() {
+  const missing = ALL_Q.filter(q => answers[q] === undefined);
+  if (missing.length > 0) {
+    document.getElementById('warn-msg').classList.add('show');
+    missing.forEach(q => {
+      const c = document.getElementById('qc' + q.replace('q',''));
+      if (c) c.style.borderColor = '#E8A020';
+    });
+    document.getElementById('qc' + missing[0].replace('q','')).scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  let total = 0;
+  ALL_Q.forEach(q => { total += answers[q] || 0; });
+
+  const groupScores = {};
+  GROUPS.forEach(g => {
+    let s = 0;
+    g.qs.forEach(q => { s += answers[q] || 0; });
+    groupScores[g.key] = s;
+  });
+
+  // max = 72 (18 questions × 4)
+  const pct = Math.round((total / 72) * 100);
+
+  let lvl;
+  if (total >= 58) lvl = {
+    cls:'level-high', level:'نمط غذائي نباتي صحي ممتاز',
+    desc:'نمطك الغذائي يتوافق بشكل كبير مع hPDI — يعكس التزاماً قوياً بالأطعمة النباتية الصحية وتقليلاً واضحاً للأطعمة الحيوانية والنباتية غير الصحية.',
+    recs:[
+      {i:'🫘',t:'حافظ على تنويع البقوليات في وجباتك — هي المصدر الأهم للبروتين النباتي والألياف'},
+      {i:'🌱',t:'فكر في إضافة مصادر أوميغا 3 نباتية مثل بذور الكتان والشيا لتعويض انخفاض الأسماك'},
+      {i:'🩺',t:'تابع مستويات B12 والحديد وفيتامين D إذا كنت تقلل الأطعمة الحيوانية بشكل كبير'},
+    ]
+  };
+  else if (total >= 45) lvl = {
+    cls:'level-good', level:'نمط نباتي جيد — مع فرص للتطوير',
+    desc:'نمطك يحتوي على عناصر نباتية صحية جيدة لكن فيه مجال للتحسين إما بزيادة النباتي الصحي أو تقليل الحيواني أو تقليل النباتي غير الصحي.',
+    recs:[
+      {i:'🥦',t:'زد تنوع الخضروات — استهدف 5 أنواع مختلفة على الأقل خلال الأسبوع'},
+      {i:'🌾',t:'استبدل الحبوب المكررة بالحبوب الكاملة تدريجياً — ابدأ بوجبة واحدة يومياً'},
+      {i:'🥤',t:'قلل المشروبات المحلاة — استبدلها بالماء أو الشاي الأخضر'},
+    ]
+  };
+  else if (total >= 32) lvl = {
+    cls:'level-mod', level:'متوسط — نمط مختلط يحتاج توجيهاً',
+    desc:'نمطك الغذائي مزيج من الأطعمة النباتية الصحية وغير الصحية مع اعتماد ملحوظ على الأطعمة الحيوانية. تغييرات تدريجية ستُظهر أثراً صحياً واضحاً.',
+    recs:[
+      {i:'🎯',t:'ابدأ بتطبيق قاعدة "نصف الطبق خضروات" في كل وجبة رئيسية هذا الأسبوع'},
+      {i:'🫘',t:'أضف وجبة بقوليات واحدة يومياً — عدس أو حمص أو فول — بدلاً من لحم في إحدى الوجبات'},
+      {i:'🍟',t:'قلل الحبوب المكررة والمشروبات السكرية — هذا وحده يرفع درجتك بشكل ملحوظ'},
+      {i:'📖',t:'اقرأ عن النمط الغذائي WFPB (Whole-Food Plant-Based) كخطوة تثقيفية'},
+    ]
+  };
+  else lvl = {
+    cls:'level-low', level:'نمط حيواني مرتفع — فرصة للتحول',
+    desc:'نمطك الغذائي الحالي يعتمد بشكل رئيسي على الأطعمة الحيوانية مع انخفاض ملحوظ في الأطعمة النباتية الصحية.',
+    recs:[
+      {i:'🥗',t:'ابدأ بإضافة سلطة خضراء لكل وجبة — هذه الخطوة الواحدة ستُحدث فرقاً فورياً في درجتك'},
+      {i:'🍎',t:'اجعل الفاكهة وجبتك الخفيفة الافتراضية بدلاً من الحلويات أو الشيبس'},
+      {i:'🔄',t:'خطط لوجبة نباتية كاملة مرة إلى مرتين أسبوعياً كبداية للتحول التدريجي'},
+      {i:'👨‍⚕️',t:'استشر أخصائي تغذية لخطة انتقال مناسبة تحافظ على التوازن الغذائي'},
+    ]
+  };
+
+  const hdr = document.getElementById('result-header');
+  hdr.className = 'result-header ' + lvl.cls;
+  document.getElementById('score-num').textContent   = total;
+  document.getElementById('result-level').textContent = lvl.level;
+  document.getElementById('result-desc').textContent  = lvl.desc;
+
+  const gg = document.getElementById('groups-grid');
+  gg.innerHTML = GROUPS.map(g => {
+    const s   = groupScores[g.key];
+    const pct = Math.round((s / g.max) * 100);
+    return `<div class="group-box">
+      <div class="group-icon">${g.icon}</div>
+      <div class="group-name">${g.label}</div>
+      <div class="group-score">${s}<span class="mx"> / ${g.max}</span></div>
+      <div class="group-bar-wrap"><div class="group-bar" style="width:${pct}%;background:${g.color}"></div></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('recs-list').innerHTML = lvl.recs.map(r =>
+    `<div class="rec-item"><div class="rec-icon">${r.i}</div><div class="rec-txt">${r.t}</div></div>`
+  ).join('');
+
+  document.getElementById('form-section').style.display   = 'none';
+  document.getElementById('result-section').style.display = 'block';
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function resetAll() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.q-card').forEach(c => { c.classList.remove('answered'); c.style.borderColor=''; });
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('form-section').style.display   = 'block';
+  document.getElementById('warn-msg').classList.remove('show');
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+updateProgress();
+</script>
+</body>
+</html>
