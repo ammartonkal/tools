@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقييم النظام الغذائي المتوسطي — MEDAS</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:#0D6E6E; --teal-mid:#1A8C8C; --teal-light:#2AADAD;
+  --teal-pale:#E6F5F5; --teal-glow:rgba(13,110,110,0.12);
+  --amber:#C87A00; --amber-pale:#FEF5E4;
+  --red:#B03A2E; --red-pale:#FDEDEC;
+  --blue:#1A5276; --blue-pale:#EAF4FB;
+  --green:#1A6B4A; --green-pale:#E8F5EE;
+  --ink:#1A2332; --ink-mid:#3D4F63; --ink-light:#6B7C93;
+  --border:#DDE4EC; --surface:#F6F8FA; --white:#fff;
+  --radius:14px; --radius-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Tajawal',sans-serif;background:#EEF4F4;color:var(--ink);min-height:100vh;direction:rtl;}
+.page{max-width:780px;margin:0 auto;padding:32px 16px 60px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0D6E6E 0%,#1A8C8C 55%,#2AADAD 100%);border-radius:20px;padding:36px 36px 32px;margin-bottom:28px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(13,110,110,0.28);}
+.hero::before{content:'';position:absolute;top:-60px;left:-40px;width:220px;height:220px;border:40px solid rgba(255,255,255,0.06);border-radius:50%;}
+.hero::after{content:'';position:absolute;bottom:-80px;right:-30px;width:260px;height:260px;border:50px solid rgba(255,255,255,0.04);border-radius:50%;}
+.hero-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.92);font-size:11px;font-weight:500;letter-spacing:2px;padding:4px 14px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;}
+.hero h1{font-size:27px;font-weight:800;color:#fff;line-height:1.35;margin-bottom:10px;position:relative;z-index:1;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.78);line-height:1.75;position:relative;z-index:1;}
+.hero-meta{display:flex;gap:20px;margin-top:20px;flex-wrap:wrap;position:relative;z-index:1;}
+.hero-meta-item{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,0.82);}
+.hero-meta-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.5);flex-shrink:0;}
+
+/* INTRO */
+.intro-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px 26px;margin-bottom:24px;}
+.intro-card h2{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.intro-card h2::before{content:'';width:4px;height:20px;background:var(--teal-mid);border-radius:2px;display:inline-block;flex-shrink:0;}
+.intro-card p{font-size:14px;color:var(--ink-mid);line-height:1.85;margin-bottom:10px;}
+.intro-card p:last-child{margin-bottom:0;}
+.score-explain{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.score-pill{flex:1;min-width:110px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;text-align:center;}
+.score-pill .sp-num{font-size:18px;font-weight:800;margin-bottom:3px;}
+.score-pill .sp-lbl{font-size:11px;color:var(--ink-light);line-height:1.4;}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:24px;}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-size:12px;color:var(--ink-light);}
+.progress-count{font-size:13px;font-weight:700;color:var(--teal);}
+.progress-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal) 0%,var(--teal-light) 100%);border-radius:3px;transition:width .4s ease;width:0%;}
+
+/* SECTION DIVIDER */
+.sec-div{margin:24px 0 16px;display:flex;align-items:center;gap:12px;}
+.sec-div-line{flex:1;height:1px;background:var(--border);}
+.sec-div-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--ink-light);white-space:nowrap;padding:4px 12px;background:var(--surface);border:1px solid var(--border);border-radius:20px;}
+
+/* QUESTION CARD */
+.q-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
+.q-card.answered{border-color:var(--teal-light);box-shadow:0 2px 12px var(--teal-glow);}
+.q-num-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;}
+.q-num{width:28px;height:28px;background:var(--teal-pale);color:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:14.5px;font-weight:500;color:var(--ink);line-height:1.6;}
+.q-text .note{display:block;font-size:12px;font-weight:400;color:var(--ink-light);margin-top:4px;}
+.q-text .criterion{display:inline-block;margin-top:6px;background:var(--teal-pale);color:var(--teal);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;}
+
+/* OPTIONS — YES/NO */
+.opts-yn{display:flex;gap:10px;}
+.opt-yn{flex:1;cursor:pointer;}
+.opt-yn input[type="radio"]{display:none;}
+.opt-yn-btn{display:block;padding:12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:500;color:var(--ink-mid);text-align:center;cursor:pointer;transition:all .18s;user-select:none;}
+.opt-yn input:checked + .opt-yn-btn.yes-btn{background:var(--teal-pale);border-color:var(--teal-light);color:var(--teal);font-weight:700;}
+.opt-yn input:checked + .opt-yn-btn.no-btn{background:#FEF5E4;border-color:#E8A020;color:#8A5500;font-weight:700;}
+.opt-yn-btn:hover{border-color:var(--teal-light);background:#f0fafa;}
+
+/* SUBMIT */
+.submit-wrap{text-align:center;margin-top:32px;}
+.submit-btn{display:inline-block;background:linear-gradient(135deg,#0D6E6E,#1A8C8C);color:#fff;font-family:'Tajawal',sans-serif;font-size:17px;font-weight:700;padding:16px 52px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(13,110,110,0.3);transition:all .2s;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(13,110,110,0.4);}
+.submit-note{font-size:13px;color:var(--ink-light);margin-top:10px;}
+.warn-msg{display:none;margin-top:14px;background:#FEF3E2;border:1px solid #E8A020;border-radius:10px;padding:12px 16px;font-size:13px;color:#7A4800;text-align:right;}
+.warn-msg.show{display:block;}
+
+/* RESULT */
+#result-section{display:none;margin-top:28px;}
+.result-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.08);}
+.result-header{padding:32px 30px 26px;text-align:center;}
+.score-circle{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 18px;border:4px solid currentColor;}
+.score-num{font-size:40px;font-weight:800;line-height:1;}
+.score-max{font-size:13px;font-weight:400;opacity:.7;margin-top:2px;}
+.result-level{font-size:20px;font-weight:800;margin-bottom:8px;}
+.result-desc{font-size:14px;color:var(--ink-mid);line-height:1.75;max-width:500px;margin:0 auto;}
+
+.level-high .score-circle{color:var(--teal);background:var(--teal-pale);}
+.level-high .result-level{color:var(--teal);}
+.level-mod .score-circle{color:#1565C0;background:#E3F2FD;}
+.level-mod .result-level{color:#1565C0;}
+.level-low .score-circle{color:var(--red);background:var(--red-pale);}
+.level-low .result-level{color:var(--red);}
+
+.result-body{padding:24px 28px 28px;border-top:1px solid var(--border);background:var(--surface);}
+
+/* FOOD GROUPS VISUAL */
+.food-groups{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+.fg-item{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 10px;text-align:center;}
+.fg-icon{font-size:22px;margin-bottom:5px;}
+.fg-name{font-size:11px;font-weight:600;color:var(--ink-light);margin-bottom:4px;}
+.fg-result{font-size:12px;font-weight:700;}
+.fg-result.pass{color:var(--teal);}
+.fg-result.fail{color:var(--red);}
+
+.recs-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;}
+.rec-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
+.rec-item:last-child{border-bottom:none;}
+.rec-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--teal-pale);}
+.rec-txt{font-size:13.5px;color:var(--ink-mid);line-height:1.6;flex:1;}
+.source-note{font-size:11px;color:var(--ink-light);margin-top:16px;padding-top:12px;border-top:1px solid var(--border);line-height:1.7;text-align:center;}
+.retry-btn{display:inline-block;margin-top:20px;background:#fff;color:var(--teal);border:1.5px solid var(--teal-light);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:600;padding:10px 28px;border-radius:10px;cursor:pointer;transition:all .18s;}
+.retry-btn:hover{background:var(--teal-pale);}
+
+.adapt-note{background:var(--amber-pale);border:1px solid #E8C070;border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#7A5000;line-height:1.7;}
+
+@media(max-width:600px){
+  .hero{padding:28px 22px 24px;}
+  .hero h1{font-size:22px;}
+  .food-groups{grid-template-columns:repeat(2,1fr);}
+  .page{padding:20px 12px 48px;}
+  .score-explain{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">أداة تقييم علمية معتمدة · MEDAS — PREDIMED</div>
+  <h1>مدى التوافق مع النظام الغذائي المتوسطي</h1>
+  <p class="hero-sub">أداة MEDAS المطوَّرة في دراسة PREDIMED الشهيرة — إحدى أكبر دراسات الوقاية الغذائية من أمراض القلب في التاريخ، نُشرت في مجلة New England Journal of Medicine</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="dot"></div>14 سؤالاً</div>
+    <div class="hero-meta-item"><div class="dot"></div>إجابات نعم / لا</div>
+    <div class="hero-meta-item"><div class="dot"></div>3–5 دقائق</div>
+    <div class="hero-meta-item"><div class="dot"></div>نتيجة فورية</div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="intro-card">
+  <h2>كيف يعمل هذا التقييم؟</h2>
+  <p>كل سؤال يقيس مدى التزامك بعنصر محدد من عناصر النظام الغذائي المتوسطي. الإجابة التي تتوافق مع النظام تعطيك <strong>نقطة واحدة (1)</strong>، وغير المتوافقة <strong>صفراً (0)</strong>. المجموع النهائي من 14 نقطة.</p>
+  <p>أجب بناءً على عاداتك الفعلية في <strong>الأسابيع الأخيرة</strong> — لا على ما تتمنى أن تكون عليه.</p>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-top">
+    <span class="progress-label">تقدم التقييم</span>
+    <span class="progress-count" id="prog-count">0 / 14</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- FORM -->
+<div id="form-section">
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">الدهون الصحية — مصدر الطاقة الرئيسي</div><div class="sec-div-line"></div></div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="qc1">
+    <div class="q-num-row"><div class="q-num">١</div>
+      <div class="q-text">هل تستخدم زيت الزيتون بشكل رئيسي في الطبخ والتحضير؟
+        <span class="note">يشمل: القلي، السلطات، الطعام خارج المنزل</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q1" value="1" onchange="pick('q1',1)"><span class="opt-yn-btn yes-btn">نعم</span></label>
+      <label class="opt-yn"><input type="radio" name="q1" value="0" onchange="pick('q1',0)"><span class="opt-yn-btn no-btn">لا</span></label>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="qc2">
+    <div class="q-num-row"><div class="q-num">٢</div>
+      <div class="q-text">هل تتناول 4 ملاعق كبيرة أو أكثر من زيت الزيتون يومياً؟
+        <span class="note">4 ملاعق كبيرة ≈ 54 مل — يشمل ما يُستخدم في الطبخ والسلطات</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q2" value="1" onchange="pick('q2',1)"><span class="opt-yn-btn yes-btn">نعم</span></label>
+      <label class="opt-yn"><input type="radio" name="q2" value="0" onchange="pick('q2',0)"><span class="opt-yn-btn no-btn">لا</span></label>
+    </div>
+  </div>
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">الخضروات والفواكه — أساس الطبق</div><div class="sec-div-line"></div></div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="qc3">
+    <div class="q-num-row"><div class="q-num">٣</div>
+      <div class="q-text">هل تتناول حصتين أو أكثر من الخضروات يومياً؟
+        <span class="note">الحصة = 200 غرام — يجب أن تشمل حصة واحدة على الأقل خضاراً نيئاً أو سلطة</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q3" value="1" onchange="pick('q3',1)"><span class="opt-yn-btn yes-btn">نعم</span></label>
+      <label class="opt-yn"><input type="radio" name="q3" value="0" onchange="pick('q3',0)"><span class="opt-yn-btn no-btn">لا</span></label>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="qc4">
+    <div class="q-num-row"><div class="q-num">٤</div>
+      <div class="q-text">هل تتناول 3 حصص أو أكثر من الفواكه يومياً؟
+        <span class="note">الحصة = فاكهة متوسطة واحدة — يشمل عصائر الفواكه الطبيعية بدون سكر مضاف</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q4" value="1" onchange="pick('q4',1)"><span class="opt-yn-btn yes-btn">نعم</span></label>
+      <label class="opt-yn"><input type="radio" name="q4" value="0" onchange="pick('q4',0)"><span class="opt-yn-btn no-btn">لا</span></label>
+    </div>
+  </div>
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">البروتين — المصادر والكميات</div><div class="sec-div-line"></div></div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="qc5">
+    <div class="q-num-row"><div class="q-num">٥</div>
+      <div class="q-text">هل تتناول أقل من حصة واحدة يومياً من اللحوم الحمراء أو المصنّعة؟
+        <span class="note">الحصة = 100–150 غرام — اللحوم المصنّعة: نقانق، لانشون، برغر جاهز، لحم مفروم صناعي</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم (تناول أقل من حصة يومياً)</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q5" value="1" onchange="pick('q5',1)"><span class="opt-yn-btn yes-btn">نعم — أقل من حصة يومياً</span></label>
+      <label class="opt-yn"><input type="radio" name="q5" value="0" onchange="pick('q5',0)"><span class="opt-yn-btn no-btn">لا — أتناول حصة أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="qc6">
+    <div class="q-num-row"><div class="q-num">٦</div>
+      <div class="q-text">هل تفضل الدواجن (دجاج، ديك رومي) على اللحوم الحمراء؟
+        <span class="note">أي أنك تختار الدجاج بدلاً من اللحم البقري أو الغنم في معظم الأوقات</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q6" value="1" onchange="pick('q6',1)"><span class="opt-yn-btn yes-btn">نعم</span></label>
+      <label class="opt-yn"><input type="radio" name="q6" value="0" onchange="pick('q6',0)"><span class="opt-yn-btn no-btn">لا</span></label>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="qc7">
+    <div class="q-num-row"><div class="q-num">٧</div>
+      <div class="q-text">هل تتناول 3 حصص أو أكثر من البقوليات أسبوعياً؟
+        <span class="note">البقوليات: العدس، الفول، الحمص، الفاصوليا، اللوبياء — الحصة = 150 غرام مطبوخ</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q7" value="1" onchange="pick('q7',1)"><span class="opt-yn-btn yes-btn">نعم</span></label>
+      <label class="opt-yn"><input type="radio" name="q7" value="0" onchange="pick('q7',0)"><span class="opt-yn-btn no-btn">لا</span></label>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="qc8">
+    <div class="q-num-row"><div class="q-num">٨</div>
+      <div class="q-text">هل تتناول 3 حصص أو أكثر من الأسماك أو المأكولات البحرية أسبوعياً؟
+        <span class="note">الحصة = 100–150 غرام — يشمل السمك الطازج والمعلب والمأكولات البحرية كالروبيان والسبانخ البحرية</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q8" value="1" onchange="pick('q8',1)"><span class="opt-yn-btn yes-btn">نعم</span></label>
+      <label class="opt-yn"><input type="radio" name="q8" value="0" onchange="pick('q8',0)"><span class="opt-yn-btn no-btn">لا</span></label>
+    </div>
+  </div>
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">الدهون والحلويات والمشروبات</div><div class="sec-div-line"></div></div>
+
+  <!-- Q9 -->
+  <div class="q-card" id="qc9">
+    <div class="q-num-row"><div class="q-num">٩</div>
+      <div class="q-text">هل تتناول أقل من حصة واحدة يومياً من الزبدة أو المارغرين أو الكريمة؟
+        <span class="note">الحصة = 12 غرام — أي حوالي ملعقة صغيرة</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم (تناول أقل من حصة يومياً)</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q9" value="1" onchange="pick('q9',1)"><span class="opt-yn-btn yes-btn">نعم — أقل من حصة يومياً</span></label>
+      <label class="opt-yn"><input type="radio" name="q9" value="0" onchange="pick('q9',0)"><span class="opt-yn-btn no-btn">لا — أتناول حصة أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="qc10">
+    <div class="q-num-row"><div class="q-num">١٠</div>
+      <div class="q-text">هل تشرب أقل من مشروب محلى أو غازي واحد يومياً؟
+        <span class="note">يشمل: المشروبات الغازية، العصائر المحلاة، مشروبات الطاقة، المشروبات المحلاة بالسكر أو بدائله</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم (أقل من مشروب يومياً)</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q10" value="1" onchange="pick('q10',1)"><span class="opt-yn-btn yes-btn">نعم — أقل من مشروب يومياً</span></label>
+      <label class="opt-yn"><input type="radio" name="q10" value="0" onchange="pick('q10',0)"><span class="opt-yn-btn no-btn">لا — أشرب مشروباً أو أكثر</span></label>
+    </div>
+  </div>
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">المكسرات وطريقة الطبخ</div><div class="sec-div-line"></div></div>
+
+  <!-- Q11 -->
+  <div class="q-card" id="qc11">
+    <div class="q-num-row"><div class="q-num">١١</div>
+      <div class="q-text">هل تتناول المكسرات 3 مرات أو أكثر في الأسبوع؟
+        <span class="note">الحصة = حفنة صغيرة (30 غرام) — جوز، لوز، كاجو، فستق، بندق — نيئة وغير مملحة يُفضَّل</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q11" value="1" onchange="pick('q11',1)"><span class="opt-yn-btn yes-btn">نعم</span></label>
+      <label class="opt-yn"><input type="radio" name="q11" value="0" onchange="pick('q11',0)"><span class="opt-yn-btn no-btn">لا</span></label>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card" id="qc12">
+    <div class="q-num-row"><div class="q-num">١٢</div>
+      <div class="q-text">هل تتناول الخضار أو المعكرونة أو الأرز المطبوخ مع صلصة الطماطم أو الثوم أو البصل أو الكراث في زيت الزيتون (سوفريتو) مرتين أو أكثر أسبوعياً؟
+        <span class="note">أي طبق فيه خضار متبل بزيت الزيتون مع الثوم أو البصل أو الطماطم — مثل: مرق الخضار، الصلصة الإيطالية، اليخنة بزيت الزيتون</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q12" value="1" onchange="pick('q12',1)"><span class="opt-yn-btn yes-btn">نعم</span></label>
+      <label class="opt-yn"><input type="radio" name="q12" value="0" onchange="pick('q12',0)"><span class="opt-yn-btn no-btn">لا</span></label>
+    </div>
+  </div>
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">أسئلة إضافية — تكيّف للبيئة السعودية</div><div class="sec-div-line"></div></div>
+
+  <!-- Q13 — adapted: replace wine with water/herbal -->
+  <div class="q-card" id="qc13">
+    <div class="q-num-row"><div class="q-num">١٣</div>
+      <div class="q-text">هل تشرب 6 أكواب أو أكثر من الماء أو المشروبات غير المحلاة (شاي أخضر، أعشاب) يومياً؟
+        <span class="note">السؤال الأصلي في MEDAS يقيس المشروبات الصحية — تم تكييفه للبيئة السعودية بدلاً من النبيذ</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q13" value="1" onchange="pick('q13',1)"><span class="opt-yn-btn yes-btn">نعم</span></label>
+      <label class="opt-yn"><input type="radio" name="q13" value="0" onchange="pick('q13',0)"><span class="opt-yn-btn no-btn">لا</span></label>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card" id="qc14">
+    <div class="q-num-row"><div class="q-num">١٤</div>
+      <div class="q-text">هل تتناول الحلويات والمعجنات والكعك أقل من 3 مرات في الأسبوع؟
+        <span class="note">يشمل: الكيك، الكوكيز، الحلويات الشرقية، المعجنات، الشوكولاتة بكميات كبيرة</span>
+        <span class="criterion">النقطة: إذا كانت الإجابة نعم (أقل من 3 مرات أسبوعياً)</span>
+      </div>
+    </div>
+    <div class="opts-yn">
+      <label class="opt-yn"><input type="radio" name="q14" value="1" onchange="pick('q14',1)"><span class="opt-yn-btn yes-btn">نعم — أقل من 3 مرات</span></label>
+      <label class="opt-yn"><input type="radio" name="q14" value="0" onchange="pick('q14',0)"><span class="opt-yn-btn no-btn">لا — 3 مرات أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <button class="submit-btn" onclick="showResult()">احسب نتيجتي</button>
+    <p class="submit-note" id="submit-note">أجب على جميع الأسئلة ثم اضغط الزر</p>
+    <div class="warn-msg" id="warn-msg">⚠️ يرجى الإجابة على جميع الأسئلة — الأسئلة الناقصة مُحددة باللون البرتقالي</div>
+  </div>
+
+</div><!-- end form-section -->
+
+<!-- RESULT -->
+<div id="result-section">
+  <div class="result-card">
+    <div class="result-header" id="result-header">
+      <div class="score-circle" id="score-circle">
+        <div class="score-num" id="score-num">0</div>
+        <div class="score-max">من 14</div>
+      </div>
+      <div class="result-level" id="result-level"></div>
+      <p class="result-desc" id="result-desc"></p>
+      <button class="retry-btn" onclick="resetAll()">إعادة التقييم</button>
+    </div>
+    <div class="result-body">
+      <div class="adapt-note">
+        ملاحظة: السؤال رقم 13 تم تكييفه من النسخة الأصلية ليناسب البيئة السعودية — السؤال الأصلي يقيس استهلاك النبيذ واستُبدل بمؤشر الإماهة الصحية.
+      </div>
+      <div class="recs-title">تفاصيل نتيجتك — ماذا تفعل الآن؟</div>
+      <div id="recs-list"></div>
+      <div class="source-note">
+        هذا التقييم مبني على أداة MEDAS المطوَّرة في دراسة PREDIMED<br>
+        المرجع الأصلي: Schröder H et al. <em>PLOS ONE</em> 2011;6(6):e20596 · doi:10.1371/journal.pone.0020596<br>
+        التحقق متعدد الدول: García-Conesa MT et al. <em>Nutrients</em> 2020;12(10):3189<br>
+        <strong>ملاحظة:</strong> هذا التقييم للتوعية الذاتية ولا يُغني عن استشارة أخصائي تغذية معتمد.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const answers = {};
+
+function pick(name, val) {
+  answers[name] = val;
+  const card = document.getElementById('qc' + name.replace('q',''));
+  if (card) { card.classList.add('answered'); card.style.borderColor = ''; }
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = Object.keys(answers).length;
+  const pct  = Math.round((done / 14) * 100);
+  document.getElementById('prog-count').textContent = done + ' / 14';
+  document.getElementById('prog-fill').style.width  = pct + '%';
+  document.getElementById('submit-note').textContent =
+    done === 14 ? '✅ جميع الأسئلة مكتملة — اضغط لعرض نتيجتك' : (14 - done) + ' سؤال متبقي';
+}
+
+function showResult() {
+  const ALL_Q = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14'];
+  const missing = ALL_Q.filter(q => answers[q] === undefined);
+  if (missing.length > 0) {
+    document.getElementById('warn-msg').classList.add('show');
+    missing.forEach(q => {
+      const c = document.getElementById('qc' + q.replace('q',''));
+      if (c) c.style.borderColor = '#E8A020';
+    });
+    document.getElementById('qc' + missing[0].replace('q','')).scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  let total = 0;
+  ALL_Q.forEach(q => { total += parseInt(answers[q]) || 0; });
+
+  // level
+  let lvl;
+  if (total >= 10) lvl = {
+    cls:'level-high',
+    level:'توافق عالٍ مع النظام المتوسطي',
+    desc:'نمطك الغذائي يتوافق بشكل كبير مع النظام الغذائي المتوسطي الذي أثبتت دراسة PREDIMED أنه يقلل خطر أمراض القلب بنسبة 30%. استمر وحافظ على هذا النمط.',
+    recs:[
+      {i:'🫒',t:'أنت تستخدم زيت الزيتون بشكل جيد — جرب التوسع في استخدام زيت الزيتون البكر الممتاز (Extra Virgin) للاستفادة القصوى من مضادات الأكسدة'},
+      {i:'🐟',t:'إذا لم تكن قد وصلت لـ 3 حصص سمك أسبوعياً — هذا هو الهدف الأهم التالي'},
+      {i:'🥗',t:'حافظ على تنوع الخضروات وركز على تناول الخضار النيء يومياً'},
+    ]
+  };
+  else if (total >= 7) lvl = {
+    cls:'level-mod',
+    level:'توافق متوسط — فرصة حقيقية للتطوير',
+    desc:'نمطك الغذائي يشترك في بعض عناصر النظام المتوسطي. تعديلات تدريجية على المحاور الضعيفة ستصنع فرقاً ملحوظاً على صحتك.',
+    recs:[
+      {i:'🫒',t:'ابدأ باستبدال الزيوت النباتية المهدرجة بزيت الزيتون في الطبخ اليومي'},
+      {i:'🥦',t:'أضف حصة خضار نيئة (سلطة) يومياً — هذا وحده يحسن درجتك'},
+      {i:'🫘',t:'زد البقوليات إلى 3 مرات أسبوعياً — فول، عدس، حمص — بدلاً من اللحوم في بعض الوجبات'},
+      {i:'🍰',t:'قلل الحلويات والمعجنات إلى أقل من 3 مرات أسبوعياً'},
+    ]
+  };
+  else lvl = {
+    cls:'level-low',
+    level:'توافق منخفض — فرصة للتغيير الحقيقي',
+    desc:'نمطك الغذائي الحالي يختلف كثيراً عن النظام المتوسطي. الخبر الجيد: حتى التغييرات الجزئية تُظهر فوائد صحية واضحة خلال أسابيع.',
+    recs:[
+      {i:'🎯',t:'خطوة واحدة أسبوعياً — ابدأ بأسهلها عليك: غير الزيت المستخدم في الطبخ إلى زيت الزيتون'},
+      {i:'🍅',t:'أضف طبق خضار (سلطة أو مطبوخ) لكل وجبة رئيسية هذا الأسبوع'},
+      {i:'🥜',t:'استبدل وجبة خفيفة مدروسة (شيبس أو حلويات) بحفنة مكسرات يومياً'},
+      {i:'🐟',t:'أضف وجبة سمك واحدة هذا الأسبوع — ابدأ بالتونة المعلبة إذا كانت الأسهل'},
+      {i:'👨‍⚕️',t:'فكر في استشارة أخصائي تغذية لخطة انتقال تدريجية مناسبة لك'},
+    ]
+  };
+
+  const hdr = document.getElementById('result-header');
+  hdr.className = 'result-header ' + lvl.cls;
+  document.getElementById('score-num').textContent   = total;
+  document.getElementById('result-level').textContent = lvl.level;
+  document.getElementById('result-desc').textContent  = lvl.desc;
+
+  document.getElementById('recs-list').innerHTML = lvl.recs.map(r =>
+    `<div class="rec-item"><div class="rec-icon">${r.i}</div><div class="rec-txt">${r.t}</div></div>`
+  ).join('');
+
+  document.getElementById('form-section').style.display   = 'none';
+  document.getElementById('result-section').style.display = 'block';
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function resetAll() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.q-card').forEach(c => { c.classList.remove('answered'); c.style.borderColor = ''; });
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('form-section').style.display   = 'block';
+  document.getElementById('warn-msg').classList.remove('show');
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+updateProgress();
+</script>
+</body>
+</html>
