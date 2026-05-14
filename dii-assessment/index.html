@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مؤشر الالتهاب الغذائي — DII</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fire:#B83200; --fire-mid:#D94A0A; --fire-light:#F07040;
+  --fire-pale:#FEF0EA; --fire-glow:rgba(217,74,10,0.12);
+  --cool:#1A5C8A; --cool-mid:#2471A3; --cool-light:#5DADE2;
+  --cool-pale:#EAF4FB; --cool-glow:rgba(36,113,163,0.12);
+  --green:#1A6B4A; --green-pale:#E8F5EE;
+  --amber:#C07A00; --amber-pale:#FEF3E2;
+  --ink:#1A2332; --ink-mid:#3D4F63; --ink-light:#6B7C93;
+  --border:#DDE4EC; --surface:#F6F8FA; --white:#fff;
+  --radius:14px; --radius-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Tajawal',sans-serif;background:#F5EEE8;color:var(--ink);min-height:100vh;direction:rtl;}
+.page{max-width:780px;margin:0 auto;padding:32px 16px 60px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#5A1200 0%,#B83200 55%,#D94A0A 100%);border-radius:20px;padding:36px 36px 32px;margin-bottom:28px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(90,18,0,0.35);}
+.hero::before{content:'';position:absolute;top:-60px;left:-40px;width:220px;height:220px;border:40px solid rgba(255,255,255,0.05);border-radius:50%;}
+.hero::after{content:'';position:absolute;bottom:-80px;right:-30px;width:260px;height:260px;border:50px solid rgba(255,255,255,0.04);border-radius:50%;}
+.hero-badge{display:inline-block;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.22);color:rgba(255,255,255,0.92);font-size:11px;font-weight:500;letter-spacing:2px;padding:4px 14px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;}
+.hero h1{font-size:26px;font-weight:800;color:#fff;line-height:1.35;margin-bottom:10px;position:relative;z-index:1;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.75;position:relative;z-index:1;}
+.hero-ref{display:inline-block;margin-top:14px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:7px 14px;font-size:12px;color:rgba(255,255,255,0.85);position:relative;z-index:1;}
+.hero-meta{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap;position:relative;z-index:1;}
+.hero-meta-item{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,0.82);}
+.hero-meta-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.45);flex-shrink:0;}
+
+/* FLAME SCALE VISUAL */
+.flame-scale{display:flex;gap:0;border-radius:10px;overflow:hidden;margin:18px 0 8px;height:10px;}
+.fs-seg{flex:1;}
+.fs-label{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-light);margin-bottom:14px;}
+
+/* INTRO */
+.intro-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px 26px;margin-bottom:24px;}
+.intro-card h2{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.intro-card h2::before{content:'';width:4px;height:20px;background:var(--fire-mid);border-radius:2px;display:inline-block;flex-shrink:0;}
+.intro-card p{font-size:14px;color:var(--ink-mid);line-height:1.85;margin-bottom:10px;}
+.intro-card p:last-child{margin-bottom:0;}
+
+.score-scale{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.scale-box{flex:1;min-width:120px;border-radius:8px;padding:10px 12px;text-align:center;border:1px solid transparent;}
+.scale-box .sb-val{font-size:15px;font-weight:800;margin-bottom:3px;}
+.scale-box .sb-lbl{font-size:11px;line-height:1.4;}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:24px;}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-size:12px;color:var(--ink-light);}
+.progress-count{font-size:13px;font-weight:700;color:var(--fire-mid);}
+.progress-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--cool) 0%,var(--fire) 100%);border-radius:3px;transition:width .4s ease;width:0%;}
+
+/* SEC DIVIDER */
+.sec-div{margin:24px 0 14px;display:flex;align-items:center;gap:12px;}
+.sec-div-line{flex:1;height:1px;background:var(--border);}
+.sec-div-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--ink-light);white-space:nowrap;padding:4px 12px;background:var(--surface);border:1px solid var(--border);border-radius:20px;}
+.sec-div-lbl.anti{color:#1A5C8A;border-color:#AED6F1;background:#EAF4FB;}
+.sec-div-lbl.pro{color:#B83200;border-color:#F5B8A0;background:#FEF0EA;}
+
+/* QUESTION CARD */
+.q-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
+.q-card.answered-anti{border-color:var(--cool-light);box-shadow:0 2px 12px var(--cool-glow);}
+.q-card.answered-pro{border-color:var(--fire-light);box-shadow:0 2px 12px var(--fire-glow);}
+.q-card.anti-card{border-right:4px solid var(--cool);}
+.q-card.pro-card{border-right:4px solid var(--fire);}
+.q-num-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;}
+.q-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.q-num.anti{background:var(--cool-pale);color:var(--cool);}
+.q-num.pro{background:var(--fire-pale);color:var(--fire);}
+.q-text{font-size:14.5px;font-weight:500;color:var(--ink);line-height:1.6;}
+.q-text .note{display:block;font-size:12px;font-weight:400;color:var(--ink-light);margin-top:4px;}
+.type-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;margin-top:5px;letter-spacing:1px;}
+.type-tag.anti{background:var(--cool-pale);color:var(--cool);}
+.type-tag.pro{background:var(--fire-pale);color:var(--fire);}
+
+/* OPTIONS */
+.options{display:flex;gap:7px;flex-wrap:wrap;}
+.opt-lbl{flex:1;min-width:90px;cursor:pointer;}
+.opt-lbl input[type="radio"]{display:none;}
+.opt-btn{display:block;padding:9px 8px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:400;color:var(--ink-mid);text-align:center;cursor:pointer;transition:all .18s;line-height:1.4;user-select:none;}
+.anti-card .opt-lbl input:checked + .opt-btn{background:var(--cool-pale);border-color:var(--cool-light);color:var(--cool);font-weight:600;}
+.pro-card .opt-lbl input:checked + .opt-btn{background:var(--fire-pale);border-color:var(--fire-light);color:var(--fire);font-weight:600;}
+.opt-btn:hover{border-color:var(--ink-light);background:#f8f8f8;}
+
+/* SUBMIT */
+.submit-wrap{text-align:center;margin-top:32px;}
+.submit-btn{display:inline-block;background:linear-gradient(135deg,#5A1200,#B83200);color:#fff;font-family:'Tajawal',sans-serif;font-size:17px;font-weight:700;padding:16px 52px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(90,18,0,0.3);transition:all .2s;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(90,18,0,0.4);}
+.submit-note{font-size:13px;color:var(--ink-light);margin-top:10px;}
+.warn-msg{display:none;margin-top:14px;background:var(--amber-pale);border:1px solid #E8B060;border-radius:10px;padding:12px 16px;font-size:13px;color:#7A4800;}
+.warn-msg.show{display:block;}
+
+/* RESULT */
+#result-section{display:none;margin-top:28px;}
+.result-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.08);}
+.result-header{padding:32px 30px 26px;text-align:center;}
+
+/* FLAME METER */
+.flame-meter{margin:0 auto 20px;max-width:420px;}
+.fm-track{height:20px;border-radius:10px;background:linear-gradient(90deg,#1A5C8A 0%,#5DADE2 25%,#F5CBA7 50%,#E67E22 75%,#B83200 100%);position:relative;overflow:visible;}
+.fm-needle{position:absolute;top:50%;transform:translate(-50%,-50%);width:3px;height:30px;background:var(--ink);border-radius:2px;transition:left .6s ease;}
+.fm-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink-light);margin-top:6px;}
+
+.result-score-row{display:flex;justify-content:center;gap:24px;margin-bottom:16px;flex-wrap:wrap;}
+.rscore-box{text-align:center;}
+.rscore-num{font-size:32px;font-weight:800;line-height:1;}
+.rscore-lbl{font-size:11px;color:var(--ink-light);margin-top:3px;}
+.result-level{font-size:20px;font-weight:800;margin-bottom:8px;}
+.result-desc{font-size:14px;color:var(--ink-mid);line-height:1.75;max-width:500px;margin:0 auto;}
+
+.level-very-anti .result-level{color:#1A5C8A;}
+.level-anti .result-level{color:#1A8C8C;}
+.level-neutral .result-level{color:var(--amber);}
+.level-pro .result-level{color:var(--fire-mid);}
+.level-very-pro .result-level{color:var(--fire);}
+
+.result-body{padding:24px 28px 28px;border-top:1px solid var(--border);background:var(--surface);}
+
+/* BREAKDOWN */
+.breakdown-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.bdown-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;}
+.bdown-title{font-size:12px;font-weight:700;margin-bottom:4px;}
+.bdown-score{font-size:26px;font-weight:800;}
+.bdown-desc{font-size:12px;color:var(--ink-light);line-height:1.5;margin-top:4px;}
+
+.recs-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;}
+.rec-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
+.rec-item:last-child{border-bottom:none;}
+.rec-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--cool-pale);}
+.rec-item.pro-rec .rec-icon{background:var(--fire-pale);}
+.rec-txt{font-size:13.5px;color:var(--ink-mid);line-height:1.6;flex:1;}
+.source-note{font-size:11px;color:var(--ink-light);margin-top:16px;padding-top:12px;border-top:1px solid var(--border);line-height:1.7;text-align:center;}
+.retry-btn{display:inline-block;margin-top:20px;background:#fff;color:var(--fire);border:1.5px solid var(--fire-light);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:600;padding:10px 28px;border-radius:10px;cursor:pointer;transition:all .18s;}
+.retry-btn:hover{background:var(--fire-pale);}
+
+@media(max-width:600px){
+  .hero{padding:28px 22px 24px;} .hero h1{font-size:21px;}
+  .breakdown-row{grid-template-columns:1fr;}
+  .options{flex-direction:column;} .opt-lbl{min-width:100%;}
+  .page{padding:20px 12px 48px;}
+  .score-scale{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">أداة تقييم علمية · Dietary Inflammatory Index — DII</div>
+  <h1>مؤشر الالتهاب الغذائي</h1>
+  <p class="hero-sub">هل غذاؤك يُشعل الالتهاب في جسمك أم يُطفئه؟ مبني على مؤشر DII الذي طوّرته جامعة ساوث كارولاينا — المرتبط بـ 6 مؤشرات التهاب في الدم</p>
+  <div class="hero-ref">Shivappa N, Hébert JR et al. · Public Health Nutrition 2014 · University of South Carolina</div>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="dot"></div>20 سؤالاً</div>
+    <div class="hero-meta-item"><div class="dot"></div>مضاد للالتهاب ومحرض للالتهاب</div>
+    <div class="hero-meta-item"><div class="dot"></div>5–7 دقائق</div>
+    <div class="hero-meta-item"><div class="dot"></div>نتيجة فورية</div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="intro-card">
+  <h2>ماذا يقيس هذا المؤشر؟</h2>
+  <p>الالتهاب المزمن المنخفض الدرجة هو جذر معظم الأمراض المزمنة — أمراض القلب، السكري، السرطان، الاكتئاب، والزهايمر. وما تأكله يومياً يُحدد إلى حد كبير مستوى الالتهاب في جسمك.</p>
+  <p>هذا المؤشر يُصنّف كل طعام كـ <strong style="color:var(--cool)">مضاد للالتهاب</strong> أو <strong style="color:var(--fire)">محرض للالتهاب</strong> — والنتيجة النهائية تُخبرك أين يقع غذاؤك على هذا المحور.</p>
+  <div class="score-scale">
+    <div class="scale-box" style="background:#EAF4FB;border-color:#AED6F1;">
+      <div class="sb-val" style="color:#1A5C8A;">سالب كبير</div>
+      <div class="sb-lbl" style="color:#1A5C8A;">مضاد للالتهاب بقوة</div>
+    </div>
+    <div class="scale-box" style="background:#E8F5EE;border-color:#A9DFBF;">
+      <div class="sb-val" style="color:var(--green);">سالب خفيف</div>
+      <div class="sb-lbl" style="color:var(--green);">مضاد للالتهاب</div>
+    </div>
+    <div class="scale-box" style="background:var(--surface);border-color:var(--border);">
+      <div class="sb-val" style="color:var(--ink-mid);">قريب من الصفر</div>
+      <div class="sb-lbl" style="color:var(--ink-light);">متعادل</div>
+    </div>
+    <div class="scale-box" style="background:#FEF0EA;border-color:#F5B8A0;">
+      <div class="sb-val" style="color:var(--fire);">موجب</div>
+      <div class="sb-lbl" style="color:var(--fire);">محرض للالتهاب</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-top">
+    <span class="progress-label">تقدم التقييم</span>
+    <span class="progress-count" id="prog-count">0 / 20</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- FORM -->
+<div id="form-section">
+
+  <!-- ANTI-INFLAMMATORY -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl anti">🧊 الأطعمة المضادة للالتهاب — تُخفض الدرجة (تُحسن)</div><div class="sec-div-line"></div></div>
+
+  <!-- Q1 -->
+  <div class="q-card anti-card" id="qc1">
+    <div class="q-num-row"><div class="q-num anti">١</div>
+      <div class="q-text">الخضروات الورقية والملونة
+        <span class="note">السبانخ، الجرجير، البروكلي، الفلفل الملون، الجزر، الطماطم الطازجة — غنية بمضادات الأكسدة والفلافونويدات</span>
+        <span class="type-tag anti">مضاد للالتهاب</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q1" value="-2" onchange="pick('q1',-2)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="-1" onchange="pick('q1',-1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="0" onchange="pick('q1',0)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="-3" onchange="pick('q1',-3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card anti-card" id="qc2">
+    <div class="q-num-row"><div class="q-num anti">٢</div>
+      <div class="q-text">الفواكه الطازجة — خاصة التوت والحمضيات والرمان
+        <span class="note">التوت، الفراولة، الرمان، البرتقال، الليمون، العنب الأحمر — غنية بالأنثوسيانين والفلافونويدات</span>
+        <span class="type-tag anti">مضاد للالتهاب</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q2" value="-2" onchange="pick('q2',-2)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="-1" onchange="pick('q2',-1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="0" onchange="pick('q2',0)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="-3" onchange="pick('q2',-3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card anti-card" id="qc3">
+    <div class="q-num-row"><div class="q-num anti">٣</div>
+      <div class="q-text">الأسماك الدهنية
+        <span class="note">السلمون، السردين، التونة، الماكريل، الرنجة — المصادر الأقوى لأوميغا 3 (EPA وDHA) المضاد للالتهاب</span>
+        <span class="type-tag anti">مضاد للالتهاب — قوي جداً</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q3" value="-2" onchange="pick('q3',-2)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="-1" onchange="pick('q3',-1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="0" onchange="pick('q3',0)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="-3" onchange="pick('q3',-3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card anti-card" id="qc4">
+    <div class="q-num-row"><div class="q-num anti">٤</div>
+      <div class="q-text">البقوليات والحبوب الكاملة
+        <span class="note">العدس، الحمص، الفول، الشوفان، الأرز البني، البرغل — غنية بالألياف ومضادات الأكسدة</span>
+        <span class="type-tag anti">مضاد للالتهاب</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q4" value="-2" onchange="pick('q4',-2)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="-1" onchange="pick('q4',-1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="0" onchange="pick('q4',0)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="-3" onchange="pick('q4',-3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card anti-card" id="qc5">
+    <div class="q-num-row"><div class="q-num anti">٥</div>
+      <div class="q-text">زيت الزيتون البكر الممتاز (Extra Virgin)
+        <span class="note">يحتوي على Oleocanthal — مركب يعمل كمضاد التهاب طبيعي شبيه بالإيبوبروفين وفق الدراسات</span>
+        <span class="type-tag anti">مضاد للالتهاب</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q5" value="-2" onchange="pick('q5',-2)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="-1" onchange="pick('q5',-1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="0" onchange="pick('q5',0)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="-3" onchange="pick('q5',-3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card anti-card" id="qc6">
+    <div class="q-num-row"><div class="q-num anti">٦</div>
+      <div class="q-text">المكسرات والبذور الصحية
+        <span class="note">الجوز (الأغنى بأوميغا 3)، اللوز، بذور الكتان، بذور الشيا — مضادات التهاب قوية وفق DII</span>
+        <span class="type-tag anti">مضاد للالتهاب</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q6" value="-2" onchange="pick('q6',-2)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="-1" onchange="pick('q6',-1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="0" onchange="pick('q6',0)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="-3" onchange="pick('q6',-3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card anti-card" id="qc7">
+    <div class="q-num-row"><div class="q-num anti">٧</div>
+      <div class="q-text">الثوم والبصل والكراث
+        <span class="note">الثوم يحتوي Allicin — من أقوى المركبات المضادة للالتهاب — طازجاً أو مطبوخاً يومياً</span>
+        <span class="type-tag anti">مضاد للالتهاب — قوي</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q7" value="-2" onchange="pick('q7',-2)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="-1" onchange="pick('q7',-1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="0" onchange="pick('q7',0)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="-3" onchange="pick('q7',-3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card anti-card" id="qc8">
+    <div class="q-num-row"><div class="q-num anti">٨</div>
+      <div class="q-text">التوابل المضادة للالتهاب
+        <span class="note">الكركم (curcumin)، الزنجبيل، الفلفل الأسود، إكليل الجبل، الزعتر، القرفة — في DII من أقوى المواد مضادة الالتهاب</span>
+        <span class="type-tag anti">مضاد للالتهاب — قوي جداً</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q8" value="-2" onchange="pick('q8',-2)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="-1" onchange="pick('q8',-1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="0" onchange="pick('q8',0)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="-3" onchange="pick('q8',-3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card anti-card" id="qc9">
+    <div class="q-num-row"><div class="q-num anti">٩</div>
+      <div class="q-text">الشاي الأخضر والأعشاب بدون سكر
+        <span class="note">الشاي الأخضر غني بـ EGCG — أحد أقوى مضادات الأكسدة المرتبطة بخفض الالتهاب في الدراسات</span>
+        <span class="type-tag anti">مضاد للالتهاب</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q9" value="-2" onchange="pick('q9',-2)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="-1" onchange="pick('q9',-1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="0" onchange="pick('q9',0)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="-3" onchange="pick('q9',-3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card anti-card" id="qc10">
+    <div class="q-num-row"><div class="q-num anti">١٠</div>
+      <div class="q-text">الأفوكادو والزيوت الصحية الأخرى
+        <span class="note">الأفوكادو، زيت بذر الكتان، زيت الجوز — غنية بالدهون الأحادية غير المشبعة وأوميغا 3 النباتي</span>
+        <span class="type-tag anti">مضاد للالتهاب</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q10" value="-2" onchange="pick('q10',-2)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="-1" onchange="pick('q10',-1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="0" onchange="pick('q10',0)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="-3" onchange="pick('q10',-3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- PRO-INFLAMMATORY -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl pro">🔥 الأطعمة المحرضة للالتهاب — ترفع الدرجة (تضر)</div><div class="sec-div-line"></div></div>
+
+  <!-- Q11 -->
+  <div class="q-card pro-card" id="qc11">
+    <div class="q-num-row"><div class="q-num pro">١١</div>
+      <div class="q-text">اللحوم المصنّعة والمعالجة
+        <span class="note">النقانق، اللانشون، البرغر الجاهز، اللحم المدخن — الأعلى في DII من حيث تحريض الالتهاب</span>
+        <span class="type-tag pro">محرض للالتهاب — قوي جداً</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q11" value="0" onchange="pick('q11',0)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q11" value="1" onchange="pick('q11',1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q11" value="2" onchange="pick('q11',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q11" value="3" onchange="pick('q11',3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card pro-card" id="qc12">
+    <div class="q-num-row"><div class="q-num pro">١٢</div>
+      <div class="q-text">المشروبات المحلاة بالسكر
+        <span class="note">المشروبات الغازية، عصائر الفواكه المصنّعة، مشروبات الطاقة — السكر المضاف من أقوى المحرضات الالتهابية</span>
+        <span class="type-tag pro">محرض للالتهاب — قوي جداً</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q12" value="0" onchange="pick('q12',0)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q12" value="1" onchange="pick('q12',1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q12" value="2" onchange="pick('q12',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q12" value="3" onchange="pick('q12',3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card pro-card" id="qc13">
+    <div class="q-num-row"><div class="q-num pro">١٣</div>
+      <div class="q-text">الدهون المتحولة والمهدرجة
+        <span class="note">السمنة النباتية، بعض المارغرين، المقليات التجارية، الكريمة الصناعية، بعض البسكويت والمخبوزات الجاهزة</span>
+        <span class="type-tag pro">محرض للالتهاب — قوي جداً</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q13" value="0" onchange="pick('q13',0)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q13" value="1" onchange="pick('q13',1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q13" value="2" onchange="pick('q13',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q13" value="3" onchange="pick('q13',3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card pro-card" id="qc14">
+    <div class="q-num-row"><div class="q-num pro">١٤</div>
+      <div class="q-text">الحبوب المكررة والنشويات السريعة
+        <span class="note">الخبز الأبيض، الأرز الأبيض، المعكرونة البيضاء، البسكويت، الكعك — ترفع السكر وتزيد الإنسولين والالتهاب</span>
+        <span class="type-tag pro">محرض للالتهاب</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q14" value="0" onchange="pick('q14',0)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q14" value="1" onchange="pick('q14',1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q14" value="2" onchange="pick('q14',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q14" value="3" onchange="pick('q14',3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card pro-card" id="qc15">
+    <div class="q-num-row"><div class="q-num pro">١٥</div>
+      <div class="q-text">اللحوم الحمراء بكميات كبيرة
+        <span class="note">اللحم البقري، الغنم — ليست محرضة بالقدر نفسه مثل المصنعة لكن كميات كبيرة يومياً تزيد الالتهاب</span>
+        <span class="type-tag pro">محرض للالتهاب — معتدل</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q15" value="0" onchange="pick('q15',0)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q15" value="1" onchange="pick('q15',1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q15" value="2" onchange="pick('q15',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q15" value="3" onchange="pick('q15',3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="q-card pro-card" id="qc16">
+    <div class="q-num-row"><div class="q-num pro">١٦</div>
+      <div class="q-text">الوجبات السريعة والمقليات التجارية
+        <span class="note">البرغر، الدجاج المقلي، البطاطس المقلية التجارية — مزيج من الدهون المتحولة والسكر والملح الزائد</span>
+        <span class="type-tag pro">محرض للالتهاب — قوي</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q16" value="0" onchange="pick('q16',0)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q16" value="1" onchange="pick('q16',1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q16" value="2" onchange="pick('q16',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q16" value="3" onchange="pick('q16',3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="q-card pro-card" id="qc17">
+    <div class="q-num-row"><div class="q-num pro">١٧</div>
+      <div class="q-text">الحلويات والسكريات المضافة
+        <span class="note">الكيك، الكوكيز، الشوكولاتة بكميات كبيرة، الحلويات الشرقية، السكر المضاف للمشروبات</span>
+        <span class="type-tag pro">محرض للالتهاب</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q17" value="0" onchange="pick('q17',0)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q17" value="1" onchange="pick('q17',1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q17" value="2" onchange="pick('q17',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q17" value="3" onchange="pick('q17',3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="q-card pro-card" id="qc18">
+    <div class="q-num-row"><div class="q-num pro">١٨</div>
+      <div class="q-text">الزيوت النباتية عالية الأوميغا 6
+        <span class="note">زيت الذرة، زيت فول الصويا، زيت عباد الشمس بكميات كبيرة — الإفراط في أوميغا 6 يُعزز الالتهاب</span>
+        <span class="type-tag pro">محرض للالتهاب — عند الإفراط</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q18" value="0" onchange="pick('q18',0)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q18" value="1" onchange="pick('q18',1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q18" value="2" onchange="pick('q18',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q18" value="3" onchange="pick('q18',3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="q-card pro-card" id="qc19">
+    <div class="q-num-row"><div class="q-num pro">١٩</div>
+      <div class="q-text">الأطعمة شديدة المعالجة (Ultra-processed)
+        <span class="note">كل منتج فيه أكثر من 5 مواد على ملصقه — إضافات، ألوان، محسنات طعم، حافظات — Ultra-processed food</span>
+        <span class="type-tag pro">محرض للالتهاب — قوي</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q19" value="0" onchange="pick('q19',0)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q19" value="1" onchange="pick('q19',1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q19" value="2" onchange="pick('q19',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q19" value="3" onchange="pick('q19',3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="q-card pro-card" id="qc20">
+    <div class="q-num-row"><div class="q-num pro">٢٠</div>
+      <div class="q-text">الملح الزائد والصوديوم المرتفع
+        <span class="note">الأطعمة المعلبة، المخللات، الشيبس، الصلصات الجاهزة، إضافة الملح على الطعام بعد الطهي</span>
+        <span class="type-tag pro">محرض للالتهاب — معتدل</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q20" value="0" onchange="pick('q20',0)"><span class="opt-btn">نادراً<br>أو أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q20" value="1" onchange="pick('q20',1)"><span class="opt-btn">1–2 مرة<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q20" value="2" onchange="pick('q20',2)"><span class="opt-btn">3–4 مرات<br>أسبوعياً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q20" value="3" onchange="pick('q20',3)"><span class="opt-btn">يومياً<br>أو أكثر</span></label>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <button class="submit-btn" onclick="showResult()">احسب مؤشر الالتهاب</button>
+    <p class="submit-note" id="submit-note">أجب على جميع الأسئلة ثم اضغط الزر</p>
+    <div class="warn-msg" id="warn-msg">⚠️ يرجى الإجابة على جميع الأسئلة — الأسئلة الناقصة مُحددة</div>
+  </div>
+
+</div>
+
+<!-- RESULT -->
+<div id="result-section">
+  <div class="result-card">
+    <div class="result-header" id="result-header">
+
+      <!-- FLAME METER -->
+      <div class="flame-meter">
+        <div class="fm-track">
+          <div class="fm-needle" id="fm-needle" style="left:50%"></div>
+        </div>
+        <div class="fm-labels">
+          <span style="color:var(--cool)">مضاد للالتهاب بقوة</span>
+          <span>متعادل</span>
+          <span style="color:var(--fire)">محرض للالتهاب</span>
+        </div>
+      </div>
+
+      <div class="result-score-row">
+        <div class="rscore-box">
+          <div class="rscore-num" id="anti-score" style="color:var(--cool)">0</div>
+          <div class="rscore-lbl">نقاط مضادة للالتهاب</div>
+        </div>
+        <div class="rscore-box">
+          <div class="rscore-num" id="pro-score" style="color:var(--fire)">0</div>
+          <div class="rscore-lbl">نقاط محرضة للالتهاب</div>
+        </div>
+        <div class="rscore-box">
+          <div class="rscore-num" id="net-score">0</div>
+          <div class="rscore-lbl" id="net-label">صافي المؤشر</div>
+        </div>
+      </div>
+
+      <div class="result-level" id="result-level"></div>
+      <p class="result-desc" id="result-desc"></p>
+      <button class="retry-btn" onclick="resetAll()">إعادة التقييم</button>
+    </div>
+    <div class="result-body">
+      <div class="breakdown-row" id="breakdown-row"></div>
+      <div class="recs-title">توصيات مبنية على نتيجتك</div>
+      <div id="recs-list"></div>
+      <div class="source-note">
+        مبني على مؤشر الالتهاب الغذائي (DII) ومؤشر eDII المبسط<br>
+        المرجع الأساسي: Shivappa N, Hebert JR et al. <em>Public Health Nutrition</em> 2014;17(8):1689–1696 · doi:10.1017/S1368980013002115<br>
+        eDII المبسط: Lo CH et al. <em>The Journal of Nutrition</em> 2019 · PMC6796497<br>
+        <strong>ملاحظة:</strong> DII الأصلي يُحسب من كميات دقيقة لـ 45 عنصراً غذائياً — هذه النسخة للتوعية الذاتية.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const answers = {};
+const ALL_Q   = Array.from({length:20}, (_,i) => 'q'+(i+1));
+const ANTI_Q  = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'];
+const PRO_Q   = ['q11','q12','q13','q14','q15','q16','q17','q18','q19','q20'];
+
+function pick(name, val) {
+  answers[name] = parseInt(val);
+  const idx  = name.replace('q','');
+  const card = document.getElementById('qc' + idx);
+  if (card) {
+    card.style.borderColor = '';
+    const isAnti = ANTI_Q.includes(name);
+    card.classList.remove('answered-anti','answered-pro');
+    card.classList.add(isAnti ? 'answered-anti' : 'answered-pro');
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = Object.keys(answers).length;
+  const pct  = Math.round((done / 20) * 100);
+  document.getElementById('prog-count').textContent = done + ' / 20';
+  document.getElementById('prog-fill').style.width  = pct + '%';
+  document.getElementById('submit-note').textContent =
+    done === 20 ? '✅ جميع الأسئلة مكتملة — اضغط لعرض نتيجتك' : (20 - done) + ' سؤال متبقي';
+}
+
+function showResult() {
+  const missing = ALL_Q.filter(q => answers[q] === undefined);
+  if (missing.length > 0) {
+    document.getElementById('warn-msg').classList.add('show');
+    missing.forEach(q => {
+      const c = document.getElementById('qc' + q.replace('q',''));
+      if (c) c.style.borderColor = '#E8A020';
+    });
+    document.getElementById('qc' + missing[0].replace('q','')).scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  let antiTotal = 0, proTotal = 0;
+  ANTI_Q.forEach(q => { antiTotal += parseInt(answers[q]) || 0; }); // negatives
+  PRO_Q.forEach(q => { proTotal  += parseInt(answers[q]) || 0; }); // positives
+  const net = antiTotal + proTotal; // anti are negative so net = anti + pro
+
+  // needle position: net ranges approx -30 to +30, map to 0-100%
+  const needlePct = Math.min(100, Math.max(0, ((net + 30) / 60) * 100));
+  document.getElementById('fm-needle').style.left = needlePct + '%';
+
+  document.getElementById('anti-score').textContent = antiTotal;
+  document.getElementById('pro-score').textContent  = '+' + proTotal;
+  document.getElementById('net-score').textContent  = (net > 0 ? '+' : '') + net;
+  document.getElementById('net-score').style.color  = net < -10 ? '#1A5C8A' : net < 0 ? '#1A6B4A' : net < 10 ? '#C07A00' : '#B83200';
+
+  let lvl;
+  if (net <= -15) lvl = {
+    label:'level-very-anti',
+    level:'مضاد للالتهاب بقوة — ممتاز',
+    desc:'غذاؤك يُقدّم حماية قوية من الالتهاب المزمن. هذا المستوى مرتبط بانخفاض ملحوظ في خطر أمراض القلب والسكري وبعض السرطانات.',
+    recs:[
+      {i:'🫒', t:'حافظ على زيت الزيتون البكر يومياً — هو حجر أساس نمطك المضاد للالتهاب', pr:false},
+      {i:'🐟', t:'واصل تناول الأسماك الدهنية أسبوعياً — تعزز خفض CRP والإنترلوكينات الالتهابية', pr:false},
+      {i:'🧪', t:'فكر في قياس CRP وIL-6 في فحصك الدوري لترى الأثر الفعلي على مؤشرات الدم', pr:false},
+    ]
+  };
+  else if (net <= -5) lvl = {
+    label:'level-anti',
+    level:'مضاد للالتهاب — جيد جداً',
+    desc:'غذاؤك يميل للحماية من الالتهاب بشكل واضح. فيه عناصر قوية جداً — واصل التحسين في المحاور الأضعف.',
+    recs:[
+      {i:'🌿', t:'أضف الكركم مع الفلفل الأسود يومياً — الفلفل الأسود يزيد امتصاص الكركمين 2000%', pr:false},
+      {i:'🍓', t:'زد من التوت والفواكه الحمراء — الأنثوسيانين من أقوى مضادات الأكسدة الالتهابية', pr:false},
+      {i:'🚫', t:'تحقق من المحرضات المخفية — صلصات جاهزة وأطعمة معلبة تحتوي مواد التهابية غير مرئية', pr:true},
+    ]
+  };
+  else if (net <= 5) lvl = {
+    label:'level-neutral',
+    level:'متعادل — فرصة للتحسين',
+    desc:'غذاؤك يحتوي على مضادات التهاب جيدة، لكن المحرضات تُعادلها. تحسين بعض العادات سيقلب الميزان لصالحك.',
+    recs:[
+      {i:'🔥', t:'المشروبات المحلاة والمصنّعات هي الأولوية — استبدال واحد منها يومياً يُحدث فرقاً ملحوظاً', pr:true},
+      {i:'🐟', t:'أضف وجبة أسماك دهنية أسبوعياً — السلمون أو السردين — الخطوة الأعلى تأثيراً لخفض الالتهاب', pr:false},
+      {i:'🌿', t:'ابدأ باستخدام الكركم والزنجبيل يومياً في الطبخ أو في مشروب دافئ', pr:false},
+    ]
+  };
+  else if (net <= 15) lvl = {
+    label:'level-pro',
+    level:'محرض للالتهاب — يحتاج مراجعة',
+    desc:'غذاؤك يُحرض الالتهاب بشكل ملحوظ. هذا المستوى مرتبط بزيادة خطر الأمراض المزمنة على المدى البعيد.',
+    recs:[
+      {i:'🚫', t:'اللحوم المصنّعة والمشروبات المحلاة هي الأولوية — تأثيرهما على الالتهاب أكبر من باقي العوامل', pr:true},
+      {i:'🥦', t:'أضف 3 حصص خضروات يومياً — هذا وحده يُحدث تغييراً مقيساً في CRP خلال 8 أسابيع', pr:false},
+      {i:'🫒', t:'استبدل الزيوت النباتية المعالجة بزيت الزيتون البكر في جميع طبخك', pr:false},
+      {i:'👨‍⚕️', t:'اطلب قياس CRP التفاعلي عالي الحساسية (hs-CRP) في فحصك القادم', pr:true},
+    ]
+  };
+  else lvl = {
+    label:'level-very-pro',
+    level:'محرض للالتهاب بقوة — تدخل عاجل',
+    desc:'غذاؤك يُشعل الالتهاب بمستوى مرتفع. هذا النمط مرتبط بزيادة كبيرة في خطر أمراض القلب والسكري والسرطان.',
+    recs:[
+      {i:'🎯', t:'ابدأ بخطوة واحدة عاجلة: أوقف المشروبات الغازية والمحلاة هذا الأسبوع تماماً', pr:true},
+      {i:'🥗', t:'أضف سلطة خضراء كبيرة بزيت الزيتون لكل وجبة رئيسية — الخضروات هي إسعاف أولي للالتهاب', pr:false},
+      {i:'🐟', t:'ابدأ بتناول السردين المعلب مرتين أسبوعياً — أسهل وأرخص مصدر لأوميغا 3 مضاد الالتهاب', pr:false},
+      {i:'🚫', t:'تجنب المطاعم السريعة والمقليات لمدة شهر وقس الفرق في مستوى طاقتك ومزاجك', pr:true},
+      {i:'👨‍⚕️', t:'استشر طبيبك لقياس مؤشرات الالتهاب (CRP, IL-6) ووضع خطة غذائية علاجية', pr:true},
+    ]
+  };
+
+  document.getElementById('result-header').className = 'result-header';
+  document.getElementById('result-level').className = 'result-level';
+  document.getElementById('result-level').style.color =
+    net <= -15 ? '#1A5C8A' : net <= -5 ? '#1A8C8C' : net <= 5 ? '#C07A00' : net <= 15 ? '#D94A0A' : '#B83200';
+  document.getElementById('result-level').textContent = lvl.level;
+  document.getElementById('result-desc').textContent  = lvl.desc;
+
+  // Breakdown
+  const antiAbs = Math.abs(antiTotal);
+  document.getElementById('breakdown-row').innerHTML = `
+    <div class="bdown-box" style="border-right:4px solid var(--cool)">
+      <div class="bdown-title" style="color:var(--cool)">🧊 مضادات الالتهاب</div>
+      <div class="bdown-score" style="color:var(--cool)">${antiTotal}</div>
+      <div class="bdown-desc">من أصل −30 نقطة ممكنة — كلما اقتربت من −30 كان أفضل</div>
+    </div>
+    <div class="bdown-box" style="border-right:4px solid var(--fire)">
+      <div class="bdown-title" style="color:var(--fire)">🔥 محرضات الالتهاب</div>
+      <div class="bdown-score" style="color:var(--fire)">+${proTotal}</div>
+      <div class="bdown-desc">من أصل +30 نقطة ممكنة — كلما اقتربت من 0 كان أفضل</div>
+    </div>
+  `;
+
+  document.getElementById('recs-list').innerHTML = lvl.recs.map(r =>
+    `<div class="rec-item ${r.pr ? 'pro-rec' : ''}">
+      <div class="rec-icon" style="background:${r.pr ? 'var(--fire-pale)' : 'var(--cool-pale)'}">${r.i}</div>
+      <div class="rec-txt">${r.t}</div>
+    </div>`
+  ).join('');
+
+  document.getElementById('form-section').style.display   = 'none';
+  document.getElementById('result-section').style.display = 'block';
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function resetAll() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.q-card').forEach(c => {
+    c.classList.remove('answered-anti','answered-pro');
+    c.style.borderColor = '';
+  });
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('form-section').style.display   = 'block';
+  document.getElementById('warn-msg').classList.remove('show');
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+updateProgress();
+</script>
+</body>
+</html>
