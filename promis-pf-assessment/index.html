@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقييم الوظيفة الجسدية — PROMIS PF</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#006E6E; --teal-mid:#008C8C; --teal-light:#00ADAD;
+  --teal-pale:#E5F5F5; --teal-glow:rgba(0,140,140,0.12);
+  --green:#1A7A4A; --green-pale:#E5F5EC;
+  --amber:#C07A00; --amber-pale:#FEF3E2;
+  --red:#B03A2E; --red-pale:#FDEDEC;
+  --purple:#5B2D8E; --purple-pale:#F0EBF8;
+  --ink:#1A2332; --ink-mid:#3D4F63; --ink-light:#6B7C93;
+  --border:#DDE4EC; --surface:#F6F8FA; --white:#fff;
+  --radius:14px; --radius-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Tajawal',sans-serif;background:#E5F0F0;color:var(--ink);min-height:100vh;direction:rtl;}
+.page{max-width:780px;margin:0 auto;padding:32px 16px 60px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#003C3C 0%,#006E6E 55%,#008C8C 100%);border-radius:20px;padding:36px 36px 32px;margin-bottom:28px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(0,60,60,0.35);}
+.hero::before{content:'';position:absolute;top:-60px;left:-40px;width:220px;height:220px;border:40px solid rgba(255,255,255,0.05);border-radius:50%;}
+.hero::after{content:'';position:absolute;bottom:-80px;right:-30px;width:260px;height:260px;border:50px solid rgba(255,255,255,0.04);border-radius:50%;}
+.nih-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.22);border-radius:8px;padding:5px 12px;margin-bottom:14px;}
+.nih-badge span{font-size:11px;font-weight:700;color:#fff;letter-spacing:1px;}
+.hero h1{font-size:25px;font-weight:800;color:#fff;line-height:1.35;margin-bottom:10px;position:relative;z-index:1;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.75;position:relative;z-index:1;}
+.hero-ref{display:inline-block;margin-top:14px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:7px 14px;font-size:12px;color:rgba(255,255,255,0.85);position:relative;z-index:1;}
+.hero-meta{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap;position:relative;z-index:1;}
+.hero-meta-item{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,0.82);}
+.hero-meta-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.45);flex-shrink:0;}
+
+/* DOMAINS STRIP */
+.domains-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+.dom-chip{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center;}
+.dom-icon{font-size:22px;margin-bottom:5px;}
+.dom-name{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
+.dom-desc{font-size:11px;color:var(--ink-light);line-height:1.4;}
+
+/* T-SCORE EXPLAINER */
+.tscore-box{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:24px;}
+.tscore-box h3{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.tscore-box h3::before{content:'';width:4px;height:18px;background:var(--teal-mid);border-radius:2px;display:inline-block;flex-shrink:0;}
+.tscore-scale{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;}
+.ts-seg{flex:1;min-width:100px;border-radius:8px;padding:10px 10px;text-align:center;border:1px solid transparent;}
+.ts-seg .ts-range{font-size:14px;font-weight:800;margin-bottom:3px;}
+.ts-seg .ts-lbl{font-size:11px;line-height:1.4;}
+
+/* INTRO */
+.intro-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px 26px;margin-bottom:24px;}
+.intro-card h2{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.intro-card h2::before{content:'';width:4px;height:20px;background:var(--teal-mid);border-radius:2px;display:inline-block;flex-shrink:0;}
+.intro-card p{font-size:14px;color:var(--ink-mid);line-height:1.85;margin-bottom:10px;}
+.intro-card p:last-child{margin-bottom:0;}
+
+/* RESPONSE LEGEND */
+.resp-legend{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.resp-pill{flex:1;min-width:100px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center;}
+.resp-num{font-size:15px;font-weight:800;margin-bottom:3px;}
+.resp-lbl{font-size:11px;color:var(--ink-light);line-height:1.3;}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:24px;}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-size:12px;color:var(--ink-light);}
+.progress-count{font-size:13px;font-weight:700;color:var(--teal-mid);}
+.progress-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal) 0%,var(--teal-light) 100%);border-radius:3px;transition:width .4s ease;width:0%;}
+
+/* SEC DIVIDER */
+.sec-div{margin:24px 0 14px;display:flex;align-items:center;gap:12px;}
+.sec-div-line{flex:1;height:1px;background:var(--border);}
+.sec-div-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--ink-light);white-space:nowrap;padding:4px 12px;background:var(--surface);border:1px solid var(--border);border-radius:20px;}
+
+/* QUESTION CARD */
+.q-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
+.q-card.answered{border-color:var(--teal-light);box-shadow:0 2px 12px var(--teal-glow);}
+.q-num-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;}
+.q-num{width:28px;height:28px;background:var(--teal-pale);color:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:14.5px;font-weight:500;color:var(--ink);line-height:1.6;}
+.q-text .note{display:block;font-size:12px;font-weight:400;color:var(--ink-light);margin-top:4px;}
+.domain-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;margin-top:5px;letter-spacing:1px;background:var(--teal-pale);color:var(--teal);}
+
+/* OPTIONS 5-POINT */
+.options{display:flex;gap:6px;flex-wrap:wrap;}
+.opt-lbl{flex:1;min-width:90px;cursor:pointer;}
+.opt-lbl input[type="radio"]{display:none;}
+.opt-btn{display:block;padding:9px 6px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:400;color:var(--ink-mid);text-align:center;cursor:pointer;transition:all .18s;line-height:1.4;user-select:none;}
+.opt-lbl input:checked + .opt-btn{background:var(--teal-pale);border-color:var(--teal-light);color:var(--teal);font-weight:600;}
+.opt-btn:hover{border-color:var(--teal-light);}
+
+/* SUBMIT */
+.submit-wrap{text-align:center;margin-top:32px;}
+.submit-btn{display:inline-block;background:linear-gradient(135deg,#003C3C,#006E6E);color:#fff;font-family:'Tajawal',sans-serif;font-size:17px;font-weight:700;padding:16px 52px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(0,60,60,0.3);transition:all .2s;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,60,60,0.4);}
+.submit-note{font-size:13px;color:var(--ink-light);margin-top:10px;}
+.warn-msg{display:none;margin-top:14px;background:var(--amber-pale);border:1px solid #E8B060;border-radius:10px;padding:12px 16px;font-size:13px;color:#7A4800;}
+.warn-msg.show{display:block;}
+
+/* RESULT */
+#result-section{display:none;margin-top:28px;}
+.result-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.08);}
+.result-header{padding:32px 30px 26px;text-align:center;}
+
+/* T-SCORE GAUGE */
+.tscore-gauge{max-width:460px;margin:0 auto 20px;}
+.tg-track{height:22px;border-radius:11px;background:linear-gradient(90deg,#B03A2E 0%,#E67E22 25%,#F1C40F 50%,#2ECC71 75%,#1A7A4A 100%);position:relative;}
+.tg-needle{position:absolute;top:50%;transform:translate(-50%,-50%);width:4px;height:32px;background:var(--ink);border-radius:2px;transition:left .7s ease;}
+.tg-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink-light);margin-top:6px;}
+.tg-mean{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:700;color:var(--ink-light);}
+
+.tscore-row{display:flex;justify-content:center;gap:20px;margin:16px 0;flex-wrap:wrap;}
+.ts-box{text-align:center;padding:12px 20px;border-radius:10px;border:1px solid var(--border);background:var(--surface);}
+.ts-val{font-size:32px;font-weight:800;line-height:1;}
+.ts-lbl-sm{font-size:11px;color:var(--ink-light);margin-top:3px;}
+.ts-raw{font-size:13px;color:var(--ink-mid);}
+
+.result-level{font-size:20px;font-weight:800;margin:10px 0 8px;}
+.result-desc{font-size:14px;color:var(--ink-mid);line-height:1.75;max-width:500px;margin:0 auto;}
+
+.level-above .result-level{color:var(--green);}
+.level-avg .result-level{color:var(--teal);}
+.level-below .result-level{color:var(--amber);}
+.level-low .result-level{color:var(--red);}
+
+.result-body{padding:24px 28px 28px;border-top:1px solid var(--border);background:var(--surface);}
+
+/* DOMAIN BREAKDOWN */
+.domain-result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
+.dr-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:13px;text-align:center;}
+.dr-icon{font-size:20px;margin-bottom:4px;}
+.dr-name{font-size:10px;font-weight:700;color:var(--ink-light);margin-bottom:5px;line-height:1.3;}
+.dr-score{font-size:20px;font-weight:800;color:var(--ink);}
+.dr-score .mx{font-size:11px;color:var(--ink-light);font-weight:400;}
+.dr-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden;}
+.dr-bar{height:100%;border-radius:2px;background:var(--teal-mid);}
+
+.recs-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;}
+.rec-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
+.rec-item:last-child{border-bottom:none;}
+.rec-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--teal-pale);}
+.rec-txt{font-size:13.5px;color:var(--ink-mid);line-height:1.6;flex:1;}
+.source-note{font-size:11px;color:var(--ink-light);margin-top:16px;padding-top:12px;border-top:1px solid var(--border);line-height:1.7;text-align:center;}
+.retry-btn{display:inline-block;margin-top:20px;background:#fff;color:var(--teal);border:1.5px solid var(--teal-light);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:600;padding:10px 28px;border-radius:10px;cursor:pointer;transition:all .18s;}
+.retry-btn:hover{background:var(--teal-pale);}
+
+@media(max-width:600px){
+  .hero{padding:28px 22px 24px;} .hero h1{font-size:21px;}
+  .domains-strip{grid-template-columns:1fr 1fr;}
+  .domain-result-grid{grid-template-columns:1fr 1fr;}
+  .options{flex-direction:column;} .opt-lbl{min-width:100%;}
+  .page{padding:20px 12px 48px;}
+  .resp-legend{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="nih-badge"><span>🏥 NIH — PROMIS® Physical Function 10a v2.0</span></div>
+  <h1>تقييم الوظيفة الجسدية اليومية</h1>
+  <p class="hero-sub">Patient-Reported Outcomes Measurement Information System — أداة طوّرها المعهد الوطني للصحة الأمريكي (NIH) لقياس قدرتك الفعلية على ممارسة الأنشطة اليومية — ليس فقط كم تتحرك، بل كيف تؤدي وظائفك</p>
+  <div class="hero-ref">Cella D et al. · Medical Care 2010 · NIH PROMIS® — Hays RD et al.</div>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="dot"></div>10 أسئلة</div>
+    <div class="hero-meta-item"><div class="dot"></div>3 محاور وظيفية</div>
+    <div class="hero-meta-item"><div class="dot"></div>T-score معياري (متوسط 50)</div>
+    <div class="hero-meta-item"><div class="dot"></div>5 دقائق</div>
+  </div>
+</div>
+
+<!-- DOMAINS -->
+<div class="domains-strip">
+  <div class="dom-chip">
+    <div class="dom-icon">🏃</div>
+    <div class="dom-name">التنقل والحركة</div>
+    <div class="dom-desc">المشي، صعود الدرج، الركض، القدرة على التنقل</div>
+  </div>
+  <div class="dom-chip">
+    <div class="dom-icon">💪</div>
+    <div class="dom-name">الأنشطة المجهدة</div>
+    <div class="dom-desc">حمل الأشياء، ممارسة الرياضة، الأعمال الشاقة</div>
+  </div>
+  <div class="dom-chip">
+    <div class="dom-icon">🖐️</div>
+    <div class="dom-name">العناية الذاتية</div>
+    <div class="dom-desc">ارتداء الملابس، الاستحمام، الأنشطة اليومية البسيطة</div>
+  </div>
+</div>
+
+<!-- T-SCORE EXPLAINER -->
+<div class="tscore-box">
+  <h3>ما هو T-score وكيف تقرأ نتيجتك؟</h3>
+  <p style="font-size:13px;color:var(--ink-mid);line-height:1.7;margin-bottom:10px;">PROMIS يستخدم T-score معياري بمتوسط <strong>50</strong> وانحراف معياري <strong>10</strong> — مُعتمَد على عينة تمثيلية للسكان الأمريكيين. الدرجة 50 تعني أنك في المتوسط العام.</p>
+  <div class="tscore-scale">
+    <div class="ts-seg" style="background:#FDEDEC;border-color:#E07060;">
+      <div class="ts-range" style="color:#B03A2E;">أقل من 35</div>
+      <div class="ts-lbl" style="color:#8B2020;">محدودية شديدة — أقل 1.5 انحراف</div>
+    </div>
+    <div class="ts-seg" style="background:#FEF3E2;border-color:#E8B060;">
+      <div class="ts-range" style="color:#C07A00;">35–44</div>
+      <div class="ts-lbl" style="color:#8A5500;">أقل من المتوسط</div>
+    </div>
+    <div class="ts-seg" style="background:#E5F5F5;border-color:#00ADAD;">
+      <div class="ts-range" style="color:#006E6E;">45–55</div>
+      <div class="ts-lbl" style="color:#004040;">متوسط المجتمع</div>
+    </div>
+    <div class="ts-seg" style="background:#E5F5EC;border-color:#4CAF7D;">
+      <div class="ts-range" style="color:#1A7A4A;">56–65</div>
+      <div class="ts-lbl" style="color:#0F5A34;">فوق المتوسط</div>
+    </div>
+    <div class="ts-seg" style="background:#E0F0E8;border-color:#2ECC71;">
+      <div class="ts-range" style="color:#1A5C30;">أكثر من 65</div>
+      <div class="ts-lbl" style="color:#0F4020;">ممتاز — أعلى 1.5 انحراف</div>
+    </div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="intro-card">
+  <h2>تعليمات الإجابة</h2>
+  <p>هذا التقييم يسألك عن <strong>قدرتك على أداء الأنشطة</strong> — لا عن مقدار ممارستها. حتى لو لا تمارس الرياضة عادةً، أجب عن قدرتك لو أردت فعلها.</p>
+  <p>كل سؤال له خمسة خيارات:</p>
+  <div class="resp-legend">
+    <div class="resp-pill"><div class="resp-num" style="color:#B03A2E;">١</div><div class="resp-lbl">غير قادر<br>على الإطلاق</div></div>
+    <div class="resp-pill"><div class="resp-num" style="color:#D4720A;">٢</div><div class="resp-lbl">قادر<br>بصعوبة شديدة</div></div>
+    <div class="resp-pill"><div class="resp-num" style="color:#C07A00;">٣</div><div class="resp-lbl">قادر<br>بصعوبة متوسطة</div></div>
+    <div class="resp-pill"><div class="resp-num" style="color:#2471A3;">٤</div><div class="resp-lbl">قادر<br>بصعوبة خفيفة</div></div>
+    <div class="resp-pill"><div class="resp-num" style="color:#1A7A4A;">٥</div><div class="resp-lbl">قادر<br>بدون أي صعوبة</div></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-top">
+    <span class="progress-label">تقدم التقييم</span>
+    <span class="progress-count" id="prog-count">0 / 10</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- FORM -->
+<div id="form-section">
+
+  <!-- DOMAIN 1: MOBILITY -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">المحور الأول — التنقل والحركة</div><div class="sec-div-line"></div></div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="qc1">
+    <div class="q-num-row"><div class="q-num">١</div>
+      <div class="q-text">هل تستطيع الركض لمسافة قصيرة مثل اللحاق بحافلة؟
+        <span class="note">قياس القدرة على الحركة السريعة المفاجئة — لا يشترط أن تكون رياضياً</span>
+        <span class="domain-tag">🏃 تنقل وحركة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q1" value="1" onchange="pick('q1',1)"><span class="opt-btn">غير قادر<br>أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="2" onchange="pick('q1',2)"><span class="opt-btn">بصعوبة<br>شديدة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="3" onchange="pick('q1',3)"><span class="opt-btn">بصعوبة<br>متوسطة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="4" onchange="pick('q1',4)"><span class="opt-btn">بصعوبة<br>خفيفة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q1" value="5" onchange="pick('q1',5)"><span class="opt-btn">بدون أي<br>صعوبة</span></label>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="qc2">
+    <div class="q-num-row"><div class="q-num">٢</div>
+      <div class="q-text">هل تستطيع صعود عشر درجات من السلم دون توقف؟
+        <span class="note">دور كامل من الدرج — قياس اللياقة القلبية التنفسية والقوة العضلية للساقين</span>
+        <span class="domain-tag">🏃 تنقل وحركة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q2" value="1" onchange="pick('q2',1)"><span class="opt-btn">غير قادر<br>أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="2" onchange="pick('q2',2)"><span class="opt-btn">بصعوبة<br>شديدة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="3" onchange="pick('q2',3)"><span class="opt-btn">بصعوبة<br>متوسطة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="4" onchange="pick('q2',4)"><span class="opt-btn">بصعوبة<br>خفيفة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q2" value="5" onchange="pick('q2',5)"><span class="opt-btn">بدون أي<br>صعوبة</span></label>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="qc3">
+    <div class="q-num-row"><div class="q-num">٣</div>
+      <div class="q-text">هل تستطيع المشي لمسافة ربع ميل (حوالي 400 متر) دون صعوبة؟
+        <span class="note">أي مشي مسافة معقولة — من المنزل للسوبر ماركت، من موقف السيارة للمكتب وما شابه</span>
+        <span class="domain-tag">🏃 تنقل وحركة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q3" value="1" onchange="pick('q3',1)"><span class="opt-btn">غير قادر<br>أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="2" onchange="pick('q3',2)"><span class="opt-btn">بصعوبة<br>شديدة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="3" onchange="pick('q3',3)"><span class="opt-btn">بصعوبة<br>متوسطة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="4" onchange="pick('q3',4)"><span class="opt-btn">بصعوبة<br>خفيفة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q3" value="5" onchange="pick('q3',5)"><span class="opt-btn">بدون أي<br>صعوبة</span></label>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="qc4">
+    <div class="q-num-row"><div class="q-num">٤</div>
+      <div class="q-text">هل تستطيع الوقوف لمدة ساعة كاملة؟
+        <span class="note">الوقوف المستمر — في طابور أو حفل أو معرض — دون الحاجة للجلوس</span>
+        <span class="domain-tag">🏃 تنقل وحركة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q4" value="1" onchange="pick('q4',1)"><span class="opt-btn">غير قادر<br>أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="2" onchange="pick('q4',2)"><span class="opt-btn">بصعوبة<br>شديدة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="3" onchange="pick('q4',3)"><span class="opt-btn">بصعوبة<br>متوسطة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="4" onchange="pick('q4',4)"><span class="opt-btn">بصعوبة<br>خفيفة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q4" value="5" onchange="pick('q4',5)"><span class="opt-btn">بدون أي<br>صعوبة</span></label>
+    </div>
+  </div>
+
+  <!-- DOMAIN 2: VIGOROUS ACTIVITIES -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">المحور الثاني — الأنشطة المجهدة والقوة</div><div class="sec-div-line"></div></div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="qc5">
+    <div class="q-num-row"><div class="q-num">٥</div>
+      <div class="q-text">هل تستطيع حمل حقيبة تسوق ثقيلة (10 كيلوغرام) لمسافة معقولة؟
+        <span class="note">قياس القوة العضلية الوظيفية — حمل الأشياء الثقيلة في الحياة اليومية</span>
+        <span class="domain-tag">💪 أنشطة مجهدة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q5" value="1" onchange="pick('q5',1)"><span class="opt-btn">غير قادر<br>أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="2" onchange="pick('q5',2)"><span class="opt-btn">بصعوبة<br>شديدة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="3" onchange="pick('q5',3)"><span class="opt-btn">بصعوبة<br>متوسطة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="4" onchange="pick('q5',4)"><span class="opt-btn">بصعوبة<br>خفيفة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q5" value="5" onchange="pick('q5',5)"><span class="opt-btn">بدون أي<br>صعوبة</span></label>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="qc6">
+    <div class="q-num-row"><div class="q-num">٦</div>
+      <div class="q-text">هل تستطيع ممارسة نشاط بدني مكثف مثل المشي السريع أو السباحة أو ركوب الدراجة؟
+        <span class="note">نشاط يرفع ضربات قلبك بشكل ملحوظ — قياس اللياقة القلبية التنفسية الوظيفية</span>
+        <span class="domain-tag">💪 أنشطة مجهدة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q6" value="1" onchange="pick('q6',1)"><span class="opt-btn">غير قادر<br>أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="2" onchange="pick('q6',2)"><span class="opt-btn">بصعوبة<br>شديدة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="3" onchange="pick('q6',3)"><span class="opt-btn">بصعوبة<br>متوسطة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="4" onchange="pick('q6',4)"><span class="opt-btn">بصعوبة<br>خفيفة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q6" value="5" onchange="pick('q6',5)"><span class="opt-btn">بدون أي<br>صعوبة</span></label>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="qc7">
+    <div class="q-num-row"><div class="q-num">٧</div>
+      <div class="q-text">هل تستطيع الجلوس على الأرض والنهوض بدون مساعدة؟
+        <span class="note">قياس مهم للقوة الوظيفية والمرونة — مرتبط بالاستقلالية الحركية والوقاية من السقوط</span>
+        <span class="domain-tag">💪 أنشطة مجهدة</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q7" value="1" onchange="pick('q7',1)"><span class="opt-btn">غير قادر<br>أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="2" onchange="pick('q7',2)"><span class="opt-btn">بصعوبة<br>شديدة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="3" onchange="pick('q7',3)"><span class="opt-btn">بصعوبة<br>متوسطة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="4" onchange="pick('q7',4)"><span class="opt-btn">بصعوبة<br>خفيفة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q7" value="5" onchange="pick('q7',5)"><span class="opt-btn">بدون أي<br>صعوبة</span></label>
+    </div>
+  </div>
+
+  <!-- DOMAIN 3: SELF-CARE & ADL -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">المحور الثالث — العناية الذاتية والأنشطة اليومية</div><div class="sec-div-line"></div></div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="qc8">
+    <div class="q-num-row"><div class="q-num">٨</div>
+      <div class="q-text">هل تستطيع الاستحمام وتنظيف نفسك باستقلالية كاملة؟
+        <span class="note">قياس الاستقلالية في أبسط الأنشطة اليومية — أساسي في تقييم الوظيفة الجسدية الوظيفية</span>
+        <span class="domain-tag">🖐️ عناية ذاتية</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q8" value="1" onchange="pick('q8',1)"><span class="opt-btn">غير قادر<br>أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="2" onchange="pick('q8',2)"><span class="opt-btn">بصعوبة<br>شديدة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="3" onchange="pick('q8',3)"><span class="opt-btn">بصعوبة<br>متوسطة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="4" onchange="pick('q8',4)"><span class="opt-btn">بصعوبة<br>خفيفة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q8" value="5" onchange="pick('q8',5)"><span class="opt-btn">بدون أي<br>صعوبة</span></label>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card" id="qc9">
+    <div class="q-num-row"><div class="q-num">٩</div>
+      <div class="q-text">هل تستطيع ارتداء ملابسك وربط حذائك بدون مساعدة؟
+        <span class="note">قياس المرونة والقدرة الحركية الدقيقة — يشمل الانحناء والتمدد</span>
+        <span class="domain-tag">🖐️ عناية ذاتية</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q9" value="1" onchange="pick('q9',1)"><span class="opt-btn">غير قادر<br>أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="2" onchange="pick('q9',2)"><span class="opt-btn">بصعوبة<br>شديدة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="3" onchange="pick('q9',3)"><span class="opt-btn">بصعوبة<br>متوسطة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="4" onchange="pick('q9',4)"><span class="opt-btn">بصعوبة<br>خفيفة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q9" value="5" onchange="pick('q9',5)"><span class="opt-btn">بدون أي<br>صعوبة</span></label>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="qc10">
+    <div class="q-num-row"><div class="q-num">١٠</div>
+      <div class="q-text">هل تستطيع القيام بأعمال منزلية خفيفة كالتنظيف وترتيب الأشياء؟
+        <span class="note">الكنس، المسح، ترتيب الأثاث، التنظيف — أنشطة يومية تتطلب حركة مستمرة لفترة معقولة</span>
+        <span class="domain-tag">🖐️ عناية ذاتية</span>
+      </div>
+    </div>
+    <div class="options">
+      <label class="opt-lbl"><input type="radio" name="q10" value="1" onchange="pick('q10',1)"><span class="opt-btn">غير قادر<br>أبداً</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="2" onchange="pick('q10',2)"><span class="opt-btn">بصعوبة<br>شديدة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="3" onchange="pick('q10',3)"><span class="opt-btn">بصعوبة<br>متوسطة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="4" onchange="pick('q10',4)"><span class="opt-btn">بصعوبة<br>خفيفة</span></label>
+      <label class="opt-lbl"><input type="radio" name="q10" value="5" onchange="pick('q10',5)"><span class="opt-btn">بدون أي<br>صعوبة</span></label>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <button class="submit-btn" onclick="showResult()">احسب T-score الوظيفي</button>
+    <p class="submit-note" id="submit-note">أجب على جميع الأسئلة ثم اضغط الزر</p>
+    <div class="warn-msg" id="warn-msg">⚠️ يرجى الإجابة على جميع الأسئلة</div>
+  </div>
+
+</div>
+
+<!-- RESULT -->
+<div id="result-section">
+  <div class="result-card">
+    <div class="result-header" id="result-header">
+
+      <!-- T-SCORE GAUGE -->
+      <div class="tscore-gauge">
+        <div class="tg-track">
+          <div class="tg-needle" id="tg-needle" style="left:50%"></div>
+          <div class="tg-mean">متوسط المجتمع = 50</div>
+        </div>
+        <div class="tg-labels">
+          <span style="color:var(--red)">محدودية شديدة (35-)</span>
+          <span style="color:var(--amber)">أقل من المتوسط</span>
+          <span style="color:var(--teal)">متوسط (50)</span>
+          <span style="color:var(--green)">فوق المتوسط (65+)</span>
+        </div>
+      </div>
+
+      <div class="tscore-row">
+        <div class="ts-box">
+          <div class="ts-val" id="tscore-val" style="color:var(--teal-mid)">50</div>
+          <div class="ts-lbl-sm">T-score التقريبي</div>
+        </div>
+        <div class="ts-box">
+          <div class="ts-raw" id="raw-score">0 / 50</div>
+          <div class="ts-lbl-sm">الدرجة الخام</div>
+        </div>
+      </div>
+
+      <div class="result-level" id="result-level"></div>
+      <p class="result-desc" id="result-desc"></p>
+      <button class="retry-btn" onclick="resetAll()">إعادة التقييم</button>
+    </div>
+
+    <div class="result-body">
+      <div class="domain-result-grid" id="domain-result-grid"></div>
+      <div class="recs-title">توصيات لتحسين وظيفتك الجسدية</div>
+      <div id="recs-list"></div>
+      <div class="source-note">
+        مبني على PROMIS® Physical Function Short Form 10a v2.0 — المعهد الوطني للصحة الأمريكي (NIH)<br>
+        المرجع: Cella D et al. <em>Medical Care</em> 2010;48(2):217–231 · Hays RD et al. <em>Value in Health</em> 2009;12(5):596–605<br>
+        <strong>ملاحظة:</strong> T-score المعروض تقريبي — للحصول على T-score دقيق استخدم خدمة HealthMeasures الرسمية على assessmentcenter.net<br>
+        الأداة متاحة مجاناً من NIH لأغراض التوعية غير التجارية.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const answers = {};
+const ALL_Q = Array.from({length:10}, (_,i) => 'q'+(i+1));
+
+const DOMAINS = [
+  { key:'mob',  icon:'🏃', name:'التنقل والحركة',          qs:['q1','q2','q3','q4'], max:20 },
+  { key:'vig',  icon:'💪', name:'الأنشطة المجهدة',         qs:['q5','q6','q7'],      max:15 },
+  { key:'self', icon:'🖐️', name:'العناية الذاتية',          qs:['q8','q9','q10'],     max:15 },
+];
+
+// Approximate T-score conversion for 10-item form (raw 10-50 → T 20-65 approx)
+function rawToT(raw) {
+  // Linear approximation based on PROMIS 10a scoring tables
+  // Raw range 10-50, T-score approx range 20-70
+  if (raw <= 10) return 20;
+  if (raw >= 50) return 70;
+  return Math.round(20 + ((raw - 10) / 40) * 50);
+}
+
+function pick(name, val) {
+  answers[name] = parseInt(val);
+  const card = document.getElementById('qc' + name.replace('q',''));
+  if (card) { card.classList.add('answered'); card.style.borderColor = ''; }
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = Object.keys(answers).length;
+  const pct  = Math.round((done / 10) * 100);
+  document.getElementById('prog-count').textContent = done + ' / 10';
+  document.getElementById('prog-fill').style.width  = pct + '%';
+  document.getElementById('submit-note').textContent =
+    done === 10 ? '✅ جميع الأسئلة مكتملة — اضغط لعرض نتيجتك' : (10 - done) + ' سؤال متبقي';
+}
+
+function showResult() {
+  const missing = ALL_Q.filter(q => answers[q] === undefined);
+  if (missing.length > 0) {
+    document.getElementById('warn-msg').classList.add('show');
+    const c = document.getElementById('qc' + missing[0].replace('q',''));
+    if (c) { c.style.borderColor = '#E8A020'; c.scrollIntoView({behavior:'smooth',block:'center'}); }
+    return;
+  }
+
+  let raw = 0;
+  ALL_Q.forEach(q => { raw += answers[q] || 0; });
+  const tScore = rawToT(raw);
+
+  // Domain scores
+  const domScores = {};
+  DOMAINS.forEach(d => {
+    let s = 0;
+    d.qs.forEach(q => { s += answers[q] || 0; });
+    domScores[d.key] = s;
+  });
+
+  // Needle: T-score 20-70 mapped to 0-100%
+  const needlePct = Math.min(98, Math.max(2, ((tScore - 20) / 50) * 100));
+  document.getElementById('tg-needle').style.left = needlePct + '%';
+  document.getElementById('tscore-val').textContent = tScore;
+  document.getElementById('raw-score').textContent  = raw + ' / 50';
+
+  let lvl;
+  if (tScore >= 60) lvl = {
+    cls:'level-above',
+    level:'وظيفة جسدية ممتازة — فوق المتوسط',
+    desc:'قدرتك الجسدية الوظيفية تفوق متوسط المجتمع. هذا يعني أنك تؤدي أنشطتك اليومية بسهولة وتمتلك احتياطياً وظيفياً جيداً.',
+    recs:[
+      {i:'🏃',t:'حافظ على هذا المستوى — اللياقة الوظيفية تتراجع مع العمر إذا لم يُحافظ عليها'},
+      {i:'⚖️',t:'أضف تمارين التوازن والمرونة — تحمي الوظيفة الجسدية على المدى الطويل'},
+      {i:'📊',t:'أعد هذا التقييم سنوياً لمتابعة تطور لياقتك الوظيفية'},
+    ]
+  };
+  else if (tScore >= 45) lvl = {
+    cls:'level-avg',
+    level:'وظيفة جسدية متوسطة — ضمن المعدل الطبيعي',
+    desc:'قدرتك الجسدية الوظيفية في النطاق الطبيعي للمجتمع. يوجد مجال للتحسين خاصةً في المحاور التي أظهرت بعض الصعوبة.',
+    recs:[
+      {i:'💪',t:'ركّز على المحور الأضعف في نتيجتك — أنشطة مستهدفة أفضل من عشوائية'},
+      {i:'🚶',t:'المشي اليومي المنتظم أسهل طريقة لتحسين التنقل والقدرة الهوائية الوظيفية'},
+      {i:'🏋️',t:'تمارين القوة تحسن حمل الأشياء والقيام بالأعمال المنزلية — ابدأ بثقل الجسم'},
+    ]
+  };
+  else if (tScore >= 35) lvl = {
+    cls:'level-below',
+    level:'وظيفة جسدية أقل من المتوسط — تحتاج اهتماماً',
+    desc:'قدرتك الوظيفية أقل من متوسط المجتمع بمقدار ملحوظ. هذا يستحق الانتباه خاصةً إذا كان يؤثر على استقلاليتك اليومية.',
+    recs:[
+      {i:'🩺',t:'استشر طبيبك — محدودية الوظيفة الجسدية قد تكون عَرَضاً لحالة طبية يمكن علاجها'},
+      {i:'🏃',t:'ابدأ ببرنامج مشي تدريجي — 10 دقائق يومياً وزد تدريجياً أسبوعياً'},
+      {i:'🤸',t:'تمارين التمدد والمرونة اليومية تحسن الأداء الوظيفي بشكل ملحوظ خلال أسابيع'},
+      {i:'💪',t:'تمارين القوة الخفيفة (كرسي السكوات، رفع الأرجل) تبني الاستقلالية الوظيفية'},
+    ]
+  };
+  else lvl = {
+    cls:'level-low',
+    level:'محدودية وظيفية ملحوظة — يستوجب متابعة',
+    desc:'نتيجتك تشير إلى محدودية وظيفية جسدية تؤثر على أنشطتك اليومية. هذا يستدعي تقييماً طبياً وبرنامج تأهيل مناسب.',
+    recs:[
+      {i:'👨‍⚕️',t:'التقييم الطبي أولاً — حدد السبب قبل البدء بأي برنامج تمرين'},
+      {i:'🤝',t:'العلاج الطبيعي (الفيزيوثيرابي) مصمم تحديداً لتحسين الوظيفة الجسدية'},
+      {i:'🪑',t:'ابدأ بتمارين الكرسي والوقوف — آمنة وفعالة حتى مع محدودية الحركة'},
+      {i:'📞',t:'لا تنتظر — المحدودية الوظيفية تتراجع بسرعة بدون تدخل مناسب'},
+    ]
+  };
+
+  document.getElementById('result-header').className = 'result-header ' + lvl.cls;
+  document.getElementById('result-level').textContent = lvl.level;
+  document.getElementById('result-desc').textContent  = lvl.desc;
+  document.getElementById('tscore-val').style.color =
+    tScore >= 60 ? 'var(--green)' : tScore >= 45 ? 'var(--teal)' : tScore >= 35 ? 'var(--amber)' : 'var(--red)';
+
+  // Domain breakdown
+  document.getElementById('domain-result-grid').innerHTML = DOMAINS.map(d => {
+    const s   = domScores[d.key];
+    const pct = Math.round((s / d.max) * 100);
+    return `<div class="dr-box">
+      <div class="dr-icon">${d.icon}</div>
+      <div class="dr-name">${d.name}</div>
+      <div class="dr-score">${s}<span class="mx"> / ${d.max}</span></div>
+      <div class="dr-bar-wrap"><div class="dr-bar" style="width:${pct}%;background:${pct>=80?'var(--green)':pct>=60?'var(--teal-mid)':pct>=40?'var(--amber)':'var(--red)'}"></div></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('recs-list').innerHTML = lvl.recs.map(r =>
+    `<div class="rec-item"><div class="rec-icon">${r.i}</div><div class="rec-txt">${r.t}</div></div>`
+  ).join('');
+
+  document.getElementById('form-section').style.display   = 'none';
+  document.getElementById('result-section').style.display = 'block';
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function resetAll() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.q-card').forEach(c => { c.classList.remove('answered'); c.style.borderColor=''; });
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('form-section').style.display   = 'block';
+  document.getElementById('warn-msg').classList.remove('show');
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+updateProgress();
+</script>
+</body>
+</html>
