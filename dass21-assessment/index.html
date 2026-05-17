@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مقياس الاكتئاب والقلق والضغط (DASS-21)</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #1e5c6e;
+    --primary-light: #e4f2f7;
+    --primary-dark: #103848;
+    --accent: #2e8fa8;
+    --d-color: #4a3570;
+    --d-light: #ede8f7;
+    --a-color: #2d5f8a;
+    --a-light: #e6f0f8;
+    --s-color: #7a3b2e;
+    --s-light: #f7efe6;
+    --success: #2d7a4f;
+    --success-light: #e6f4ed;
+    --warning: #b06000;
+    --warning-light: #fff3e0;
+    --danger: #c0392b;
+    --danger-light: #fdecea;
+    --border: #d0e4ea;
+    --bg: #f1f7fa;
+    --card: #ffffff;
+    --text: #0d2830;
+    --text-muted: #3a6070;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(30,92,110,0.10);
+  }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  .header {
+    background: var(--primary);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 32px 28px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: 60px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 12px;
+    border-radius: 20px;
+    padding: 3px 12px;
+    margin-bottom: 12px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .header p  { font-size: 14px; opacity: 0.85; max-width: 560px; line-height: 1.6; }
+  .header-meta { display: flex; gap: 20px; margin-top: 18px; flex-wrap: wrap; }
+  .header-meta span {
+    font-size: 13px; opacity: 0.8;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .header-meta span::before { content: '•'; opacity: 0.6; }
+
+  /* Domain legend */
+  .domain-legend {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    display: flex; gap: 20px; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-dot.d { background: var(--d-color); }
+  .legend-dot.a { background: var(--a-color); }
+  .legend-dot.s { background: var(--s-color); }
+
+  .notice {
+    background: var(--warning-light);
+    border: 1.5px solid #f0c070;
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--warning);
+    line-height: 1.6;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .notice-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .progress-bar-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .progress-label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill  { height: 100%; background: var(--primary); border-radius: 10px; width: 0%; transition: width 0.4s ease; }
+  .progress-count { font-size: 13px; color: var(--primary); font-weight: 700; white-space: nowrap; }
+
+  /* Question card */
+  .q-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+    overflow: hidden;
+    border-right: 4px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .q-card.domain-d { border-right-color: var(--d-color); }
+  .q-card.domain-a { border-right-color: var(--a-color); }
+  .q-card.domain-s { border-right-color: var(--s-color); }
+  .q-card.has-error { outline: 1.5px solid var(--danger); }
+
+  .q-body { padding: 16px 18px; }
+  .q-label {
+    font-size: 14px; font-weight: 500; color: var(--text);
+    margin-bottom: 12px; line-height: 1.6;
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .q-num { color: var(--primary); font-weight: 700; flex-shrink: 0; min-width: 24px; }
+  .domain-tag {
+    font-size: 10px; font-weight: 700; border-radius: 20px;
+    padding: 1px 7px; flex-shrink: 0; margin-top: 3px;
+  }
+  .domain-tag.d { background: var(--d-light); color: var(--d-color); }
+  .domain-tag.a { background: var(--a-light); color: var(--a-color); }
+  .domain-tag.s { background: var(--s-light); color: var(--s-color); }
+
+  /* 4-point scale */
+  .scale-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .s4-opt { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+  .s4-opt input[type="radio"] { display: none; }
+  .s4-btn {
+    width: 100%; padding: 10px 4px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--bg);
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+  .s4-opt input:checked + .s4-btn {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 700;
+  }
+  .s4-opt:hover .s4-btn { border-color: var(--accent); background: var(--primary-light); }
+  .s4-val { font-size: 10px; color: var(--text-muted); font-weight: 700; }
+
+  .alert-missing {
+    background: var(--danger-light); border: 1.5px solid #f5b7b1;
+    border-radius: 8px; padding: 12px 16px; font-size: 14px;
+    color: var(--danger); margin-bottom: 16px; display: none;
+  }
+
+  .btn-wrap { text-align: center; margin-top: 28px; }
+  .btn-calc {
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 10px;
+    padding: 14px 44px; font-size: 16px; font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px 14px rgba(30,92,110,0.25);
+  }
+  .btn-calc:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-calc:active { transform: translateY(0); }
+
+  /* Result */
+  .result-card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 28px;
+    margin-top: 28px; display: none;
+  }
+  .result-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--primary-dark); }
+
+  /* Three domain results */
+  .three-domains { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .domain-res {
+    border-radius: 10px; padding: 16px 14px; text-align: center;
+    border: 1.5px solid var(--border);
+  }
+  .domain-res-name { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .domain-res-score { font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+  .domain-res-max   { font-size: 11px; opacity: 0.6; margin-bottom: 8px; }
+  .domain-res-badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    border-radius: 20px; padding: 2px 10px;
+  }
+
+  /* Severity table */
+  .sev-table-wrap { margin-bottom: 24px; }
+  .sev-table-wrap h4 { font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; }
+  .sev-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .sev-table th, .sev-table td {
+    padding: 8px 10px; text-align: center; border: 1px solid var(--border);
+  }
+  .sev-table th { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; }
+  .sev-table td:first-child { text-align: right; font-weight: 500; }
+  .highlight-row td { font-weight: 700; }
+
+  .recs { border-top: 1.5px solid var(--border); padding-top: 20px; margin-top: 4px; }
+  .recs h4 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary-dark); }
+  .rec-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 14px; line-height: 1.6; }
+  .rec-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .btn-reset {
+    background: none; border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 10px 28px; font-size: 14px; font-family: 'Tajawal', sans-serif;
+    color: var(--text-muted); cursor: pointer; margin-top: 20px;
+    transition: all 0.2s; display: block; margin-left: auto; margin-right: auto;
+  }
+  .btn-reset:hover { border-color: var(--primary); color: var(--primary); }
+
+  .references {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 20px 24px; margin-top: 20px;
+  }
+  .references h4 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text-muted); }
+  .references p  { font-size: 12px; color: var(--text-muted); line-height: 1.8; direction: ltr; text-align: left; }
+
+  @media (max-width: 520px) {
+    .header h1 { font-size: 18px; }
+    .three-domains { grid-template-columns: 1fr; }
+    .scale-4 { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-badge">ركيزة إدارة الضغط النفسي · طب نمط الحياة</div>
+    <h1>مقياس الاكتئاب والقلق والضغط (DASS-21)</h1>
+    <p>تقييم ذاتي شامل يقيس ثلاثة محاور معاً في أداة واحدة، ويميّز بينها بدقة لتحديد ما يحتاج إلى اهتمام ومتابعة.</p>
+    <div class="header-meta">
+      <span>21 سؤالاً</span>
+      <span>3 محاور</span>
+      <span>الأسبوع الماضي</span>
+      <span>7 دقائق</span>
+    </div>
+  </div>
+
+  <div class="domain-legend">
+    <div class="legend-item"><div class="legend-dot d"></div><span>الاكتئاب (D)</span></div>
+    <div class="legend-item"><div class="legend-dot a"></div><span>القلق (A)</span></div>
+    <div class="legend-item"><div class="legend-dot s"></div><span>الضغط النفسي (S)</span></div>
+  </div>
+
+  <div class="notice">
+    <span class="notice-icon">⚠️</span>
+    <span>هذا المقياس أداة فرز أولي وليس تشخيصاً طبياً. إذا كانت أفكارك تتضمن إيذاء النفس تواصل فوراً مع طبيبك أو شخص تثق به.</span>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <span class="progress-label">التقدم</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-count" id="progressCount">0 / 21</span>
+  </div>
+
+  <div id="alertMissing" class="alert-missing">يرجى الإجابة على جميع الأسئلة قبل احتساب النتيجة.</div>
+
+  <!-- الأسئلة مرتبة بنفس ترتيب DASS-21 الأصلي مع تصنيف كل سؤال -->
+  <!-- D=اكتئاب A=قلق S=ضغط -->
+
+  <!-- Q1 — S -->
+  <div class="q-card domain-s" id="qc1">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١.</span><span class="domain-tag s">ض</span>وجدت صعوبة في الهدوء.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q1" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q1" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q1" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q1" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 — A -->
+  <div class="q-card domain-a" id="qc2">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٢.</span><span class="domain-tag a">ق</span>شعرت بجفاف الفم.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q2" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q2" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q2" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q2" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 — D -->
+  <div class="q-card domain-d" id="qc3">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٣.</span><span class="domain-tag d">ك</span>لم أستطع الشعور بأي مشاعر إيجابية.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q3" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q3" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q3" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q3" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 — A -->
+  <div class="q-card domain-a" id="qc4">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٤.</span><span class="domain-tag a">ق</span>عانيت من صعوبة في التنفس (مثل سرعة التنفس أو ضيقه دون مجهود).</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q4" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q4" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q4" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q4" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 — D -->
+  <div class="q-card domain-d" id="qc5">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٥.</span><span class="domain-tag d">ك</span>وجدت صعوبة في المبادرة للقيام بالأشياء.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q5" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q5" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q5" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q5" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 — S -->
+  <div class="q-card domain-s" id="qc6">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٦.</span><span class="domain-tag s">ض</span>كنت أميل للمبالغة في ردود أفعالي.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q6" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q6" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q6" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q6" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 — A -->
+  <div class="q-card domain-a" id="qc7">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٧.</span><span class="domain-tag a">ق</span>شعرت بالارتعاش (مثل ارتجاف اليدين).</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q7" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q7" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q7" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q7" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 — S -->
+  <div class="q-card domain-s" id="qc8">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٨.</span><span class="domain-tag s">ض</span>شعرت بأنني أستنزف طاقتي كثيراً.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q8" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q8" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q8" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q8" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 — A -->
+  <div class="q-card domain-a" id="qc9">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٩.</span><span class="domain-tag a">ق</span>قلقت من مواقف قد أشعر فيها بالذعر وأبدو سخيفاً.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q9" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q9" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q9" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q9" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 — D -->
+  <div class="q-card domain-d" id="qc10">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١٠.</span><span class="domain-tag d">ك</span>شعرت بأنه لا شيء يستحق التطلع إليه.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q10" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q10" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q10" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q10" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 — S -->
+  <div class="q-card domain-s" id="qc11">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١١.</span><span class="domain-tag s">ض</span>وجدت نفسي أتضايق بسهولة.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q11" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q11" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q11" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q11" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 — A -->
+  <div class="q-card domain-a" id="qc12">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١٢.</span><span class="domain-tag a">ق</span>شعرت بكثير من الطاقة العصبية.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q12" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q12" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q12" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q12" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 — D -->
+  <div class="q-card domain-d" id="qc13">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١٣.</span><span class="domain-tag d">ك</span>شعرت بالحزن والاكتئاب.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q13" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q13" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q13" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q13" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14 — S -->
+  <div class="q-card domain-s" id="qc14">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١٤.</span><span class="domain-tag s">ض</span>وجدت نفسي غير متسامح مع أي شيء يعيقني عن إتمام ما أفعله.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q14" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q14" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q14" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q14" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15 — A -->
+  <div class="q-card domain-a" id="qc15">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١٥.</span><span class="domain-tag a">ق</span>كنت على وشك الهلع.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q15" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q15" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q15" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q15" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q16 — D -->
+  <div class="q-card domain-d" id="qc16">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١٦.</span><span class="domain-tag d">ك</span>لم أستطع الحماس لأي شيء.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q16" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q16" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q16" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q16" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q17 — D -->
+  <div class="q-card domain-d" id="qc17">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١٧.</span><span class="domain-tag d">ك</span>شعرت بأنني لست جديراً بالاهتمام.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q17" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q17" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q17" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q17" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q18 — S -->
+  <div class="q-card domain-s" id="qc18">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١٨.</span><span class="domain-tag s">ض</span>شعرت بأنني كنت حساساً جداً.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q18" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q18" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q18" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q18" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q19 — A -->
+  <div class="q-card domain-a" id="qc19">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١٩.</span><span class="domain-tag a">ق</span>أحسست بنبضات قلبي دون مجهود جسدي.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q19" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q19" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q19" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q19" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q20 — A -->
+  <div class="q-card domain-a" id="qc20">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٢٠.</span><span class="domain-tag a">ق</span>شعرت بالخوف دون سبب واضح.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q20" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q20" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q20" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q20" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q21 — D -->
+  <div class="q-card domain-d" id="qc21">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٢١.</span><span class="domain-tag d">ك</span>شعرت بأن الحياة لا معنى لها.</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q21" value="0" onchange="updateProgress()"><span class="s4-btn">لم ينطبق عليّ إطلاقاً</span><span class="s4-val">(0)</span></label>
+        <label class="s4-opt"><input type="radio" name="q21" value="1" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ بعض الشيء</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q21" value="2" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ كثيراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q21" value="3" onchange="updateProgress()"><span class="s4-btn">انطبق عليّ تماماً</span><span class="s4-val">(3)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-wrap">
+    <button class="btn-calc" onclick="calculate()">احسب نتيجتي</button>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+    <div class="result-title">نتيجة مقياس الاكتئاب والقلق والضغط</div>
+
+    <div class="three-domains" id="threeDomains"></div>
+
+    <div class="sev-table-wrap">
+      <h4>جدول مستويات الشدة المرجعية</h4>
+      <table class="sev-table">
+        <thead>
+          <tr><th>المستوى</th><th>الاكتئاب</th><th>القلق</th><th>الضغط</th></tr>
+        </thead>
+        <tbody id="sevTable"></tbody>
+      </table>
+    </div>
+
+    <div class="recs">
+      <h4>التوصيات</h4>
+      <div id="recsList"></div>
+    </div>
+
+    <button class="btn-reset" onclick="resetForm()">إعادة التقييم</button>
+  </div>
+
+  <div class="references">
+    <h4>المراجع العلمية</h4>
+    <p>
+      Lovibond SH, Lovibond PF. Manual for the Depression Anxiety Stress Scales (2nd ed.). Psychology Foundation; 1995.<br>
+      Henry JD, Crawford JR. The short-form version of the Depression Anxiety Stress Scales (DASS-21): Construct validity and normative data in a large non-clinical sample. <em>British Journal of Clinical Psychology</em>. 2005;44(2):227–239.<br>
+      Moussa MT, Lovibond P, Laube R, Megahead HA. Psychometric properties of an Arabic version of the Depression Anxiety Stress Scales (DASS). <em>Research on Social Work Practice</em>. 2017;27(3):375–386.
+    </p>
+  </div>
+
+</div>
+
+<script>
+const QNAMES = Array.from({length:21}, (_,i) => 'q'+(i+1));
+
+// D=اكتئاب: 3,5,10,13,16,17,21 (1-indexed)
+// A=قلق:    2,4,7,9,12,15,19,20
+// S=ضغط:    1,6,8,11,14,18
+
+const D_QS = ['q3','q5','q10','q13','q16','q17','q21'];
+const A_QS = ['q2','q4','q7','q9','q12','q15','q19','q20'];
+const S_QS = ['q1','q6','q8','q11','q14','q18'];
+
+function getVal(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? parseInt(el.value) : null;
+}
+
+function updateProgress() {
+  const answered = QNAMES.filter(n => getVal(n) !== null).length;
+  const pct = Math.round(answered / 21 * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = answered + ' / 21';
+}
+
+function sumOf(qs) {
+  return qs.reduce((s,n) => s + (getVal(n) ?? 0), 0) * 2;
+}
+
+function sevLevel(score, thresholds) {
+  if (score <= thresholds[0]) return { lvl: 'normal',   label: 'طبيعي',         cls: 'good' };
+  if (score <= thresholds[1]) return { lvl: 'mild',     label: 'خفيف',          cls: 'mild' };
+  if (score <= thresholds[2]) return { lvl: 'moderate', label: 'متوسط',         cls: 'moderate' };
+  if (score <= thresholds[3]) return { lvl: 'severe',   label: 'شديد',          cls: 'severe' };
+  return                             { lvl: 'extreme',  label: 'شديد جداً',     cls: 'extreme' };
+}
+
+// D thresholds: 9/13/20/27 | A: 7/9/14/19 | S: 14/18/25/33
+const D_THR = [9, 13, 20, 27];
+const A_THR = [7,  9, 14, 19];
+const S_THR = [14, 18, 25, 33];
+
+const clsColors = {
+  good:     { bg: '#e6f4ed', color: '#2d7a4f', border: '#7bc49a' },
+  mild:     { bg: '#eef4e6', color: '#5a8a3a', border: '#9ac472' },
+  moderate: { bg: '#fff3e0', color: '#b06000', border: '#f0c070' },
+  severe:   { bg: '#fff0ea', color: '#c05020', border: '#f0a080' },
+  extreme:  { bg: '#fdecea', color: '#c0392b', border: '#f5b7b1' },
+};
+
+function calculate() {
+  document.getElementById('alertMissing').style.display = 'none';
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('has-error'));
+
+  const missing = QNAMES.filter(n => getVal(n) === null);
+  if (missing.length > 0) {
+    missing.forEach(n => {
+      const idx = QNAMES.indexOf(n) + 1;
+      document.getElementById('qc' + idx).classList.add('has-error');
+    });
+    document.getElementById('alertMissing').style.display = 'block';
+    document.getElementById('alertMissing').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const dScore = sumOf(D_QS);
+  const aScore = sumOf(A_QS);
+  const sScore = sumOf(S_QS);
+
+  const dSev = sevLevel(dScore, D_THR);
+  const aSev = sevLevel(aScore, A_THR);
+  const sSev = sevLevel(sScore, S_THR);
+
+  // Three domain cards
+  const domainDefs = [
+    { name: 'الاكتئاب', score: dScore, max: 42, sev: dSev, cls: 'd' },
+    { name: 'القلق',    score: aScore, max: 42, sev: aSev, cls: 'a' },
+    { name: 'الضغط',   score: sScore, max: 42, sev: sSev, cls: 's' },
+  ];
+
+  document.getElementById('threeDomains').innerHTML = domainDefs.map(d => {
+    const c = clsColors[d.sev.cls];
+    return `<div class="domain-res" style="background:${c.bg}; border-color:${c.border}">
+      <div class="domain-res-name" style="color:${c.color}">${d.name}</div>
+      <div class="domain-res-score" style="color:${c.color}">${d.score}</div>
+      <div class="domain-res-max">من ${d.max}</div>
+      <div class="domain-res-badge" style="background:rgba(0,0,0,0.08);color:${c.color}">${d.sev.label}</div>
+    </div>`;
+  }).join('');
+
+  // Severity table with highlighted current row per domain
+  const levels = [
+    { name: 'طبيعي',     d: '0–9',   a: '0–7',   s: '0–14'  },
+    { name: 'خفيف',      d: '10–13', a: '8–9',   s: '15–18' },
+    { name: 'متوسط',     d: '14–20', a: '10–14', s: '19–25' },
+    { name: 'شديد',      d: '21–27', a: '15–19', s: '26–33' },
+    { name: 'شديد جداً', d: '28+',   a: '20+',   s: '34+'   },
+  ];
+  const lvlOrder = ['normal','mild','moderate','severe','extreme'];
+
+  document.getElementById('sevTable').innerHTML = levels.map((row, i) => {
+    const isD = lvlOrder[i] === dSev.lvl;
+    const isA = lvlOrder[i] === aSev.lvl;
+    const isS = lvlOrder[i] === sSev.lvl;
+    const highlight = isD || isA || isS;
+    const style = highlight ? 'background:#fff9e6;' : '';
+    const dStyle = isD ? `color:${clsColors[dSev.cls].color};font-weight:700` : '';
+    const aStyle = isA ? `color:${clsColors[aSev.cls].color};font-weight:700` : '';
+    const sStyle = isS ? `color:${clsColors[sSev.cls].color};font-weight:700` : '';
+    return `<tr style="${style}">
+      <td>${row.name}</td>
+      <td style="${dStyle}">${row.d}</td>
+      <td style="${aStyle}">${row.a}</td>
+      <td style="${sStyle}">${row.s}</td>
+    </tr>`;
+  }).join('');
+
+  // Recommendations
+  const recs = [];
+  const worst = Math.max(
+    lvlOrder.indexOf(dSev.lvl),
+    lvlOrder.indexOf(aSev.lvl),
+    lvlOrder.indexOf(sSev.lvl)
+  );
+
+  if (dSev.lvl !== 'normal')
+    recs.push({ icon: '🤝', text: 'أعراض الاكتئاب تستجيب جيداً للنشاط البدني والتواصل الاجتماعي. حافظ على روتين يومي منتظم حتى حين لا تشعر بالرغبة فيه.' });
+  if (aSev.lvl !== 'normal')
+    recs.push({ icon: '🫁', text: 'تمارين التنفس الحجابي والتأمل الذهني أثبتت فاعليتها في تخفيف القلق. 10 دقائق يومياً تُحدث فارقاً ملموساً بعد أسبوعين.' });
+  if (sSev.lvl !== 'normal')
+    recs.push({ icon: '⏸️', text: 'الضغط المزمن يحتاج إلى فواصل حقيقية — ليس فقط تغيير نشاط. حدد وقتاً يومياً تكون فيه بعيداً عن المسؤوليات والشاشات.' });
+  if (worst >= 2)
+    recs.push({ icon: '🩺', text: 'نتائجك في مستوى متوسط أو أعلى في محور أو أكثر. يُنصح بمراجعة مختص نفسي لتقييم أعمق ووضع خطة دعم مناسبة.' });
+  if (worst >= 3)
+    recs.push({ icon: '🆘', text: 'الدرجات مرتفعة تستدعي تدخلاً متخصصاً. لا تواجه هذا المستوى من الأعراض بمفردك — المساعدة المتخصصة تُقصّر مدة المعاناة بشكل كبير.' });
+  if (recs.length === 0)
+    recs.push({ icon: '✅', text: 'نتائجك ضمن النطاق الطبيعي في المحاور الثلاثة. الحفاظ على نمط حياة صحي متوازن هو أفضل وقاية من اضطرابات الصحة النفسية.' });
+
+  document.getElementById('recsList').innerHTML = recs.map(r =>
+    `<div class="rec-item"><span class="rec-icon">${r.icon}</span><span>${r.text}</span></div>`
+  ).join('');
+
+  const card = document.getElementById('resultCard');
+  card.style.display = 'block';
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function resetForm() {
+  QNAMES.forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false));
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('has-error'));
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('alertMissing').style.display = 'none';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
