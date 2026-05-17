@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استبيان STOP-BANG للكشف عن انقطاع النفس أثناء النوم</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #5b3a8a;
+    --primary-light: #ede8f7;
+    --primary-dark: #3d2660;
+    --accent: #7c5ab8;
+    --danger: #c0392b;
+    --danger-light: #fdecea;
+    --warning: #b06000;
+    --warning-light: #fff3e0;
+    --success: #2d7a4f;
+    --success-light: #e6f4ed;
+    --border: #e0d9f0;
+    --bg: #f5f3fb;
+    --card: #ffffff;
+    --text: #1e1530;
+    --text-muted: #5a4e78;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(91,58,138,0.10);
+  }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    background: var(--primary);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 32px 28px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: 60px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 12px;
+    border-radius: 20px;
+    padding: 3px 12px;
+    margin-bottom: 12px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .header p  { font-size: 14px; opacity: 0.85; max-width: 560px; line-height: 1.6; }
+  .header-meta { display: flex; gap: 20px; margin-top: 18px; flex-wrap: wrap; }
+  .header-meta span {
+    font-size: 13px; opacity: 0.8;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .header-meta span::before { content: '•'; opacity: 0.6; }
+
+  /* Notice */
+  .notice {
+    background: var(--warning-light);
+    border: 1.5px solid #f0c070;
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--warning);
+    line-height: 1.6;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .notice-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Progress */
+  .progress-bar-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .progress-label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--primary); border-radius: 10px; width: 0%; transition: width 0.4s ease; }
+  .progress-count { font-size: 13px; color: var(--primary); font-weight: 700; white-space: nowrap; }
+
+  /* Section card */
+  .section-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .section-header {
+    background: var(--primary-light);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-letter {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--primary); color: #fff;
+    font-size: 18px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-family: 'Tajawal', sans-serif;
+  }
+  .section-title { font-size: 15px; font-weight: 700; color: var(--primary-dark); }
+  .section-sub   { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+  .section-body  { padding: 20px; }
+
+  /* Yes/No question */
+  .yn-block { margin-bottom: 16px; }
+  .yn-block:last-child { margin-bottom: 0; }
+  .yn-label {
+    font-size: 14px; font-weight: 500; color: var(--text);
+    margin-bottom: 10px; line-height: 1.55;
+  }
+  .yn-label .q-letter {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 6px;
+    background: var(--primary); color: #fff;
+    font-size: 13px; font-weight: 700;
+    margin-left: 8px; flex-shrink: 0; vertical-align: middle;
+  }
+  .yn-options { display: flex; gap: 10px; }
+  .yn-opt { flex: 1; }
+  .yn-opt input[type="radio"] { display: none; }
+  .yn-btn {
+    display: block; width: 100%;
+    padding: 11px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px; font-weight: 500;
+    color: var(--text-muted);
+    background: var(--bg);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .yn-opt input:checked + .yn-btn {
+    font-weight: 700;
+  }
+  .yn-opt.yes input:checked + .yn-btn {
+    border-color: var(--danger);
+    background: var(--danger-light);
+    color: var(--danger);
+  }
+  .yn-opt.no input:checked + .yn-btn {
+    border-color: var(--success);
+    background: var(--success-light);
+    color: var(--success);
+  }
+  .yn-opt:hover .yn-btn {
+    border-color: var(--accent);
+    background: var(--primary-light);
+  }
+
+  /* Alert */
+  .alert-missing {
+    background: var(--danger-light); border: 1.5px solid #f5b7b1;
+    border-radius: 8px; padding: 12px 16px; font-size: 14px;
+    color: var(--danger); margin-bottom: 16px; display: none;
+  }
+
+  /* Button */
+  .btn-wrap { text-align: center; margin-top: 28px; }
+  .btn-calc {
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 10px;
+    padding: 14px 44px; font-size: 16px; font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px 14px rgba(91,58,138,0.25);
+  }
+  .btn-calc:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-calc:active { transform: translateY(0); }
+
+  /* Result */
+  .result-card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 28px;
+    margin-top: 28px; display: none;
+  }
+  .result-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--primary-dark); }
+
+  .risk-banner {
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 24px;
+    display: flex; align-items: flex-start; gap: 16px;
+  }
+  .risk-banner.low    { background: var(--success-light); border: 1.5px solid #7bc49a; }
+  .risk-banner.mid    { background: var(--warning-light); border: 1.5px solid #f0c070; }
+  .risk-banner.high   { background: var(--danger-light);  border: 1.5px solid #f5b7b1; }
+
+  .risk-score-circle {
+    width: 70px; height: 70px; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-weight: 700; flex-shrink: 0; border: 3px solid;
+  }
+  .risk-score-circle .rv  { font-size: 26px; line-height: 1; }
+  .risk-score-circle .rm  { font-size: 12px; opacity: 0.7; }
+  .low  .risk-score-circle { border-color: var(--success); color: var(--success); background: #fff; }
+  .mid  .risk-score-circle { border-color: var(--warning); color: var(--warning); background: #fff; }
+  .high .risk-score-circle { border-color: var(--danger);  color: var(--danger);  background: #fff; }
+
+  .risk-text h3 { font-size: 17px; font-weight: 700; margin-bottom: 5px; }
+  .low  .risk-text h3 { color: var(--success); }
+  .mid  .risk-text h3 { color: var(--warning); }
+  .high .risk-text h3 { color: var(--danger);  }
+  .risk-text p  { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Answers summary */
+  .answers-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; margin-bottom: 24px;
+  }
+  .answer-row {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; padding: 8px 12px;
+    border-radius: 8px; background: var(--bg);
+  }
+  .answer-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .answer-dot.yes { background: var(--danger); }
+  .answer-dot.no  { background: var(--success); }
+  .answer-q { flex: 1; color: var(--text); }
+  .answer-v { font-weight: 700; font-size: 12px; }
+  .answer-v.yes { color: var(--danger); }
+  .answer-v.no  { color: var(--success); }
+
+  /* Action box */
+  .action-box {
+    border-radius: 10px; padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+  .action-box.low  { background: var(--success-light); border: 1.5px solid #7bc49a; }
+  .action-box.mid  { background: var(--warning-light); border: 1.5px solid #f0c070; }
+  .action-box.high { background: var(--danger-light);  border: 1.5px solid #f5b7b1; }
+  .action-box h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .low  .action-box h4 { color: var(--success); }
+  .mid  .action-box h4 { color: var(--warning); }
+  .high .action-box h4 { color: var(--danger);  }
+  .action-box p  { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Reset */
+  .btn-reset {
+    background: none; border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 10px 28px; font-size: 14px; font-family: 'Tajawal', sans-serif;
+    color: var(--text-muted); cursor: pointer; margin-top: 20px;
+    transition: all 0.2s; display: block; margin-left: auto; margin-right: auto;
+  }
+  .btn-reset:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* References */
+  .references {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 20px 24px; margin-top: 20px;
+  }
+  .references h4 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text-muted); }
+  .references p  { font-size: 12px; color: var(--text-muted); line-height: 1.8; direction: ltr; text-align: left; }
+
+  @media (max-width: 520px) {
+    .header h1 { font-size: 18px; }
+    .answers-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">ركيزة النوم المريح · طب نمط الحياة</div>
+    <h1>استبيان STOP-BANG</h1>
+    <p>أداة فرز سريعة للكشف عن احتمالية انقطاع النفس الانسدادي أثناء النوم — حالة شائعة وخطيرة كثيراً ما تمر دون تشخيص.</p>
+    <div class="header-meta">
+      <span>8 أسئلة</span>
+      <span>نعم / لا</span>
+      <span>دقيقتان</span>
+      <span>فرز وإحالة</span>
+    </div>
+  </div>
+
+  <!-- Notice -->
+  <div class="notice">
+    <span class="notice-icon">⚠️</span>
+    <span>هذا الاستبيان أداة فرز أولي وليس تشخيصاً طبياً. التشخيص الدقيق لانقطاع النفس يتطلب دراسة النوم (Polysomnography) بإشراف متخصص.</span>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar-wrap">
+    <span class="progress-label">التقدم</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-count" id="progressCount">0 / 8</span>
+  </div>
+
+  <div id="alertMissing" class="alert-missing">يرجى الإجابة على جميع الأسئلة قبل احتساب النتيجة.</div>
+
+  <!-- S — Snoring -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">S</div>
+      <div>
+        <div class="section-title">Snoring — الشخير</div>
+        <div class="section-sub">هل يسمعك الآخرون؟</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="yn-block">
+        <div class="yn-label">
+          <span class="q-letter">S</span>
+          هل تشخر بصوت عالٍ يُسمع من وراء الباب المغلق، أو يُزعج من يشارككم الغرفة؟
+        </div>
+        <div class="yn-options">
+          <div class="yn-opt yes"><input type="radio" name="qs" id="qs_y" value="1" onchange="updateProgress()"><label class="yn-btn" for="qs_y">نعم</label></div>
+          <div class="yn-opt no"><input type="radio" name="qs" id="qs_n" value="0" onchange="updateProgress()"><label class="yn-btn" for="qs_n">لا</label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- T — Tired -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">T</div>
+      <div>
+        <div class="section-title">Tired — الإرهاق النهاري</div>
+        <div class="section-sub">هل تشعر بالتعب رغم النوم؟</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="yn-block">
+        <div class="yn-label">
+          <span class="q-letter">T</span>
+          هل تشعر بالإرهاق أو النعاس الشديد خلال النهار بصفة متكررة رغم نومك ليلاً؟
+        </div>
+        <div class="yn-options">
+          <div class="yn-opt yes"><input type="radio" name="qt" id="qt_y" value="1" onchange="updateProgress()"><label class="yn-btn" for="qt_y">نعم</label></div>
+          <div class="yn-opt no"><input type="radio" name="qt" id="qt_n" value="0" onchange="updateProgress()"><label class="yn-btn" for="qt_n">لا</label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- O — Observed -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">O</div>
+      <div>
+        <div class="section-title">Observed — انقطاع ملاحَظ</div>
+        <div class="section-sub">هل لاحظ أحد توقف تنفسك؟</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="yn-block">
+        <div class="yn-label">
+          <span class="q-letter">O</span>
+          هل لاحظ أحد أنك تتوقف عن التنفس أو تختنق أثناء نومك؟
+        </div>
+        <div class="yn-options">
+          <div class="yn-opt yes"><input type="radio" name="qo" id="qo_y" value="1" onchange="updateProgress()"><label class="yn-btn" for="qo_y">نعم</label></div>
+          <div class="yn-opt no"><input type="radio" name="qo" id="qo_n" value="0" onchange="updateProgress()"><label class="yn-btn" for="qo_n">لا</label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P — Pressure -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">P</div>
+      <div>
+        <div class="section-title">Pressure — ضغط الدم</div>
+        <div class="section-sub">هل تعاني من ارتفاع ضغط الدم؟</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="yn-block">
+        <div class="yn-label">
+          <span class="q-letter">P</span>
+          هل تعاني من ارتفاع ضغط الدم، أو تتناول أدوية لتنظيمه؟
+        </div>
+        <div class="yn-options">
+          <div class="yn-opt yes"><input type="radio" name="qp" id="qp_y" value="1" onchange="updateProgress()"><label class="yn-btn" for="qp_y">نعم</label></div>
+          <div class="yn-opt no"><input type="radio" name="qp" id="qp_n" value="0" onchange="updateProgress()"><label class="yn-btn" for="qp_n">لا</label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B — BMI -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">B</div>
+      <div>
+        <div class="section-title">BMI — مؤشر كتلة الجسم</div>
+        <div class="section-sub">هل الوزن مرتفع؟</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="yn-block">
+        <div class="yn-label">
+          <span class="q-letter">B</span>
+          هل مؤشر كتلة جسمك أعلى من 35 كغم/م²؟ (وزن مفرط — Obese)
+        </div>
+        <div class="yn-options">
+          <div class="yn-opt yes"><input type="radio" name="qb" id="qb_y" value="1" onchange="updateProgress()"><label class="yn-btn" for="qb_y">نعم</label></div>
+          <div class="yn-opt no"><input type="radio" name="qb" id="qb_n" value="0" onchange="updateProgress()"><label class="yn-btn" for="qb_n">لا</label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- A — Age -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">A</div>
+      <div>
+        <div class="section-title">Age — العمر</div>
+        <div class="section-sub">هل تجاوزت الخمسين؟</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="yn-block">
+        <div class="yn-label">
+          <span class="q-letter">A</span>
+          هل عمرك أكبر من 50 سنة؟
+        </div>
+        <div class="yn-options">
+          <div class="yn-opt yes"><input type="radio" name="qa" id="qa_y" value="1" onchange="updateProgress()"><label class="yn-btn" for="qa_y">نعم</label></div>
+          <div class="yn-opt no"><input type="radio" name="qa" id="qa_n" value="0" onchange="updateProgress()"><label class="yn-btn" for="qa_n">لا</label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- N — Neck -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">N</div>
+      <div>
+        <div class="section-title">Neck — محيط الرقبة</div>
+        <div class="section-sub">هل الرقبة كبيرة؟</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="yn-block">
+        <div class="yn-label">
+          <span class="q-letter">N</span>
+          هل محيط رقبتك أكبر من 40 سم؟ (تقريباً مقاس قميص 43 فأكثر)
+        </div>
+        <div class="yn-options">
+          <div class="yn-opt yes"><input type="radio" name="qn" id="qn_y" value="1" onchange="updateProgress()"><label class="yn-btn" for="qn_y">نعم</label></div>
+          <div class="yn-opt no"><input type="radio" name="qn" id="qn_n" value="0" onchange="updateProgress()"><label class="yn-btn" for="qn_n">لا</label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- G — Gender -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">G</div>
+      <div>
+        <div class="section-title">Gender — الجنس</div>
+        <div class="section-sub">الذكور أكثر عرضة</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="yn-block">
+        <div class="yn-label">
+          <span class="q-letter">G</span>
+          هل أنت من الذكور؟
+        </div>
+        <div class="yn-options">
+          <div class="yn-opt yes"><input type="radio" name="qg" id="qg_y" value="1" onchange="updateProgress()"><label class="yn-btn" for="qg_y">نعم (ذكر)</label></div>
+          <div class="yn-opt no"><input type="radio" name="qg" id="qg_n" value="0" onchange="updateProgress()"><label class="yn-btn" for="qg_n">لا (أنثى)</label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculate -->
+  <div class="btn-wrap">
+    <button class="btn-calc" onclick="calculate()">احسب نتيجتي</button>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+    <div class="result-title">نتيجة استبيان STOP-BANG</div>
+
+    <div class="risk-banner" id="riskBanner">
+      <div class="risk-score-circle" id="riskCircle">
+        <span class="rv" id="riskVal">—</span>
+        <span class="rm">من 8</span>
+      </div>
+      <div class="risk-text">
+        <h3 id="riskLabel">—</h3>
+        <p id="riskDesc">—</p>
+      </div>
+    </div>
+
+    <div class="answers-grid" id="answersGrid"></div>
+
+    <div class="action-box" id="actionBox">
+      <h4 id="actionTitle">—</h4>
+      <p id="actionDesc">—</p>
+    </div>
+
+    <button class="btn-reset" onclick="resetForm()">إعادة التقييم</button>
+  </div>
+
+  <!-- References -->
+  <div class="references">
+    <h4>المراجع العلمية</h4>
+    <p>
+      Chung F, Abdullah HR, Liao P. STOP-Bang Questionnaire: A Practical Approach to Screen for Obstructive Sleep Apnea. <em>Chest</em>. 2016;149(3):631–638.<br>
+      Chung F, Yegneswaran B, Liao P, et al. STOP questionnaire: a tool to screen patients for obstructive sleep apnea. <em>Anesthesiology</em>. 2008;108(5):812–821.<br>
+      Abrishami A, et al. Preoperative screening questionnaires for obstructive sleep apnea: a systematic review. <em>Canadian Journal of Anesthesia</em>. 2010;57(5):423–438.
+    </p>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  { name: 'qs', letter: 'S', label: 'الشخير العالي' },
+  { name: 'qt', letter: 'T', label: 'الإرهاق النهاري' },
+  { name: 'qo', letter: 'O', label: 'انقطاع ملاحَظ' },
+  { name: 'qp', letter: 'P', label: 'ارتفاع ضغط الدم' },
+  { name: 'qb', letter: 'B', label: 'مؤشر كتلة الجسم > 35' },
+  { name: 'qa', letter: 'A', label: 'العمر > 50 سنة' },
+  { name: 'qn', letter: 'N', label: 'محيط الرقبة > 40 سم' },
+  { name: 'qg', letter: 'G', label: 'الجنس ذكر' },
+];
+
+function getVal(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? parseInt(el.value) : null;
+}
+
+function updateProgress() {
+  const answered = QUESTIONS.filter(q => getVal(q.name) !== null).length;
+  const pct = Math.round(answered / 8 * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = answered + ' / 8';
+}
+
+function calculate() {
+  document.getElementById('alertMissing').style.display = 'none';
+
+  const vals = QUESTIONS.map(q => getVal(q.name));
+  if (vals.some(v => v === null)) {
+    document.getElementById('alertMissing').style.display = 'block';
+    document.getElementById('alertMissing').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const score = vals.reduce((s, v) => s + v, 0);
+  const tier  = score <= 2 ? 'low' : score <= 4 ? 'mid' : 'high';
+
+  // Risk banner
+  const banner = document.getElementById('riskBanner');
+  banner.className = 'risk-banner ' + tier;
+  document.getElementById('riskCircle').className = 'risk-score-circle';
+  document.getElementById('riskVal').textContent = score;
+
+  const interps = {
+    low:  { label: 'خطر منخفض',   desc: 'احتمالية الإصابة بانقطاع النفس الانسدادي منخفضة بناءً على إجاباتك.' },
+    mid:  { label: 'خطر متوسط',   desc: 'توجد عوامل خطر تستدعي الانتباه. يُنصح بمناقشة الأمر مع طبيبك في زيارتك القادمة.' },
+    high: { label: 'خطر مرتفع',   desc: 'إجاباتك تشير إلى احتمالية مرتفعة لانقطاع النفس الانسدادي. يُوصى بمراجعة الطبيب لإجراء تقييم متخصص.' },
+  };
+  document.getElementById('riskLabel').textContent = interps[tier].label;
+  document.getElementById('riskDesc').textContent  = interps[tier].desc;
+
+  // Answers summary
+  let gridHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const isYes = vals[i] === 1;
+    gridHTML += `<div class="answer-row">
+      <div class="answer-dot ${isYes ? 'yes' : 'no'}"></div>
+      <span class="answer-q"><strong>${q.letter}</strong> — ${q.label}</span>
+      <span class="answer-v ${isYes ? 'yes' : 'no'}">${isYes ? 'نعم' : 'لا'}</span>
+    </div>`;
+  });
+  document.getElementById('answersGrid').innerHTML = gridHTML;
+
+  // Action box
+  const actionBox = document.getElementById('actionBox');
+  actionBox.className = 'action-box ' + tier;
+  const actions = {
+    low: {
+      title: 'لا حاجة لإجراء فوري',
+      desc:  'نتيجتك مطمئنة. إذا شعرت لاحقاً بتعب نهاري غير مبرر أو أخبرك أحد بتوقف تنفسك أثناء النوم، أعد التقييم وناقش الأمر مع طبيبك.'
+    },
+    mid: {
+      title: 'يُنصح بمناقشة الأمر مع طبيبك',
+      desc:  'احرص على إخبار طبيبك بنتيجة هذا الاستبيان في زيارتك القادمة. قد يوصيك بإجراء دراسة نوم (Polysomnography) لتأكيد أو نفي التشخيص. في المرحلة الحالية، النوم على الجانب بدلاً من الظهر والحفاظ على وزن صحي يساعدان على تخفيف الأعراض.'
+    },
+    high: {
+      title: 'يُوصى بمراجعة الطبيب قريباً',
+      desc:  'إجاباتك تشير إلى احتمالية مرتفعة لانقطاع النفس الانسدادي، وهي حالة تؤثر على القلب والضغط والتركيز وجودة الحياة. لا تتأخر في مراجعة طبيبك لطلب دراسة نوم متخصصة. التشخيص المبكر والعلاج (مثل جهاز CPAP) يحسّن الحياة بشكل ملموس.'
+    }
+  };
+  document.getElementById('actionTitle').textContent = actions[tier].title;
+  document.getElementById('actionDesc').textContent  = actions[tier].desc;
+
+  const card = document.getElementById('resultCard');
+  card.style.display = 'block';
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function resetForm() {
+  QUESTIONS.forEach(q => {
+    document.querySelectorAll(`input[name="${q.name}"]`).forEach(r => r.checked = false);
+  });
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('alertMissing').style.display = 'none';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
