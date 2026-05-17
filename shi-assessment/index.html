@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مؤشر نظافة النوم (SHI)</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #2e6b5e;
+    --primary-light: #e4f2ef;
+    --primary-dark: #1e4a40;
+    --accent: #4a9e8a;
+    --success: #2d7a4f;
+    --success-light: #e6f4ed;
+    --warning: #b06000;
+    --warning-light: #fff3e0;
+    --danger: #c0392b;
+    --danger-light: #fdecea;
+    --border: #d8e5e2;
+    --bg: #f2f7f6;
+    --card: #ffffff;
+    --text: #1a2e2a;
+    --text-muted: #4a6b63;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(46,107,94,0.10);
+  }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    background: var(--primary);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 32px 28px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: 60px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 12px;
+    border-radius: 20px;
+    padding: 3px 12px;
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .header p  { font-size: 14px; opacity: 0.85; max-width: 560px; line-height: 1.6; }
+  .header-meta { display: flex; gap: 20px; margin-top: 18px; flex-wrap: wrap; }
+  .header-meta span {
+    font-size: 13px; opacity: 0.8;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .header-meta span::before { content: '•'; opacity: 0.6; }
+
+  /* Progress */
+  .progress-bar-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .progress-label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--primary); border-radius: 10px; width: 0%; transition: width 0.4s ease; }
+  .progress-count { font-size: 13px; color: var(--primary); font-weight: 700; white-space: nowrap; }
+
+  /* Domain card */
+  .domain-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .domain-card.has-error { border-color: var(--danger); }
+
+  .domain-header {
+    background: var(--primary-light);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .domain-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--primary); color: #fff;
+    font-size: 14px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .domain-title { font-size: 15px; font-weight: 700; color: var(--primary-dark); }
+  .domain-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+  .domain-body { padding: 20px; }
+
+  /* Question */
+  .question-block { margin-bottom: 18px; }
+  .question-block:last-child { margin-bottom: 0; }
+  .question-label {
+    font-size: 14px; color: var(--text); margin-bottom: 10px; font-weight: 500; line-height: 1.5;
+  }
+  .question-label .q-num { color: var(--primary); font-weight: 700; margin-left: 4px; }
+
+  /* Scale options — 5-point horizontal */
+  .scale-wrap { display: flex; flex-direction: column; gap: 6px; }
+  .scale-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 6px;
+  }
+  .scale-opt {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer;
+  }
+  .scale-opt input[type="radio"] { display: none; }
+  .scale-btn {
+    width: 100%; padding: 10px 4px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--bg);
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.3;
+  }
+  .scale-opt input:checked + .scale-btn {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 700;
+  }
+  .scale-opt:hover .scale-btn {
+    border-color: var(--accent);
+    background: var(--primary-light);
+  }
+  .scale-labels {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-muted);
+    padding: 0 2px; margin-top: 2px;
+  }
+
+  /* Error */
+  .alert-missing {
+    background: var(--danger-light); border: 1.5px solid #f5b7b1;
+    border-radius: 8px; padding: 12px 16px; font-size: 14px;
+    color: var(--danger); margin-bottom: 16px; display: none;
+  }
+  .error-note { font-size: 12px; color: var(--danger); margin-top: 6px; display: none; }
+  .domain-card.has-error .error-note { display: block; }
+
+  /* Button */
+  .btn-wrap { text-align: center; margin-top: 28px; }
+  .btn-calc {
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 10px;
+    padding: 14px 44px; font-size: 16px; font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px 14px rgba(46,107,94,0.25);
+  }
+  .btn-calc:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-calc:active { transform: translateY(0); }
+
+  /* Result */
+  .result-card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 28px;
+    margin-top: 28px; display: none;
+  }
+  .result-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--primary-dark); }
+
+  .score-dial { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; }
+  .score-circle {
+    width: 90px; height: 90px; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-weight: 700; flex-shrink: 0; border: 4px solid;
+  }
+  .score-circle .score-val { font-size: 28px; line-height: 1; }
+  .score-circle .score-max { font-size: 13px; opacity: 0.7; }
+  .score-circle.good    { border-color: #2d7a4f; color: #2d7a4f; background: #e6f4ed; }
+  .score-circle.fair    { border-color: #b06000; color: #b06000; background: #fff3e0; }
+  .score-circle.poor    { border-color: #c0392b; color: #c0392b; background: #fdecea; }
+
+  .score-interp h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .score-interp p  { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Domain breakdown */
+  .domains-breakdown { margin-bottom: 24px; }
+  .domains-breakdown h4 { font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px; }
+  .domain-row-r { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+  .domain-row-r .drn { flex: 1; color: var(--text); }
+  .domain-bar-track { width: 120px; height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+  .domain-bar-fill { height: 100%; border-radius: 10px; background: var(--primary); transition: width 0.6s ease; }
+  .domain-bar-fill.lvl-good { background: #2d7a4f; }
+  .domain-bar-fill.lvl-fair { background: #b06000; }
+  .domain-bar-fill.lvl-poor { background: #c0392b; }
+  .dsv { width: 24px; text-align: center; font-weight: 700; color: var(--text-muted); flex-shrink: 0; }
+
+  /* Recs */
+  .recs { border-top: 1.5px solid var(--border); padding-top: 20px; margin-top: 4px; }
+  .recs h4 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary-dark); }
+  .rec-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 14px; line-height: 1.6; }
+  .rec-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Reset */
+  .btn-reset {
+    background: none; border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 10px 28px; font-size: 14px; font-family: 'Tajawal', sans-serif;
+    color: var(--text-muted); cursor: pointer; margin-top: 20px;
+    transition: all 0.2s; display: block; margin-left: auto; margin-right: auto;
+  }
+  .btn-reset:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* References */
+  .references {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 20px 24px; margin-top: 20px;
+  }
+  .references h4 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text-muted); }
+  .references p  { font-size: 12px; color: var(--text-muted); line-height: 1.8; direction: ltr; text-align: left; }
+
+  @media (max-width: 520px) {
+    .header h1 { font-size: 18px; }
+    .scale-btn { font-size: 11px; padding: 8px 2px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">ركيزة النوم المريح · طب نمط الحياة</div>
+    <h1>مؤشر نظافة النوم (SHI)</h1>
+    <p>تقييم ذاتي للعادات والسلوكيات اليومية التي تؤثر على جودة نومك، لتحديد ما يحتاج إلى تعديل.</p>
+    <div class="header-meta">
+      <span>13 سؤالاً</span>
+      <span>5 محاور</span>
+      <span>الدرجة من 52</span>
+      <span>3–5 دقائق</span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar-wrap">
+    <span class="progress-label">التقدم</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-count" id="progressCount">0 / 13</span>
+  </div>
+
+  <div id="alertMissing" class="alert-missing">يرجى الإجابة على جميع الأسئلة قبل احتساب النتيجة.</div>
+
+  <!-- ===== محور ١: الكافيين والمنبهات ===== -->
+  <div class="domain-card" id="d1">
+    <div class="domain-header">
+      <div class="domain-num">١</div>
+      <div>
+        <div class="domain-title">الكافيين والمنبهات</div>
+        <div class="domain-subtitle">القهوة، الشاي، المشروبات المنبهة</div>
+      </div>
+    </div>
+    <div class="domain-body">
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س١.</span> أتناول الكافيين (قهوة، شاي، مشروبات طاقة) في غضون 4 ساعات قبل النوم.</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q1">
+            <label class="scale-opt"><input type="radio" name="q1" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q1" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q1" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q1" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q1" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س٢.</span> أتناول الكحول أو النيكوتين قبل النوم.</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q2">
+            <label class="scale-opt"><input type="radio" name="q2" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q2" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q2" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q2" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q2" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== محور ٢: بيئة النوم ===== -->
+  <div class="domain-card" id="d2">
+    <div class="domain-header">
+      <div class="domain-num">٢</div>
+      <div>
+        <div class="domain-title">بيئة النوم</div>
+        <div class="domain-subtitle">الضوء، الضوضاء، ودرجة الحرارة</div>
+      </div>
+    </div>
+    <div class="domain-body">
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س٣.</span> غرفة نومي تكون مضاءة أو صاخبة عند محاولتي النوم.</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q3">
+            <label class="scale-opt"><input type="radio" name="q3" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q3" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q3" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q3" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q3" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س٤.</span> غرفة نومي تكون غير مريحة من حيث درجة الحرارة (حارة جداً أو باردة جداً).</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q4">
+            <label class="scale-opt"><input type="radio" name="q4" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q4" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q4" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q4" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q4" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س٥.</span> أستخدم الفراش لأنشطة أخرى غير النوم (العمل، مشاهدة التلفاز، تصفح الهاتف).</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q5">
+            <label class="scale-opt"><input type="radio" name="q5" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q5" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q5" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q5" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q5" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== محور ٣: انتظام مواعيد النوم ===== -->
+  <div class="domain-card" id="d3">
+    <div class="domain-header">
+      <div class="domain-num">٣</div>
+      <div>
+        <div class="domain-title">انتظام مواعيد النوم</div>
+        <div class="domain-subtitle">ثبات وقت النوم والصحو</div>
+      </div>
+    </div>
+    <div class="domain-body">
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س٦.</span> أذهب للنوم في أوقات مختلفة من يوم لآخر.</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q6">
+            <label class="scale-opt"><input type="radio" name="q6" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q6" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q6" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q6" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q6" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س٧.</span> أنام أو أغفو في أوقات مختلفة من النهار.</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q7">
+            <label class="scale-opt"><input type="radio" name="q7" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q7" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q7" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q7" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q7" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س٨.</span> أقضي وقتاً طويلاً في الفراش أكثر مما أحتاج للنوم.</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q8">
+            <label class="scale-opt"><input type="radio" name="q8" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q8" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q8" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q8" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q8" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== محور ٤: الإثارة قبل النوم ===== -->
+  <div class="domain-card" id="d4">
+    <div class="domain-header">
+      <div class="domain-num">٤</div>
+      <div>
+        <div class="domain-title">الإثارة الذهنية والجسدية قبل النوم</div>
+        <div class="domain-subtitle">النشاط والشاشات والأفكار قبيل النوم</div>
+      </div>
+    </div>
+    <div class="domain-body">
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س٩.</span> أمارس نشاطاً بدنياً مكثفاً في غضون ساعة قبل النوم.</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q9">
+            <label class="scale-opt"><input type="radio" name="q9" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q9" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q9" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q9" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q9" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س١٠.</span> أفكر في مشكلات أو أمور مثيرة للقلق عند محاولتي النوم.</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q10">
+            <label class="scale-opt"><input type="radio" name="q10" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q10" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q10" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q10" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q10" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س١١.</span> أستخدم الشاشات (هاتف، تلفاز، حاسوب) في غرفة النوم قبيل النوم مباشرة.</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q11">
+            <label class="scale-opt"><input type="radio" name="q11" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q11" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q11" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q11" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q11" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== محور ٥: العوامل النهارية ===== -->
+  <div class="domain-card" id="d5">
+    <div class="domain-header">
+      <div class="domain-num">٥</div>
+      <div>
+        <div class="domain-title">العوامل النهارية</div>
+        <div class="domain-subtitle">القيلولة والتعرض للضوء والنشاط</div>
+      </div>
+    </div>
+    <div class="domain-body">
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س١٢.</span> أنام قيلولة طويلة (أكثر من 30 دقيقة) في النهار.</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q12">
+            <label class="scale-opt"><input type="radio" name="q12" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q12" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q12" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q12" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q12" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+      <div class="question-block">
+        <div class="question-label"><span class="q-num">س١٣.</span> أتناول وجبات دسمة أو كميات كبيرة من الطعام قبل النوم بساعتين أو أقل.</div>
+        <div class="scale-wrap">
+          <div class="scale-row" id="q13">
+            <label class="scale-opt"><input type="radio" name="q13" value="0"><span class="scale-btn">أبداً<br>(0)</span></label>
+            <label class="scale-opt"><input type="radio" name="q13" value="1"><span class="scale-btn">نادراً<br>(1)</span></label>
+            <label class="scale-opt"><input type="radio" name="q13" value="2"><span class="scale-btn">أحياناً<br>(2)</span></label>
+            <label class="scale-opt"><input type="radio" name="q13" value="3"><span class="scale-btn">كثيراً<br>(3)</span></label>
+            <label class="scale-opt"><input type="radio" name="q13" value="4"><span class="scale-btn">دائماً<br>(4)</span></label>
+          </div>
+          <div class="scale-labels"><span>أفضل</span><span>أسوأ</span></div>
+        </div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculate -->
+  <div class="btn-wrap">
+    <button class="btn-calc" onclick="calculate()">احسب نتيجتي</button>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+    <div class="result-title">نتيجة مؤشر نظافة النوم</div>
+
+    <div class="score-dial">
+      <div class="score-circle" id="scoreCircle">
+        <span class="score-val" id="scoreVal">—</span>
+        <span class="score-max">من 52</span>
+      </div>
+      <div class="score-interp">
+        <h3 id="scoreLabel">—</h3>
+        <p id="scoreDesc">—</p>
+      </div>
+    </div>
+
+    <div class="domains-breakdown">
+      <h4>تفصيل المحاور</h4>
+      <div id="domainsBreakdown"></div>
+    </div>
+
+    <div class="recs">
+      <h4>التوصيات</h4>
+      <div id="recsList"></div>
+    </div>
+
+    <button class="btn-reset" onclick="resetForm()">إعادة التقييم</button>
+  </div>
+
+  <!-- References -->
+  <div class="references">
+    <h4>المراجع العلمية</h4>
+    <p>
+      Mastin DF, Bryson J, Corwyn R. Assessment of sleep hygiene using the Sleep Hygiene Index. <em>Journal of Behavioral Medicine</em>. 2006;29(3):223–227.<br>
+      Yang CM, et al. Psychometric evaluation of the sleep hygiene index in a clinical sample. <em>Journal of the Formosan Medical Association</em>. 2010;109(7):499–506.
+    </p>
+  </div>
+
+</div>
+
+<script>
+const QNAMES = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13'];
+
+const DOMAIN_DEFS = [
+  { name: 'الكافيين والمنبهات',              qs: ['q1','q2'],           id: 'd1', max: 8  },
+  { name: 'بيئة النوم',                      qs: ['q3','q4','q5'],      id: 'd2', max: 12 },
+  { name: 'انتظام مواعيد النوم',             qs: ['q6','q7','q8'],      id: 'd3', max: 12 },
+  { name: 'الإثارة قبل النوم',              qs: ['q9','q10','q11'],    id: 'd4', max: 12 },
+  { name: 'العوامل النهارية',                qs: ['q12','q13'],         id: 'd5', max: 8  },
+];
+
+function getVal(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? parseInt(el.value) : null;
+}
+
+function updateProgress() {
+  const answered = QNAMES.filter(n => getVal(n) !== null).length;
+  const pct = Math.round(answered / QNAMES.length * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = answered + ' / ' + QNAMES.length;
+}
+
+document.querySelectorAll('input[type="radio"]').forEach(r => {
+  r.addEventListener('change', updateProgress);
+});
+
+function calculate() {
+  document.getElementById('alertMissing').style.display = 'none';
+  document.querySelectorAll('.domain-card').forEach(c => c.classList.remove('has-error'));
+
+  let missing = false;
+  DOMAIN_DEFS.forEach(d => {
+    const unanswered = d.qs.some(q => getVal(q) === null);
+    if (unanswered) {
+      document.getElementById(d.id).classList.add('has-error');
+      missing = true;
+    }
+  });
+
+  if (missing) {
+    document.getElementById('alertMissing').style.display = 'block';
+    document.getElementById('alertMissing').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const total = QNAMES.reduce((sum, n) => sum + getVal(n), 0);
+
+  // Score circle
+  const circle = document.getElementById('scoreCircle');
+  document.getElementById('scoreVal').textContent = total;
+  const tier = total <= 16 ? 'good' : total <= 32 ? 'fair' : 'poor';
+  circle.className = 'score-circle ' + tier;
+
+  const interps = {
+    good: {
+      label: 'نظافة نوم جيدة',
+      desc:  'عاداتك النومية صحية بشكل عام. استمر في المحافظة عليها وراجع المحاور ذات الدرجة الأعلى للتحسين.'
+    },
+    fair: {
+      label: 'نظافة نوم متوسطة',
+      desc:  'توجد بعض العادات السلبية التي تؤثر على نومك. التعديلات الموضحة أدناه ستحدث فارقاً ملموساً.'
+    },
+    poor: {
+      label: 'نظافة نوم ضعيفة',
+      desc:  'عاداتك النومية تؤثر سلباً على جودة نومك. يُوصى بمراجعة جميع المحاور وتطبيق التوصيات تدريجياً.'
+    }
+  };
+  document.getElementById('scoreLabel').textContent = interps[tier].label;
+  document.getElementById('scoreDesc').textContent  = interps[tier].desc;
+
+  // Domain bars
+  let barsHTML = '';
+  DOMAIN_DEFS.forEach(d => {
+    const score = d.qs.reduce((s, q) => s + getVal(q), 0);
+    const pct   = (score / d.max) * 100;
+    const lvl   = score <= d.max * 0.3 ? 'lvl-good' : score <= d.max * 0.6 ? 'lvl-fair' : 'lvl-poor';
+    barsHTML += `<div class="domain-row-r">
+      <div class="drn">${d.name}</div>
+      <div class="domain-bar-track"><div class="domain-bar-fill ${lvl}" style="width:${pct}%"></div></div>
+      <div class="dsv">${score}</div>
+    </div>`;
+  });
+  document.getElementById('domainsBreakdown').innerHTML = barsHTML;
+
+  // Recommendations
+  const recs = [];
+  const domainScores = DOMAIN_DEFS.map(d => d.qs.reduce((s,q) => s + getVal(q), 0));
+
+  if (domainScores[0] >= 3)
+    recs.push({ icon: '☕', text: 'تجنّب الكافيين بعد الظهر. نصف عمر الكافيين 5–6 ساعات، مما يعني أن كوب قهوة الساعة 4 عصراً لا يزال في جسمك عند منتصف الليل.' });
+  if (domainScores[1] >= 4)
+    recs.push({ icon: '🌙', text: 'اجعل غرفة نومك مظلمة وهادئة ومبردة قليلاً (18–20°م). استخدم ستائر معتمة أو قناع نوم إذا لزم، واحتفظ بالفراش للنوم فقط.' });
+  if (domainScores[2] >= 4)
+    recs.push({ icon: '⏰', text: 'ثبّت موعد نومك وصحوك حتى في أيام الإجازة بفارق لا يتجاوز 30 دقيقة. الانتظام هو أقوى أداة لضبط الساعة البيولوجية.' });
+  if (domainScores[3] >= 4)
+    recs.push({ icon: '📵', text: 'ضع روتيناً للاسترخاء قبل النوم بـ 30–60 دقيقة: أطفئ الشاشات، اقرأ كتاباً ورقياً، أو مارس تمارين التنفس العميق لتهدئة الجهاز العصبي.' });
+  if (domainScores[4] >= 3)
+    recs.push({ icon: '🌞', text: 'اقصر القيلولة على 20 دقيقة قبل الساعة 3 عصراً. وتجنّب الوجبات الدسمة قبل ساعتين من النوم لأنها ترفع درجة الحرارة الداخلية.' });
+  if (recs.length === 0)
+    recs.push({ icon: '✅', text: 'عاداتك النومية ممتازة! الحفاظ على هذه الأنماط بانتظام هو مفتاح نوم صحي مستدام.' });
+
+  document.getElementById('recsList').innerHTML = recs.map(r =>
+    `<div class="rec-item"><span class="rec-icon">${r.icon}</span><span>${r.text}</span></div>`
+  ).join('');
+
+  const card = document.getElementById('resultCard');
+  card.style.display = 'block';
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function resetForm() {
+  QNAMES.forEach(n => {
+    document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false);
+  });
+  document.querySelectorAll('.domain-card').forEach(c => c.classList.remove('has-error'));
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('alertMissing').style.display = 'none';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
