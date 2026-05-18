@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مقياس UCLA للوحدة الانفرادية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #2d6b8a;
+    --primary-light: #e4f0f7;
+    --primary-dark: #1a4560;
+    --accent: #4a8fb5;
+    --success: #2d7a4f;
+    --success-light: #e6f4ed;
+    --warning: #b06000;
+    --warning-light: #fff3e0;
+    --danger: #c0392b;
+    --danger-light: #fdecea;
+    --border: #cce0ee;
+    --bg: #f0f6fa;
+    --card: #ffffff;
+    --text: #0d2030;
+    --text-muted: #3a6070;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(45,107,138,0.10);
+  }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  .header {
+    background: var(--primary);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 32px 28px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: 60px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 12px;
+    border-radius: 20px;
+    padding: 3px 12px;
+    margin-bottom: 12px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .header p  { font-size: 14px; opacity: 0.85; max-width: 560px; line-height: 1.6; }
+  .header-meta { display: flex; gap: 20px; margin-top: 18px; flex-wrap: wrap; }
+  .header-meta span {
+    font-size: 13px; opacity: 0.8;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .header-meta span::before { content: '•'; opacity: 0.6; }
+
+  .progress-bar-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .progress-label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill  { height: 100%; background: var(--primary); border-radius: 10px; width: 0%; transition: width 0.4s ease; }
+  .progress-count { font-size: 13px; color: var(--primary); font-weight: 700; white-space: nowrap; }
+
+  .q-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .q-card.has-error { border-color: var(--danger); }
+  .q-body { padding: 22px 22px 18px; }
+  .q-label {
+    font-size: 15px; font-weight: 500; color: var(--text);
+    margin-bottom: 16px; line-height: 1.6;
+  }
+  .q-num { color: var(--primary); font-weight: 700; margin-left: 6px; }
+
+  /* 4-point scale */
+  .scale-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .s4-opt { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+  .s4-opt input[type="radio"] { display: none; }
+  .s4-btn {
+    width: 100%; padding: 14px 6px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    color: var(--text-muted);
+    background: var(--bg);
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+  .s4-opt input:checked + .s4-btn {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 700;
+  }
+  .s4-opt:hover .s4-btn { border-color: var(--accent); background: var(--primary-light); }
+  .s4-val { font-size: 11px; color: var(--text-muted); font-weight: 700; }
+
+  .alert-missing {
+    background: var(--danger-light); border: 1.5px solid #f5b7b1;
+    border-radius: 8px; padding: 12px 16px; font-size: 14px;
+    color: var(--danger); margin-bottom: 16px; display: none;
+  }
+  .error-note { font-size: 12px; color: var(--danger); margin-top: 8px; display: none; }
+  .q-card.has-error .error-note { display: block; }
+
+  .btn-wrap { text-align: center; margin-top: 28px; }
+  .btn-calc {
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 10px;
+    padding: 14px 44px; font-size: 16px; font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px 14px rgba(45,107,138,0.25);
+  }
+  .btn-calc:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-calc:active { transform: translateY(0); }
+
+  .result-card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 28px;
+    margin-top: 28px; display: none;
+  }
+  .result-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--primary-dark); }
+
+  .score-dial { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; }
+  .score-circle {
+    width: 90px; height: 90px; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-weight: 700; flex-shrink: 0; border: 4px solid;
+  }
+  .score-circle .score-val { font-size: 28px; line-height: 1; }
+  .score-circle .score-max { font-size: 13px; opacity: 0.7; }
+  .score-circle.low    { border-color: #2d7a4f; color: #2d7a4f; background: #e6f4ed; }
+  .score-circle.mid    { border-color: #b06000; color: #b06000; background: #fff3e0; }
+  .score-circle.high   { border-color: #c0392b; color: #c0392b; background: #fdecea; }
+
+  .score-interp h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .score-interp p  { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Visual scale bar */
+  .scale-bar-wrap { margin-bottom: 24px; }
+  .scale-bar-wrap h4 { font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; }
+  .scale-bar-track {
+    height: 10px; border-radius: 10px;
+    background: linear-gradient(to left, #c0392b 0%, #b06000 40%, #2d7a4f 100%);
+    position: relative; margin-bottom: 6px;
+  }
+  .scale-bar-pointer {
+    position: absolute; top: -4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--primary-dark); border: 3px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    transform: translateX(50%);
+    transition: right 0.6s ease;
+  }
+  .scale-bar-labels {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-muted);
+  }
+
+  .recs { border-top: 1.5px solid var(--border); padding-top: 20px; margin-top: 4px; }
+  .recs h4 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary-dark); }
+  .rec-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 14px; line-height: 1.6; }
+  .rec-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .btn-reset {
+    background: none; border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 10px 28px; font-size: 14px; font-family: 'Tajawal', sans-serif;
+    color: var(--text-muted); cursor: pointer; margin-top: 20px;
+    transition: all 0.2s; display: block; margin-left: auto; margin-right: auto;
+  }
+  .btn-reset:hover { border-color: var(--primary); color: var(--primary); }
+
+  .references {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 20px 24px; margin-top: 20px;
+  }
+  .references h4 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text-muted); }
+  .references p  { font-size: 12px; color: var(--text-muted); line-height: 1.8; direction: ltr; text-align: left; }
+
+  @media (max-width: 520px) {
+    .header h1 { font-size: 18px; }
+    .scale-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-badge">ركيزة الترابط الاجتماعي · طب نمط الحياة</div>
+    <h1>مقياس UCLA للوحدة الانفرادية</h1>
+    <p>تقييم ذاتي سريع لمستوى الشعور بالوحدة والانفصال عن الآخرين، للتمييز بين الوحدة العابرة والوحدة المزمنة التي تستدعي الاهتمام.</p>
+    <div class="header-meta">
+      <span>3 أسئلة</span>
+      <span>الدرجة من 9</span>
+      <span>دقيقة واحدة</span>
+      <span>فرز وإحالة</span>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <span class="progress-label">التقدم</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-count" id="progressCount">0 / 3</span>
+  </div>
+
+  <div id="alertMissing" class="alert-missing">يرجى الإجابة على جميع الأسئلة قبل احتساب النتيجة.</div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="qc1">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">١.</span> كم مرة تشعر بأنك تفتقر إلى الرفقة؟</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q1" value="1" onchange="updateProgress()"><span class="s4-btn">أبداً</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q1" value="2" onchange="updateProgress()"><span class="s4-btn">نادراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q1" value="3" onchange="updateProgress()"><span class="s4-btn">أحياناً</span><span class="s4-val">(3)</span></label>
+        <label class="s4-opt"><input type="radio" name="q1" value="4" onchange="updateProgress()"><span class="s4-btn">في أغلب الأحيان</span><span class="s4-val">(4)</span></label>
+      </div>
+      <div class="error-note">الرجاء اختيار إجابة</div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="qc2">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٢.</span> كم مرة تشعر بأنك متروك أو مُهمَل؟</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q2" value="1" onchange="updateProgress()"><span class="s4-btn">أبداً</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q2" value="2" onchange="updateProgress()"><span class="s4-btn">نادراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q2" value="3" onchange="updateProgress()"><span class="s4-btn">أحياناً</span><span class="s4-val">(3)</span></label>
+        <label class="s4-opt"><input type="radio" name="q2" value="4" onchange="updateProgress()"><span class="s4-btn">في أغلب الأحيان</span><span class="s4-val">(4)</span></label>
+      </div>
+      <div class="error-note">الرجاء اختيار إجابة</div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="qc3">
+    <div class="q-body">
+      <div class="q-label"><span class="q-num">٣.</span> كم مرة تشعر بأنك معزول عن الآخرين؟</div>
+      <div class="scale-4">
+        <label class="s4-opt"><input type="radio" name="q3" value="1" onchange="updateProgress()"><span class="s4-btn">أبداً</span><span class="s4-val">(1)</span></label>
+        <label class="s4-opt"><input type="radio" name="q3" value="2" onchange="updateProgress()"><span class="s4-btn">نادراً</span><span class="s4-val">(2)</span></label>
+        <label class="s4-opt"><input type="radio" name="q3" value="3" onchange="updateProgress()"><span class="s4-btn">أحياناً</span><span class="s4-val">(3)</span></label>
+        <label class="s4-opt"><input type="radio" name="q3" value="4" onchange="updateProgress()"><span class="s4-btn">في أغلب الأحيان</span><span class="s4-val">(4)</span></label>
+      </div>
+      <div class="error-note">الرجاء اختيار إجابة</div>
+    </div>
+  </div>
+
+  <div class="btn-wrap">
+    <button class="btn-calc" onclick="calculate()">احسب نتيجتي</button>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+    <div class="result-title">نتيجة مقياس UCLA للوحدة الانفرادية</div>
+
+    <div class="score-dial">
+      <div class="score-circle" id="scoreCircle">
+        <span class="score-val" id="scoreVal">—</span>
+        <span class="score-max">من 12</span>
+      </div>
+      <div class="score-interp">
+        <h3 id="scoreLabel">—</h3>
+        <p id="scoreDesc">—</p>
+      </div>
+    </div>
+
+    <div class="scale-bar-wrap">
+      <h4>موقعك على مقياس الوحدة</h4>
+      <div class="scale-bar-track">
+        <div class="scale-bar-pointer" id="scalePointer"></div>
+      </div>
+      <div class="scale-bar-labels">
+        <span>لا وحدة (3)</span>
+        <span>متوسطة (6)</span>
+        <span>مرتفعة (9–12)</span>
+      </div>
+    </div>
+
+    <div class="recs">
+      <h4>التوصيات</h4>
+      <div id="recsList"></div>
+    </div>
+
+    <button class="btn-reset" onclick="resetForm()">إعادة التقييم</button>
+  </div>
+
+  <div class="references">
+    <h4>المراجع العلمية</h4>
+    <p>
+      Hughes ME, Waite LJ, Hawkley LC, Cacioppo JT. A short scale for measuring loneliness in large surveys: Results from two population-based studies. <em>Research on Aging</em>. 2004;26(6):655–672.<br>
+      Russell DW. UCLA Loneliness Scale (Version 3): Reliability, validity, and factor structure. <em>Journal of Personality Assessment</em>. 1996;66(1):20–40.<br>
+      Cacioppo JT, Hawkley LC. Perceived social isolation and cognition. <em>Trends in Cognitive Sciences</em>. 2009;13(10):447–454.
+    </p>
+  </div>
+
+</div>
+
+<script>
+const QNAMES = ['q1','q2','q3'];
+
+function getVal(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? parseInt(el.value) : null;
+}
+
+function updateProgress() {
+  const answered = QNAMES.filter(n => getVal(n) !== null).length;
+  const pct = Math.round(answered / 3 * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = answered + ' / 3';
+}
+
+function calculate() {
+  document.getElementById('alertMissing').style.display = 'none';
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('has-error'));
+
+  let missing = false;
+  QNAMES.forEach((n, i) => {
+    if (getVal(n) === null) {
+      document.getElementById('qc' + (i + 1)).classList.add('has-error');
+      missing = true;
+    }
+  });
+
+  if (missing) {
+    document.getElementById('alertMissing').style.display = 'block';
+    document.getElementById('alertMissing').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const total = QNAMES.reduce((s, n) => s + getVal(n), 0);
+  const tier  = total <= 5 ? 'low' : total <= 8 ? 'mid' : 'high';
+
+  const circle = document.getElementById('scoreCircle');
+  document.getElementById('scoreVal').textContent = total;
+  circle.className = 'score-circle ' + tier;
+
+  const interps = {
+    low:  { label: 'وحدة منخفضة',  desc: 'تشعر بارتباط جيد بمن حولك. مستوى الوحدة لديك ضمن النطاق الطبيعي.' },
+    mid:  { label: 'وحدة متوسطة', desc: 'تشعر ببعض الوحدة في أوقات معينة. الانتباه لهذا الشعور وتعزيز الروابط الاجتماعية يمنع تفاقمه.' },
+    high: { label: 'وحدة مرتفعة', desc: 'تعاني من شعور واضح بالوحدة والانفصال. هذا يستدعي اهتماماً جدياً وخطوات فعلية لبناء الروابط الاجتماعية.' },
+  };
+  document.getElementById('scoreLabel').textContent = interps[tier].label;
+  document.getElementById('scoreDesc').textContent  = interps[tier].desc;
+
+  // Scale bar pointer
+  const pct = ((total - 3) / 9) * 100;
+  document.getElementById('scalePointer').style.right = pct + '%';
+
+  // Recommendations
+  const recs = [];
+  if (tier === 'low')
+    recs.push({ icon: '✅', text: 'روابطك الاجتماعية في وضع جيد. الاستمرار في تغذية هذه العلاقات وتعميقها هو أفضل وقاية من الوحدة مستقبلاً.' });
+  if (tier === 'mid' || tier === 'high')
+    recs.push({ icon: '📅', text: 'خصص موعداً أسبوعياً ثابتاً للقاء شخص مقرب — وجهاً لوجه. الانتظام أهم من التكرار، ولقاء واحد عميق أسبوعياً يصنع فارقاً.' });
+  if (tier === 'mid' || tier === 'high')
+    recs.push({ icon: '🤝', text: 'الانضمام إلى نشاط جماعي منتظم — رياضة، تطوع، دراسة — يبني روابط طبيعية دون ضغط اجتماعي مباشر.' });
+  if (tier === 'high')
+    recs.push({ icon: '💬', text: 'الوحدة المرتفعة المزمنة ترتبط بتداعيات صحية موثّقة. التحدث مع مختص نفسي يساعدك على فهم أسباب هذا الشعور ووضع خطة للتغيير.' });
+  if (tier === 'high')
+    recs.push({ icon: '🌱', text: 'ابدأ صغيراً — رسالة لشخص لم تتواصل معه منذ فترة، أو ابتسامة لجار. الروابط الكبيرة تبدأ دائماً بخطوات صغيرة.' });
+
+  document.getElementById('recsList').innerHTML = recs.map(r =>
+    `<div class="rec-item"><span class="rec-icon">${r.icon}</span><span>${r.text}</span></div>`
+  ).join('');
+
+  const card = document.getElementById('resultCard');
+  card.style.display = 'block';
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function resetForm() {
+  QNAMES.forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false));
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('has-error'));
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('alertMissing').style.display = 'none';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
