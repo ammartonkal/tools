@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مقياس جودة الحياة الرقمية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #1a6b5a;
+    --primary-light: #e4f5f0;
+    --primary-dark: #0d4035;
+    --accent: #2a9a80;
+    --d1-color: #1a6b5a;
+    --d2-color: #2d5f8a;
+    --d3-color: #7a3b2e;
+    --d4-color: #6a1a7a;
+    --d5-color: #5a6a1a;
+    --success: #2d7a4f;
+    --success-light: #e6f4ed;
+    --warning: #b06000;
+    --warning-light: #fff3e0;
+    --danger: #c0392b;
+    --danger-light: #fdecea;
+    --border: #c8e8e0;
+    --bg: #eef8f5;
+    --card: #ffffff;
+    --text: #0a2018;
+    --text-muted: #3a6858;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(26,107,90,0.10);
+  }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  .header {
+    background: linear-gradient(135deg, var(--primary) 0%, #2d5f8a 100%);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 32px 28px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: 40px;
+    width: 140px; height: 140px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 12px;
+    border-radius: 20px;
+    padding: 3px 12px;
+    margin-bottom: 12px;
+  }
+  .header-badge2 {
+    display: inline-block;
+    background: rgba(255,215,0,0.25);
+    color: #ffd700;
+    font-size: 11px;
+    border-radius: 20px;
+    padding: 2px 10px;
+    margin-right: 8px;
+    font-weight: 700;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .header p  { font-size: 14px; opacity: 0.85; max-width: 560px; line-height: 1.6; }
+  .header-meta { display: flex; gap: 20px; margin-top: 18px; flex-wrap: wrap; }
+  .header-meta span {
+    font-size: 13px; opacity: 0.8;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .header-meta span::before { content: '•'; opacity: 0.6; }
+
+  /* Dimensions legend */
+  .dimensions-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .dimensions-card h3 { font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px; }
+  .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .dim-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; border-radius: 8px; background: var(--bg);
+    border: 1.5px solid var(--border);
+  }
+  .dim-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .dim-dot.d1 { background: var(--d1-color); }
+  .dim-dot.d2 { background: var(--d2-color); }
+  .dim-dot.d3 { background: var(--d3-color); }
+  .dim-dot.d4 { background: var(--d4-color); }
+  .dim-dot.d5 { background: var(--d5-color); }
+  .dim-text { flex: 1; }
+  .dim-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .dim-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+  .progress-bar-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .progress-label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill  { height: 100%; background: var(--primary); border-radius: 10px; width: 0%; transition: width 0.4s ease; }
+  .progress-count { font-size: 13px; color: var(--primary); font-weight: 700; white-space: nowrap; }
+
+  /* Domain card */
+  .domain-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .domain-card.has-error { border-color: var(--danger); }
+
+  .domain-header {
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .domain-header.d1 { background: #e4f5f0; }
+  .domain-header.d2 { background: #e4eef8; }
+  .domain-header.d3 { background: #f7efe6; }
+  .domain-header.d4 { background: #f3e8f8; }
+  .domain-header.d5 { background: #f5f7e4; }
+
+  .domain-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    color: #fff; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .domain-icon.d1 { background: var(--d1-color); }
+  .domain-icon.d2 { background: var(--d2-color); }
+  .domain-icon.d3 { background: var(--d3-color); }
+  .domain-icon.d4 { background: var(--d4-color); }
+  .domain-icon.d5 { background: var(--d5-color); }
+
+  .domain-title    { font-size: 15px; font-weight: 700; }
+  .domain-title.d1 { color: var(--d1-color); }
+  .domain-title.d2 { color: var(--d2-color); }
+  .domain-title.d3 { color: var(--d3-color); }
+  .domain-title.d4 { color: var(--d4-color); }
+  .domain-title.d5 { color: var(--d5-color); }
+  .domain-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+  .domain-body { padding: 18px 20px; }
+
+  .q-block { margin-bottom: 16px; }
+  .q-block:last-child { margin-bottom: 0; }
+  .q-label {
+    font-size: 14px; font-weight: 500; color: var(--text);
+    margin-bottom: 12px; line-height: 1.6;
+  }
+  .q-num { color: var(--primary); font-weight: 700; margin-left: 6px; }
+
+  /* Reversed badge */
+  .rev-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    background: #fff3e0; color: #b06000;
+    border-radius: 20px; padding: 1px 7px; margin-right: 5px;
+    vertical-align: middle;
+  }
+
+  /* 5-point scale */
+  .scale-5 { display: grid; grid-template-columns: repeat(5,1fr); gap: 5px; }
+  .s5-opt { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+  .s5-opt input[type="radio"] { display: none; }
+  .s5-btn {
+    width: 100%; padding: 10px 3px;
+    border: 1.5px solid var(--border); border-radius: 7px;
+    text-align: center; font-family: 'Tajawal', sans-serif;
+    font-size: 11px; color: var(--text-muted);
+    background: var(--bg); cursor: pointer; transition: all 0.15s; line-height: 1.3;
+  }
+  .s5-opt input:checked + .s5-btn {
+    border-color: var(--primary); background: var(--primary-light);
+    color: var(--primary-dark); font-weight: 700;
+  }
+  .s5-opt:hover .s5-btn { border-color: var(--accent); background: var(--primary-light); }
+  .s5-val { font-size: 10px; color: var(--text-muted); font-weight: 700; }
+  .scale-ends {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-muted); margin-top: 4px;
+  }
+
+  .alert-missing {
+    background: var(--danger-light); border: 1.5px solid #f5b7b1;
+    border-radius: 8px; padding: 12px 16px; font-size: 14px;
+    color: var(--danger); margin-bottom: 16px; display: none;
+  }
+  .error-note { font-size: 12px; color: var(--danger); margin-top: 6px; display: none; }
+  .domain-card.has-error .error-note { display: block; }
+
+  .btn-wrap { text-align: center; margin-top: 28px; }
+  .btn-calc {
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 10px;
+    padding: 14px 44px; font-size: 16px; font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px 14px rgba(26,107,90,0.25);
+  }
+  .btn-calc:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-calc:active { transform: translateY(0); }
+
+  /* Result */
+  .result-card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 28px;
+    margin-top: 28px; display: none;
+  }
+  .result-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--primary-dark); }
+
+  /* Radar-like pentagon display */
+  .pentagon-wrap { margin-bottom: 28px; text-align: center; }
+  .pentagon-wrap h4 { font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 16px; text-align: right; }
+
+  /* Overall score */
+  .overall-banner {
+    border-radius: 10px; padding: 20px 22px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  }
+  .overall-banner.high { background: var(--success-light); border: 1.5px solid #7bc49a; }
+  .overall-banner.mid  { background: var(--warning-light); border: 1.5px solid #f0c070; }
+  .overall-banner.low  { background: var(--danger-light);  border: 1.5px solid #f5b7b1; }
+
+  .overall-circle {
+    width: 90px; height: 90px; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-weight: 700; flex-shrink: 0; border: 4px solid;
+  }
+  .overall-circle .ov { font-size: 26px; line-height: 1; }
+  .overall-circle .om { font-size: 12px; opacity: 0.7; }
+  .high .overall-circle { border-color: var(--success); color: var(--success); background: #fff; }
+  .mid  .overall-circle { border-color: var(--warning); color: var(--warning); background: #fff; }
+  .low  .overall-circle { border-color: var(--danger);  color: var(--danger);  background: #fff; }
+
+  .overall-text h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .high .overall-text h3 { color: var(--success); }
+  .mid  .overall-text h3 { color: var(--warning); }
+  .low  .overall-text h3 { color: var(--danger); }
+  .overall-text p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Domain result cards */
+  .domain-results { margin-bottom: 24px; }
+  .domain-results h4 { font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px; }
+  .dr-card {
+    border-radius: 10px; padding: 14px 16px; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 14px;
+    border: 1.5px solid var(--border);
+  }
+  .dr-color { width: 4px; height: 40px; border-radius: 4px; flex-shrink: 0; }
+  .dr-color.d1 { background: var(--d1-color); }
+  .dr-color.d2 { background: var(--d2-color); }
+  .dr-color.d3 { background: var(--d3-color); }
+  .dr-color.d4 { background: var(--d4-color); }
+  .dr-color.d5 { background: var(--d5-color); }
+  .dr-info { flex: 1; }
+  .dr-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .dr-bar-track { height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .dr-bar-fill  { height: 100%; border-radius: 10px; transition: width 0.6s ease; }
+  .dr-bar-fill.high { background: var(--success); }
+  .dr-bar-fill.mid  { background: var(--warning); }
+  .dr-bar-fill.low  { background: var(--danger); }
+  .dr-score { font-size: 15px; font-weight: 700; flex-shrink: 0; }
+  .dr-badge {
+    font-size: 11px; font-weight: 700; border-radius: 20px; padding: 2px 10px; flex-shrink: 0;
+  }
+  .dr-badge.high { background: var(--success-light); color: var(--success); }
+  .dr-badge.mid  { background: var(--warning-light); color: var(--warning); }
+  .dr-badge.low  { background: var(--danger-light);  color: var(--danger); }
+
+  .recs { border-top: 1.5px solid var(--border); padding-top: 20px; margin-top: 4px; }
+  .recs h4 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary-dark); }
+  .rec-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 14px; line-height: 1.6; }
+  .rec-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .btn-reset {
+    background: none; border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 10px 28px; font-size: 14px; font-family: 'Tajawal', sans-serif;
+    color: var(--text-muted); cursor: pointer; margin-top: 20px;
+    transition: all 0.2s; display: block; margin-left: auto; margin-right: auto;
+  }
+  .btn-reset:hover { border-color: var(--primary); color: var(--primary); }
+
+  .references {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 20px 24px; margin-top: 20px;
+  }
+  .references h4 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text-muted); }
+  .references p  { font-size: 12px; color: var(--text-muted); line-height: 1.8; direction: ltr; text-align: left; }
+
+  @media (max-width: 520px) {
+    .header h1 { font-size: 18px; }
+    .dim-grid { grid-template-columns: 1fr; }
+    .scale-5 { gap: 3px; }
+    .s5-btn  { font-size: 10px; padding: 8px 1px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <span class="header-badge">القسم السابع: الصحة الرقمية</span>
+      <span class="header-badge2">⭐ أداة مبتكرة</span>
+    </div>
+    <h1>مقياس جودة الحياة الرقمية</h1>
+    <p>تقييم شامل لجودة علاقتك بالعالم الرقمي عبر خمسة أبعاد — من نوعية الاستخدام وتأثيره على علاقاتك الحقيقية ونومك وحضورك الذهني وهويتك الرقمية.</p>
+    <div class="header-meta">
+      <span>20 سؤالاً</span>
+      <span>5 أبعاد</span>
+      <span>الدرجة من 100</span>
+      <span>7 دقائق</span>
+    </div>
+  </div>
+
+  <!-- Dimensions -->
+  <div class="dimensions-card">
+    <h3>الأبعاد الخمسة التي يقيسها هذا المقياس</h3>
+    <div class="dim-grid">
+      <div class="dim-item">
+        <div class="dim-dot d1"></div>
+        <div class="dim-text">
+          <div class="dim-name">نوعية الاستخدام</div>
+          <div class="dim-desc">نشط ومنتج أم سلبي واستهلاكي</div>
+        </div>
+      </div>
+      <div class="dim-item">
+        <div class="dim-dot d2"></div>
+        <div class="dim-text">
+          <div class="dim-name">السيطرة والتوازن</div>
+          <div class="dim-desc">أنت تتحكم في الوقت الرقمي أم هو يتحكم فيك</div>
+        </div>
+      </div>
+      <div class="dim-item">
+        <div class="dim-dot d3"></div>
+        <div class="dim-text">
+          <div class="dim-name">التأثير على العلاقات</div>
+          <div class="dim-desc">الرقمي يُكمل الحضوري أم يحلّ محله</div>
+        </div>
+      </div>
+      <div class="dim-item">
+        <div class="dim-dot d4"></div>
+        <div class="dim-text">
+          <div class="dim-name">الحضور الذهني</div>
+          <div class="dim-desc">قدرتك على التركيز والانفصال عن الشاشات</div>
+        </div>
+      </div>
+      <div class="dim-item">
+        <div class="dim-dot d5"></div>
+        <div class="dim-text">
+          <div class="dim-name">الهوية الرقمية</div>
+          <div class="dim-desc">صحة علاقتك بنسختك الرقمية وهويتك الإلكترونية</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <span class="progress-label">التقدم</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-count" id="progressCount">0 / 20</span>
+  </div>
+
+  <div id="alertMissing" class="alert-missing">يرجى الإجابة على جميع الأسئلة قبل احتساب النتيجة.</div>
+
+  <!-- ===== البُعد ١: نوعية الاستخدام ===== -->
+  <div class="domain-card" id="d1">
+    <div class="domain-header d1">
+      <div class="domain-icon d1">🎯</div>
+      <div>
+        <div class="domain-title d1">نوعية الاستخدام</div>
+        <div class="domain-subtitle">نشط ومنتج أم سلبي واستهلاكي</div>
+      </div>
+    </div>
+    <div class="domain-body">
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١.</span> حين أستخدم وسائل التواصل الاجتماعي أكون في الغالب أتواصل بشكل حقيقي مع أشخاص أهتم بهم أو أتعلم أو أنتج شيئاً.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q1" value="1" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(1)</span></label>
+          <label class="s5-opt"><input type="radio" name="q1" value="2" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q1" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q1" value="4" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q1" value="5" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(5)</span></label>
+        </div>
+        <div class="scale-ends"><span>استهلاكي</span><span>منتج</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٢.</span> <span class="rev-badge">عكسي</span> أجد نفسي أتصفح المنصات عشوائياً دون هدف واضح لفترات طويلة.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q2" value="5" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(5)</span></label>
+          <label class="s5-opt"><input type="radio" name="q2" value="4" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q2" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q2" value="2" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q2" value="1" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(1)</span></label>
+        </div>
+        <div class="scale-ends"><span>أفضل</span><span>أسوأ</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٣.</span> أخرج من جلسات الشاشة بشعور إيجابي — تعلمت شيئاً أو تواصلت بشكل مفيد.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q3" value="1" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(1)</span></label>
+          <label class="s5-opt"><input type="radio" name="q3" value="2" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q3" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q3" value="4" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q3" value="5" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(5)</span></label>
+        </div>
+        <div class="scale-ends"><span>سلبي</span><span>إيجابي</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٤.</span> <span class="rev-badge">عكسي</span> أجد نفسي أتحقق من الهاتف بشكل آلي دون قرار واعٍ.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q4" value="5" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(5)</span></label>
+          <label class="s5-opt"><input type="radio" name="q4" value="4" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q4" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q4" value="2" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q4" value="1" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(1)</span></label>
+        </div>
+        <div class="scale-ends"><span>أفضل</span><span>أسوأ</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="error-note">الرجاء الإجابة على جميع أسئلة هذا البُعد</div>
+    </div>
+  </div>
+
+  <!-- ===== البُعد ٢: السيطرة والتوازن ===== -->
+  <div class="domain-card" id="d2">
+    <div class="domain-header d2">
+      <div class="domain-icon d2">⚖️</div>
+      <div>
+        <div class="domain-title d2">السيطرة والتوازن</div>
+        <div class="domain-subtitle">من يتحكم في وقتك الرقمي</div>
+      </div>
+    </div>
+    <div class="domain-body">
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٥.</span> أستطيع تحديد وقت محدد للشاشات والالتزام به دون صعوبة كبيرة.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q5" value="1" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(1)</span></label>
+          <label class="s5-opt"><input type="radio" name="q5" value="2" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q5" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q5" value="4" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q5" value="5" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(5)</span></label>
+        </div>
+        <div class="scale-ends"><span>أسوأ</span><span>أفضل</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٦.</span> <span class="rev-badge">عكسي</span> أقضي وقتاً أطول على الشاشات مما أنوي أو أخطط له في الغالب.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q6" value="5" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(5)</span></label>
+          <label class="s5-opt"><input type="radio" name="q6" value="4" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q6" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q6" value="2" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q6" value="1" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(1)</span></label>
+        </div>
+        <div class="scale-ends"><span>أفضل</span><span>أسوأ</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٧.</span> أستطيع الانقطاع عن الشاشات لساعات أو يوم كامل دون أن أشعر بقلق أو انزعاج شديد.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q7" value="1" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(1)</span></label>
+          <label class="s5-opt"><input type="radio" name="q7" value="2" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q7" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q7" value="4" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q7" value="5" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(5)</span></label>
+        </div>
+        <div class="scale-ends"><span>أسوأ</span><span>أفضل</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٨.</span> <span class="rev-badge">عكسي</span> أستخدم الهاتف في أوقات لا ينبغي — أثناء الأكل، في الاجتماعات، قبل النوم مباشرة.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q8" value="5" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(5)</span></label>
+          <label class="s5-opt"><input type="radio" name="q8" value="4" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q8" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q8" value="2" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q8" value="1" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(1)</span></label>
+        </div>
+        <div class="scale-ends"><span>أفضل</span><span>أسوأ</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="error-note">الرجاء الإجابة على جميع أسئلة هذا البُعد</div>
+    </div>
+  </div>
+
+  <!-- ===== البُعد ٣: التأثير على العلاقات ===== -->
+  <div class="domain-card" id="d3">
+    <div class="domain-header d3">
+      <div class="domain-icon d3">🤝</div>
+      <div>
+        <div class="domain-title d3">التأثير على العلاقات الحضورية</div>
+        <div class="domain-subtitle">الرقمي يُكمّل حياتك الاجتماعية أم يُقلّل منها</div>
+      </div>
+    </div>
+    <div class="domain-body">
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٩.</span> وسائل التواصل الاجتماعي تُساعدني على تعزيز علاقاتي الحضورية لا استبدالها.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q9" value="1" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(1)</span></label>
+          <label class="s5-opt"><input type="radio" name="q9" value="2" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q9" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q9" value="4" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q9" value="5" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(5)</span></label>
+        </div>
+        <div class="scale-ends"><span>أسوأ</span><span>أفضل</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١٠.</span> <span class="rev-badge">عكسي</span> أجد نفسي منشغلاً بالهاتف أثناء وجودي مع أشخاص أهتم بهم.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q10" value="5" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(5)</span></label>
+          <label class="s5-opt"><input type="radio" name="q10" value="4" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q10" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q10" value="2" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q10" value="1" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(1)</span></label>
+        </div>
+        <div class="scale-ends"><span>أفضل</span><span>أسوأ</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١١.</span> <span class="rev-badge">عكسي</span> أشعر أن وقتي على المنصات يأخذ من وقت اللقاءات الحضورية مع من أحبهم.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q11" value="5" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(5)</span></label>
+          <label class="s5-opt"><input type="radio" name="q11" value="4" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q11" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q11" value="2" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q11" value="1" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(1)</span></label>
+        </div>
+        <div class="scale-ends"><span>أفضل</span><span>أسوأ</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١٢.</span> جودة تواصلي الحضوري مع الأشخاص المهمين في حياتي لم تتأثر بعالمي الرقمي.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q12" value="1" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(1)</span></label>
+          <label class="s5-opt"><input type="radio" name="q12" value="2" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q12" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q12" value="4" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q12" value="5" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(5)</span></label>
+        </div>
+        <div class="scale-ends"><span>أسوأ</span><span>أفضل</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="error-note">الرجاء الإجابة على جميع أسئلة هذا البُعد</div>
+    </div>
+  </div>
+
+  <!-- ===== البُعد ٤: الحضور الذهني ===== -->
+  <div class="domain-card" id="d4">
+    <div class="domain-header d4">
+      <div class="domain-icon d4">🧠</div>
+      <div>
+        <div class="domain-title d4">الحضور الذهني والتركيز</div>
+        <div class="domain-subtitle">قدرتك على الحضور في اللحظة دون شاشة</div>
+      </div>
+    </div>
+    <div class="domain-body">
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١٣.</span> أستطيع التركيز في عمل أو نشاط لفترة مطوّلة دون الحاجة للتحقق من هاتفي.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q13" value="1" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(1)</span></label>
+          <label class="s5-opt"><input type="radio" name="q13" value="2" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q13" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q13" value="4" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q13" value="5" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(5)</span></label>
+        </div>
+        <div class="scale-ends"><span>أسوأ</span><span>أفضل</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١٤.</span> <span class="rev-badge">عكسي</span> أجد صعوبة في الملل أو الانتظار دون اللجوء فوراً للهاتف.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q14" value="5" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(5)</span></label>
+          <label class="s5-opt"><input type="radio" name="q14" value="4" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q14" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q14" value="2" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q14" value="1" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(1)</span></label>
+        </div>
+        <div class="scale-ends"><span>أفضل</span><span>أسوأ</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١٥.</span> <span class="rev-badge">عكسي</span> أجد أن الشاشات أثّرت على قدرتي على القراءة أو التفكير العميق مقارنةً بالسابق.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q15" value="5" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(5)</span></label>
+          <label class="s5-opt"><input type="radio" name="q15" value="4" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q15" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q15" value="2" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q15" value="1" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(1)</span></label>
+        </div>
+        <div class="scale-ends"><span>أفضل</span><span>أسوأ</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١٦.</span> أستطيع الاستمتاع بلحظات الهدوء والصمت دون الحاجة لملئها بالشاشات.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q16" value="1" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(1)</span></label>
+          <label class="s5-opt"><input type="radio" name="q16" value="2" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q16" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q16" value="4" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q16" value="5" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(5)</span></label>
+        </div>
+        <div class="scale-ends"><span>أسوأ</span><span>أفضل</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="error-note">الرجاء الإجابة على جميع أسئلة هذا البُعد</div>
+    </div>
+  </div>
+
+  <!-- ===== البُعد ٥: الهوية الرقمية ===== -->
+  <div class="domain-card" id="d5">
+    <div class="domain-header d5">
+      <div class="domain-icon d5">🪪</div>
+      <div>
+        <div class="domain-title d5">الهوية الرقمية والرضا الذاتي</div>
+        <div class="domain-subtitle">صحة علاقتك بنسختك الرقمية</div>
+      </div>
+    </div>
+    <div class="domain-body">
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١٧.</span> ما أنشره على المنصات يعكس هويتي الحقيقية ولا يُشعرني بضغط التمثيل أو الأداء.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q17" value="1" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(1)</span></label>
+          <label class="s5-opt"><input type="radio" name="q17" value="2" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q17" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q17" value="4" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q17" value="5" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(5)</span></label>
+        </div>
+        <div class="scale-ends"><span>أسوأ</span><span>أفضل</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١٨.</span> <span class="rev-badge">عكسي</span> يُؤثر عدد الإعجابات والتفاعلات على مزاجي وتقديري لنفسي.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q18" value="5" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(5)</span></label>
+          <label class="s5-opt"><input type="radio" name="q18" value="4" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q18" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q18" value="2" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q18" value="1" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(1)</span></label>
+        </div>
+        <div class="scale-ends"><span>أفضل</span><span>أسوأ</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١٩.</span> <span class="rev-badge">عكسي</span> أشعر بضغط لتقديم صورة مثالية عن حياتي على وسائل التواصل.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q19" value="5" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(5)</span></label>
+          <label class="s5-opt"><input type="radio" name="q19" value="4" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q19" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q19" value="2" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q19" value="1" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(1)</span></label>
+        </div>
+        <div class="scale-ends"><span>أفضل</span><span>أسوأ</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٢٠.</span> أشعر بالرضا عن علاقتي الكلية بالعالم الرقمي وأنها تخدم حياتي لا تُعقّدها.</div>
+        <div class="scale-5">
+          <label class="s5-opt"><input type="radio" name="q20" value="1" onchange="updateProgress()"><span class="s5-btn">لا ينطبق إطلاقاً</span><span class="s5-val">(1)</span></label>
+          <label class="s5-opt"><input type="radio" name="q20" value="2" onchange="updateProgress()"><span class="s5-btn">نادراً</span><span class="s5-val">(2)</span></label>
+          <label class="s5-opt"><input type="radio" name="q20" value="3" onchange="updateProgress()"><span class="s5-btn">أحياناً</span><span class="s5-val">(3)</span></label>
+          <label class="s5-opt"><input type="radio" name="q20" value="4" onchange="updateProgress()"><span class="s5-btn">كثيراً</span><span class="s5-val">(4)</span></label>
+          <label class="s5-opt"><input type="radio" name="q20" value="5" onchange="updateProgress()"><span class="s5-btn">دائماً</span><span class="s5-val">(5)</span></label>
+        </div>
+        <div class="scale-ends"><span>أسوأ</span><span>أفضل</span></div>
+        <div class="error-note">الرجاء اختيار إجابة</div>
+      </div>
+
+      <div class="error-note">الرجاء الإجابة على جميع أسئلة هذا البُعد</div>
+    </div>
+  </div>
+
+  <div class="btn-wrap">
+    <button class="btn-calc" onclick="calculate()">احسب نتيجتي</button>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+    <div class="result-title">نتيجة مقياس جودة الحياة الرقمية</div>
+
+    <div class="overall-banner" id="overallBanner">
+      <div class="overall-circle" id="overallCircle">
+        <span class="ov" id="overallVal">—</span>
+        <span class="om">من 100</span>
+      </div>
+      <div class="overall-text">
+        <h3 id="overallLabel">—</h3>
+        <p id="overallDesc">—</p>
+      </div>
+    </div>
+
+    <div class="domain-results">
+      <h4>تفصيل الأبعاد الخمسة</h4>
+      <div id="domainResults"></div>
+    </div>
+
+    <div class="recs">
+      <h4>التوصيات</h4>
+      <div id="recsList"></div>
+    </div>
+
+    <button class="btn-reset" onclick="resetForm()">إعادة التقييم</button>
+  </div>
+
+  <div class="references">
+    <h4>المراجع العلمية والأطر المصدرية</h4>
+    <p>
+      Vanden Abeele MMP. Digital wellbeing as a dynamic construct. <em>Communication Theory</em>. 2021;31(4):932–955.<br>
+      Jenkins-Guarnieri MA, Wright SL, Johnson BD. Development and validation of a Social Media Use Integration Scale. <em>Psychology of Popular Media Culture</em>. 2013;2(1):38–50.<br>
+      Burke M, Kraut RE. The relationship between Facebook use and well-being depends on communication type and tie strength. <em>Journal of Computer-Mediated Communication</em>. 2016;21(4):265–281.<br>
+      Twenge JM, Campbell WK. Associations between screen time and lower psychological well-being among children and adolescents. <em>Preventive Medicine Reports</em>. 2018;12:271–283.
+    </p>
+  </div>
+
+</div>
+
+<script>
+const QNAMES = Array.from({length:20}, (_,i) => 'q'+(i+1));
+
+const DOMAINS = [
+  { name: 'نوعية الاستخدام',               qs: ['q1','q2','q3','q4'],               id: 'd1', cls: 'd1', icon: '🎯', max: 20 },
+  { name: 'السيطرة والتوازن',               qs: ['q5','q6','q7','q8'],               id: 'd2', cls: 'd2', icon: '⚖️', max: 20 },
+  { name: 'التأثير على العلاقات',           qs: ['q9','q10','q11','q12'],            id: 'd3', cls: 'd3', icon: '🤝', max: 20 },
+  { name: 'الحضور الذهني والتركيز',        qs: ['q13','q14','q15','q16'],           id: 'd4', cls: 'd4', icon: '🧠', max: 20 },
+  { name: 'الهوية الرقمية والرضا الذاتي', qs: ['q17','q18','q19','q20'],           id: 'd5', cls: 'd5', icon: '🪪', max: 20 },
+];
+
+function getVal(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? parseInt(el.value) : null;
+}
+
+function updateProgress() {
+  const answered = QNAMES.filter(n => getVal(n) !== null).length;
+  const pct = Math.round(answered / 20 * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = answered + ' / 20';
+}
+
+function domainTier(score, max) {
+  const r = score / max;
+  if (r >= 0.7) return 'high';
+  if (r >= 0.4) return 'mid';
+  return 'low';
+}
+
+function overallTier(score) {
+  if (score >= 70) return 'high';
+  if (score >= 40) return 'mid';
+  return 'low';
+}
+
+function calculate() {
+  document.getElementById('alertMissing').style.display = 'none';
+  document.querySelectorAll('.domain-card').forEach(c => c.classList.remove('has-error'));
+
+  let missing = false;
+  DOMAINS.forEach(d => {
+    if (d.qs.some(n => getVal(n) === null)) {
+      document.getElementById(d.id).classList.add('has-error');
+      missing = true;
+    }
+  });
+
+  if (missing) {
+    document.getElementById('alertMissing').style.display = 'block';
+    document.getElementById('alertMissing').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const total = QNAMES.reduce((s, n) => s + getVal(n), 0);
+  const tier  = overallTier(total);
+
+  const banner = document.getElementById('overallBanner');
+  banner.className = 'overall-banner ' + tier;
+  document.getElementById('overallVal').textContent = total;
+
+  const interps = {
+    high: { label: 'جودة رقمية عالية',        desc: 'علاقتك بالعالم الرقمي صحية ومتوازنة. أنت تتحكم في الأداة وتُوظّفها لخدمة حياتك لا العكس.' },
+    mid:  { label: 'جودة رقمية متوسطة',       desc: 'هناك فجوات في بعض أبعاد علاقتك الرقمية. الوعي بها والعمل عليها سيُحسّن جودة حياتك الرقمية والحضورية معاً.' },
+    low:  { label: 'جودة رقمية منخفضة — تحتاج مراجعة', desc: 'علاقتك بالعالم الرقمي تُؤثر سلباً على حياتك. التغيير المقصود والواعي ضروري لاستعادة التوازن.' },
+  };
+  document.getElementById('overallLabel').textContent = interps[tier].label;
+  document.getElementById('overallDesc').textContent  = interps[tier].desc;
+
+  // Domain results
+  const dScores = DOMAINS.map(d => d.qs.reduce((s, n) => s + getVal(n), 0));
+  const tierLabels = { high: 'جيد', mid: 'متوسط', low: 'يحتاج تحسين' };
+
+  let drHTML = '';
+  DOMAINS.forEach((d, i) => {
+    const score = dScores[i];
+    const pct   = (score / d.max) * 100;
+    const t     = domainTier(score, d.max);
+    drHTML += `<div class="dr-card">
+      <div class="dr-color ${d.cls}"></div>
+      <div class="dr-info">
+        <div class="dr-name">${d.icon} ${d.name}</div>
+        <div class="dr-bar-track"><div class="dr-bar-fill ${t}" style="width:${pct}%"></div></div>
+      </div>
+      <div class="dr-score">${score}<span style="font-size:11px;opacity:0.6">/${d.max}</span></div>
+      <div class="dr-badge ${t}">${tierLabels[t]}</div>
+    </div>`;
+  });
+  document.getElementById('domainResults').innerHTML = drHTML;
+
+  // Recommendations
+  const recs = [];
+  const [use, ctrl, rel, mind, id_] = dScores;
+
+  if (use <= 10)
+    recs.push({ icon: '🎯', text: 'استخدامك سلبي في الغالب. قبل كل جلسة رقمية اسأل نفسك: ما هدفي؟ ثلاثون ثانية من الوعي تُحوّل الاستخدام العشوائي إلى مقصود.' });
+  if (ctrl <= 10)
+    recs.push({ icon: '⏰', text: 'الشاشات تتحكم في وقتك لا أنت. ابدأ بقاعدة واحدة: لا هاتف في غرفة النوم. هذه القاعدة وحدها تُحسّن النوم والسيطرة والصباح.' });
+  if (rel <= 10)
+    recs.push({ icon: '👥', text: 'الشاشة تسرق حضورك من أحبائك. ضع قاعدة "الهاتف وجهاً للأسفل" في كل لقاء — هذه الإيماءة البسيطة تُعيد التواصل الحقيقي.' });
+  if (mind <= 10)
+    recs.push({ icon: '🧘', text: 'قدرتك على التركيز تراجعت. ابدأ بـ"بلوك" تركيز واحد يومياً — 25 دقيقة عمل بدون هاتف كاملاً. هذه العضلة تتقوى بالتدريب.' });
+  if (id_ <= 10)
+    recs.push({ icon: '🪪', text: 'ضغط التمثيل الرقمي يستنزفك. جرّب أسبوعاً بدون نشر شيء — فقط استهلاك ما يفيدك. ستكتشف ارتياحاً غير متوقع.' });
+  if (tier === 'high')
+    recs.push({ icon: '✅', text: 'علاقتك الرقمية صحية ومتوازنة. راجع هذا التقييم كل 6 أشهر — التوازن الرقمي ليس حالة ثابتة بل يحتاج صيانة مستمرة.' });
+  if (tier === 'low')
+    recs.push({ icon: '🔄', text: 'ابدأ بتغيير واحد فقط هذا الأسبوع — أصغر تغيير ممكن في البُعد الأضعف. التغييرات الكبيرة تبدأ دائماً بخطوة واحدة.' });
+
+  document.getElementById('recsList').innerHTML = recs.map(r =>
+    `<div class="rec-item"><span class="rec-icon">${r.icon}</span><span>${r.text}</span></div>`
+  ).join('');
+
+  const card = document.getElementById('resultCard');
+  card.style.display = 'block';
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function resetForm() {
+  QNAMES.forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false));
+  document.querySelectorAll('.domain-card').forEach(c => c.classList.remove('has-error'));
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('alertMissing').style.display = 'none';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
