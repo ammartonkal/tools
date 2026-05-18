@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عجلة نمط الحياة الصحي — الجمعية التعاونية لتعزيز الصحة وجودة الحياة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a1628;
+    --bg2: #0f1f3d;
+    --card: #111e36;
+    --card2: #162444;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8f0fe;
+    --text-muted: #8a9cc0;
+    --text-dim: #4a5878;
+    --accent: #4a9eff;
+    --gold: #f0c040;
+
+    --c1: #34c98a;  /* التغذية */
+    --c2: #4a9eff;  /* النشاط */
+    --c3: #9b59f5;  /* النوم */
+    --c4: #ff6b6b;  /* الضغط */
+    --c5: #ff9f43;  /* الترابط */
+    --c6: #26d0ce;  /* المواد */
+    --c7: #fd79a8;  /* الرقمية */
+
+    --radius: 16px;
+  }
+
+  * { font-family: 'Tajawal', sans-serif; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    background: linear-gradient(160deg, #0f1f3d 0%, #0a1628 60%, #0d1a30 100%);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(74,158,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(74,158,255,0.12);
+    border: 1px solid rgba(74,158,255,0.25);
+    border-radius: 30px; padding: 6px 16px;
+    font-size: 12px; color: var(--accent);
+    margin-bottom: 20px; font-weight: 500;
+  }
+  .hero h1 {
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #e8f0fe 0%, #a0c4ff 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 10px; line-height: 1.3;
+  }
+  .hero p {
+    font-size: 15px; color: var(--text-muted);
+    max-width: 540px; margin: 0 auto; line-height: 1.7;
+  }
+
+  /* ===== Main Layout ===== */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* ===== Input Panel ===== */
+  .input-panel {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  .panel-title {
+    font-size: 13px; font-weight: 700;
+    color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 4px;
+    padding-right: 4px;
+  }
+
+  .pillar-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .pillar-card:hover { border-color: rgba(255,255,255,0.15); }
+
+  .pillar-header {
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer; user-select: none;
+  }
+  .pillar-color {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    box-shadow: 0 0 8px currentColor;
+  }
+  .pillar-name { font-size: 14px; font-weight: 700; flex: 1; }
+  .pillar-score-badge {
+    font-size: 18px; font-weight: 800; min-width: 44px; text-align: center;
+    line-height: 1;
+  }
+  .pillar-pct {
+    font-size: 11px; color: var(--text-dim); text-align: center;
+    min-width: 36px;
+  }
+
+  .pillar-inputs {
+    padding: 0 16px 14px;
+    display: flex; flex-direction: column; gap: 10px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .input-row {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .input-label {
+    font-size: 12px; color: var(--text-muted); flex: 1; line-height: 1.4;
+  }
+  .input-label span {
+    display: block; font-size: 10px; color: var(--text-dim); margin-top: 1px;
+  }
+  .score-input {
+    width: 64px; text-align: center;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 8px;
+    font-size: 15px; font-weight: 700; color: var(--text);
+    outline: none; transition: border-color 0.2s;
+    -moz-appearance: textfield;
+  }
+  .score-input::-webkit-inner-spin-button,
+  .score-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .score-input:focus { border-color: var(--accent); }
+
+  .score-max {
+    font-size: 11px; color: var(--text-dim); white-space: nowrap; min-width: 36px;
+  }
+
+  /* ===== Right Panel ===== */
+  .right-panel {
+    position: sticky; top: 24px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+
+  /* ===== Wheel ===== */
+  .wheel-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 20px 20px;
+    text-align: center;
+  }
+  .wheel-card h2 {
+    font-size: 16px; font-weight: 700; margin-bottom: 6px;
+    color: var(--text);
+  }
+  .wheel-card p {
+    font-size: 12px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;
+  }
+
+  #wheelSvg {
+    width: 100%; max-width: 340px;
+    height: auto; display: block; margin: 0 auto;
+  }
+
+  /* Overall score */
+  .overall-score {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+  .overall-num {
+    font-size: 52px; font-weight: 800; line-height: 1;
+    background: linear-gradient(135deg, #4a9eff, #9b59f5);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .overall-label {
+    font-size: 14px; font-weight: 700; margin: 6px 0 4px;
+  }
+  .overall-desc {
+    font-size: 12px; color: var(--text-muted); line-height: 1.5;
+  }
+
+  /* Bars breakdown */
+  .breakdown-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+  }
+  .breakdown-card h3 {
+    font-size: 13px; font-weight: 700; color: var(--text-muted);
+    margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .bar-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .bar-row:last-child { margin-bottom: 0; }
+  .bar-name { font-size: 12px; color: var(--text-muted); width: 80px; flex-shrink: 0; text-align: right; }
+  .bar-track {
+    flex: 1; height: 6px; background: rgba(255,255,255,0.06);
+    border-radius: 10px; overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 10px;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+  .bar-pct { font-size: 12px; font-weight: 700; width: 36px; text-align: left; flex-shrink: 0; }
+
+  /* Top recommendation */
+  .rec-card {
+    background: linear-gradient(135deg, rgba(74,158,255,0.08), rgba(155,89,245,0.08));
+    border: 1px solid rgba(74,158,255,0.2);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .rec-card h3 { font-size: 13px; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .rec-card p  { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Print button */
+  .print-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: linear-gradient(135deg, #1a3a6a, #1a2a50);
+    border: 1px solid rgba(74,158,255,0.3);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    font-size: 14px; font-weight: 700; color: var(--accent);
+    cursor: pointer; transition: all 0.2s;
+    width: 100%;
+  }
+  .print-btn:hover {
+    background: linear-gradient(135deg, #1e4080, #1e3060);
+    border-color: rgba(74,158,255,0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(74,158,255,0.15);
+  }
+  .print-btn svg { flex-shrink: 0; }
+
+  /* Reset button */
+  .reset-btn {
+    display: block; width: 100%; text-align: center;
+    background: none; border: 1px solid var(--border);
+    border-radius: 10px; padding: 11px;
+    font-size: 13px; color: var(--text-dim);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text-muted); }
+
+  /* ===== Print Styles ===== */
+  @media print {
+    @page { margin: 15mm; size: A4 portrait; }
+
+    body { background: #fff !important; color: #1a1a2e !important; }
+    .hero { background: #f8f9fc !important; border-bottom: 2px solid #eee; padding: 24px; }
+    .hero h1 { -webkit-text-fill-color: #1a1a2e !important; background: none !important; font-size: 22px; }
+    .hero p { color: #666 !important; }
+    .hero-badge { border-color: #ccc !important; color: #555 !important; background: #f0f4ff !important; }
+
+    .main { display: block !important; padding: 16px 0 !important; }
+    .input-panel { display: none !important; }
+    .right-panel { position: static !important; display: block !important; }
+
+    .wheel-card, .overall-score, .breakdown-card, .rec-card {
+      background: #fff !important;
+      border: 1px solid #ddd !important;
+      break-inside: avoid;
+      margin-bottom: 12px;
+    }
+    .wheel-card h2, .overall-score, .breakdown-card h3, .rec-card h3 {
+      color: #1a1a2e !important;
+    }
+    .wheel-card p, .overall-desc, .bar-name, .rec-card p {
+      color: #555 !important;
+    }
+    .overall-num {
+      -webkit-text-fill-color: #1a3a8a !important;
+      background: none !important;
+    }
+    .bar-track { background: #eee !important; }
+    .bar-pct { color: #333 !important; }
+    .overall-score { background: #f8f9fc !important; }
+    .rec-card { background: #f0f4ff !important; border-color: #c0d4f8 !important; }
+
+    .print-btn, .reset-btn { display: none !important; }
+
+    /* Print footer */
+    .print-footer {
+      display: block !important;
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+    }
+
+    /* SVG colors for print */
+    #wheelSvg { max-width: 280px !important; }
+  }
+
+  .print-footer { display: none; }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    .main { grid-template-columns: 1fr; }
+    .right-panel { position: static; }
+  }
+
+  /* ===== Animations ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .pillar-card { animation: fadeUp 0.4s ease both; }
+  .pillar-card:nth-child(1) { animation-delay: 0.05s; }
+  .pillar-card:nth-child(2) { animation-delay: 0.10s; }
+  .pillar-card:nth-child(3) { animation-delay: 0.15s; }
+  .pillar-card:nth-child(4) { animation-delay: 0.20s; }
+  .pillar-card:nth-child(5) { animation-delay: 0.25s; }
+  .pillar-card:nth-child(6) { animation-delay: 0.30s; }
+  .pillar-card:nth-child(7) { animation-delay: 0.35s; }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/></svg>
+    برنامج طب نمط الحياة · الجمعية التعاونية لتعزيز الصحة وجودة الحياة
+  </div>
+  <h1>عجلة نمط الحياة الصحي</h1>
+  <p>أدخل نتائج تقييماتك لترى صورتك الصحية الشاملة دفعةً واحدة — وتعرف من أين تبدأ.</p>
+</div>
+
+<div class="main">
+
+  <!-- ===== Input Panel ===== -->
+  <div class="input-panel">
+    <div class="panel-title">أدخل نتائج تقييماتك</div>
+
+    <!-- ١. التغذية -->
+    <div class="pillar-card" id="pc1">
+      <div class="pillar-header" onclick="toggleCard('pi1')">
+        <div class="pillar-color" style="color:var(--c1);background:var(--c1)"></div>
+        <div class="pillar-name" style="color:var(--c1)">🥗 التغذية</div>
+        <div class="pillar-score-badge" id="sb1" style="color:var(--c1)">—</div>
+        <div class="pillar-pct" id="pp1">—</div>
+      </div>
+      <div class="pillar-inputs" id="pi1">
+        <div class="input-row">
+          <div class="input-label">REAP-S<span>جودة النظام الغذائي</span></div>
+          <input type="number" class="score-input" id="i_reap" min="0" max="39" placeholder="—" oninput="update()">
+          <div class="score-max">/ 39</div>
+        </div>
+        <div class="input-row">
+          <div class="input-label">MEDAS<span>نمط البحر المتوسط</span></div>
+          <input type="number" class="score-input" id="i_medas" min="0" max="14" placeholder="—" oninput="update()">
+          <div class="score-max">/ 14</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ٢. النشاط الحركي -->
+    <div class="pillar-card" id="pc2">
+      <div class="pillar-header" onclick="toggleCard('pi2')">
+        <div class="pillar-color" style="color:var(--c2);background:var(--c2)"></div>
+        <div class="pillar-name" style="color:var(--c2)">🏃 النشاط الحركي</div>
+        <div class="pillar-score-badge" id="sb2" style="color:var(--c2)">—</div>
+        <div class="pillar-pct" id="pp2">—</div>
+      </div>
+      <div class="pillar-inputs" id="pi2">
+        <div class="input-row">
+          <div class="input-label">IPAQ-SF<span>النشاط البدني الأسبوعي</span></div>
+          <input type="number" class="score-input" id="i_ipaq" min="0" max="100" placeholder="—" oninput="update()">
+          <div class="score-max">/ 100</div>
+        </div>
+        <div class="input-row">
+          <div class="input-label">WHO PA<span>معايير منظمة الصحة</span></div>
+          <input type="number" class="score-input" id="i_whopa" min="0" max="100" placeholder="—" oninput="update()">
+          <div class="score-max">/ 100</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ٣. النوم -->
+    <div class="pillar-card" id="pc3">
+      <div class="pillar-header" onclick="toggleCard('pi3')">
+        <div class="pillar-color" style="color:var(--c3);background:var(--c3)"></div>
+        <div class="pillar-name" style="color:var(--c3)">🌙 النوم المريح</div>
+        <div class="pillar-score-badge" id="sb3" style="color:var(--c3)">—</div>
+        <div class="pillar-pct" id="pp3">—</div>
+      </div>
+      <div class="pillar-inputs" id="pi3">
+        <div class="input-row">
+          <div class="input-label">PSQI<span>جودة النوم — عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_psqi" min="0" max="21" placeholder="—" oninput="update()">
+          <div class="score-max">/ 21</div>
+        </div>
+        <div class="input-row">
+          <div class="input-label">SHI<span>نظافة النوم — عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_shi" min="0" max="52" placeholder="—" oninput="update()">
+          <div class="score-max">/ 52</div>
+        </div>
+        <div class="input-row">
+          <div class="input-label">STOP-BANG<span>انقطاع النفس — عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_stopbang" min="0" max="8" placeholder="—" oninput="update()">
+          <div class="score-max">/ 8</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ٤. الضغط النفسي -->
+    <div class="pillar-card" id="pc4">
+      <div class="pillar-header" onclick="toggleCard('pi4')">
+        <div class="pillar-color" style="color:var(--c4);background:var(--c4)"></div>
+        <div class="pillar-name" style="color:var(--c4)">🧠 إدارة الضغط</div>
+        <div class="pillar-score-badge" id="sb4" style="color:var(--c4)">—</div>
+        <div class="pillar-pct" id="pp4">—</div>
+      </div>
+      <div class="pillar-inputs" id="pi4">
+        <div class="input-row">
+          <div class="input-label">PSS<span>الضغط النفسي — عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_pss" min="0" max="40" placeholder="—" oninput="update()">
+          <div class="score-max">/ 40</div>
+        </div>
+        <div class="input-row">
+          <div class="input-label">GAD-7<span>القلق — عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_gad" min="0" max="21" placeholder="—" oninput="update()">
+          <div class="score-max">/ 21</div>
+        </div>
+        <div class="input-row">
+          <div class="input-label">PHQ-9<span>الاكتئاب — عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_phq" min="0" max="27" placeholder="—" oninput="update()">
+          <div class="score-max">/ 27</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ٥. الترابط الاجتماعي -->
+    <div class="pillar-card" id="pc5">
+      <div class="pillar-header" onclick="toggleCard('pi5')">
+        <div class="pillar-color" style="color:var(--c5);background:var(--c5)"></div>
+        <div class="pillar-name" style="color:var(--c5)">🤝 الترابط الاجتماعي</div>
+        <div class="pillar-score-badge" id="sb5" style="color:var(--c5)">—</div>
+        <div class="pillar-pct" id="pp5">—</div>
+      </div>
+      <div class="pillar-inputs" id="pi5">
+        <div class="input-row">
+          <div class="input-label">UCLA-3<span>الوحدة — عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_ucla" min="3" max="12" placeholder="—" oninput="update()">
+          <div class="score-max">/ 12</div>
+        </div>
+        <div class="input-row">
+          <div class="input-label">MSPSS<span>الدعم الاجتماعي</span></div>
+          <input type="number" class="score-input" id="i_mspss" min="0" max="84" placeholder="—" oninput="update()">
+          <div class="score-max">/ 84</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ٦. المواد الضارة -->
+    <div class="pillar-card" id="pc6">
+      <div class="pillar-header" onclick="toggleCard('pi6')">
+        <div class="pillar-color" style="color:var(--c6);background:var(--c6)"></div>
+        <div class="pillar-name" style="color:var(--c6)">🚫 تجنب المواد</div>
+        <div class="pillar-score-badge" id="sb6" style="color:var(--c6)">—</div>
+        <div class="pillar-pct" id="pp6">—</div>
+      </div>
+      <div class="pillar-inputs" id="pi6">
+        <div class="input-row">
+          <div class="input-label">FTND<span>النيكوتين — عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_ftnd" min="0" max="10" placeholder="—" oninput="update()">
+          <div class="score-max">/ 10</div>
+        </div>
+        <div class="input-row">
+          <div class="input-label">DAST<span>الأدوية — عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_dast" min="0" max="10" placeholder="—" oninput="update()">
+          <div class="score-max">/ 10</div>
+        </div>
+        <div class="input-row">
+          <div class="input-label">كافيين<span>— عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_caff" min="0" max="56" placeholder="—" oninput="update()">
+          <div class="score-max">/ 56</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ٧. الصحة الرقمية -->
+    <div class="pillar-card" id="pc7">
+      <div class="pillar-header" onclick="toggleCard('pi7')">
+        <div class="pillar-color" style="color:var(--c7);background:var(--c7)"></div>
+        <div class="pillar-name" style="color:var(--c7)">📱 الصحة الرقمية</div>
+        <div class="pillar-score-badge" id="sb7" style="color:var(--c7)">—</div>
+        <div class="pillar-pct" id="pp7">—</div>
+      </div>
+      <div class="pillar-inputs" id="pi7">
+        <div class="input-row">
+          <div class="input-label">BSMAS<span>إدمان المنصات — عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_bsmas" min="6" max="30" placeholder="—" oninput="update()">
+          <div class="score-max">/ 30</div>
+        </div>
+        <div class="input-row">
+          <div class="input-label">FoMO<span>الخوف من الفوات — عكسي ↑ أسوأ</span></div>
+          <input type="number" class="score-input" id="i_fomo" min="10" max="50" placeholder="—" oninput="update()">
+          <div class="score-max">/ 50</div>
+        </div>
+        <div class="input-row">
+          <div class="input-label">DQoL<span>جودة الحياة الرقمية</span></div>
+          <input type="number" class="score-input" id="i_dqol" min="0" max="100" placeholder="—" oninput="update()">
+          <div class="score-max">/ 100</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end input-panel -->
+
+  <!-- ===== Right Panel ===== -->
+  <div class="right-panel">
+
+    <!-- Wheel -->
+    <div class="wheel-card">
+      <h2>عجلة نمط الحياة الصحي</h2>
+      <p>كل شريحة ركيزة — كلما امتدت للخارج كان مستواها أفضل</p>
+      <svg id="wheelSvg" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg">
+        <!-- سيُملأ بـ JS -->
+      </svg>
+    </div>
+
+    <!-- Overall -->
+    <div class="overall-score">
+      <div class="overall-num" id="overallNum">—</div>
+      <div class="overall-label" id="overallLabel">أدخل نتائجك لرؤية مستواك الكلي</div>
+      <div class="overall-desc" id="overallDesc">أدخل درجاتك من التقييمات السابقة في الحقول على اليسار.</div>
+    </div>
+
+    <!-- Breakdown bars -->
+    <div class="breakdown-card">
+      <h3>تفصيل الركائز السبع</h3>
+      <div id="barsContainer">
+        <div style="text-align:center;padding:20px;font-size:13px;color:var(--text-dim)">أدخل نتائجك لرؤية التفصيل</div>
+      </div>
+    </div>
+
+    <!-- Recommendation -->
+    <div class="rec-card" id="recCard" style="display:none">
+      <h3>💡 أولى خطواتك</h3>
+      <p id="recText">—</p>
+    </div>
+
+    <!-- Print button -->
+    <button class="print-btn" onclick="printWheel()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      طباعة / حفظ PDF
+    </button>
+
+    <button class="reset-btn" onclick="resetAll()">إعادة تعيين جميع القيم</button>
+
+  </div><!-- end right-panel -->
+
+</div><!-- end main -->
+
+<!-- Print footer (hidden on screen) -->
+<div class="print-footer" id="printFooter">
+  tools.drammartonkal.com · تقييم نمط الحياة الصحي · الجمعية التعاونية لتعزيز الصحة وجودة الحياة
+</div>
+
+<script>
+// ===== Config =====
+const PILLARS = [
+  {
+    id: 1, name: 'التغذية', color: '#34c98a', emoji: '🥗',
+    inputs: [
+      { id: 'i_reap',  max: 39, reversed: false },
+      { id: 'i_medas', max: 14, reversed: false },
+    ],
+    rec: 'البدء بزيادة حصص الخضار والفواكه إلى 5 يومياً يُحسّن نتيجة التغذية بشكل ملموس خلال شهر.'
+  },
+  {
+    id: 2, name: 'النشاط الحركي', color: '#4a9eff', emoji: '🏃',
+    inputs: [
+      { id: 'i_ipaq',  max: 100, reversed: false },
+      { id: 'i_whopa', max: 100, reversed: false },
+    ],
+    rec: '150 دقيقة مشي أسبوعياً تُحقق معايير الحد الأدنى لمنظمة الصحة العالمية. ابدأ بـ 20 دقيقة يومياً.'
+  },
+  {
+    id: 3, name: 'النوم المريح', color: '#9b59f5', emoji: '🌙',
+    inputs: [
+      { id: 'i_psqi',    max: 21, reversed: true },
+      { id: 'i_shi',     max: 52, reversed: true },
+      { id: 'i_stopbang',max: 8,  reversed: true },
+    ],
+    rec: 'تثبيت موعد النوم والصحو بفارق لا يتجاوز 30 دقيقة يومياً هو أكثر تدخل يُحسّن جودة النوم.'
+  },
+  {
+    id: 4, name: 'إدارة الضغط', color: '#ff6b6b', emoji: '🧠',
+    inputs: [
+      { id: 'i_pss', max: 40, reversed: true },
+      { id: 'i_gad', max: 21, reversed: true },
+      { id: 'i_phq', max: 27, reversed: true },
+    ],
+    rec: '10 دقائق تنفس عميق يومياً تُخفض الكورتيزول بشكل موثّق. ابدأ بتمرين 4-7-8 ثلاث مرات يومياً.'
+  },
+  {
+    id: 5, name: 'الترابط الاجتماعي', color: '#ff9f43', emoji: '🤝',
+    inputs: [
+      { id: 'i_ucla',  max: 12, reversed: true,  minVal: 3 },
+      { id: 'i_mspss', max: 84, reversed: false },
+    ],
+    rec: 'موعد أسبوعي ثابت مع شخص مقرب — حضورياً لا رقمياً — هو أبسط وأفضل استثمار في صحتك الاجتماعية.'
+  },
+  {
+    id: 6, name: 'تجنب المواد', color: '#26d0ce', emoji: '🚫',
+    inputs: [
+      { id: 'i_ftnd', max: 10, reversed: true },
+      { id: 'i_dast', max: 10, reversed: true },
+      { id: 'i_caff', max: 56, reversed: true },
+    ],
+    rec: 'تقليل الكافيين بعد الظهر والإقلاع عن التبغ بدعم طبي — هاتان الخطوتان وحدهما تُحسّنان ست ركائز أخرى.'
+  },
+  {
+    id: 7, name: 'الصحة الرقمية', color: '#fd79a8', emoji: '📱',
+    inputs: [
+      { id: 'i_bsmas', max: 30, reversed: true,  minVal: 6  },
+      { id: 'i_fomo',  max: 50, reversed: true,  minVal: 10 },
+      { id: 'i_dqol',  max: 100, reversed: false },
+    ],
+    rec: 'إيقاف جميع إشعارات المنصات ووضع الهاتف في غرفة أخرى ليلاً — هاتان القاعدتان تُحسّنان النوم والتركيز معاً.'
+  },
+];
+
+// ===== Toggle cards =====
+function toggleCard(id) {
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+}
+
+// ===== Compute pillar score =====
+function pillarPct(pillar) {
+  const vals = pillar.inputs.map(inp => {
+    const raw = parseFloat(document.getElementById(inp.id).value);
+    if (isNaN(raw)) return null;
+    const min = inp.minVal ?? 0;
+    const range = inp.max - min;
+    let pct = (raw - min) / range * 100;
+    if (inp.reversed) pct = 100 - pct;
+    return Math.max(0, Math.min(100, pct));
+  }).filter(v => v !== null);
+  if (!vals.length) return null;
+  return vals.reduce((a, b) => a + b, 0) / vals.length;
+}
+
+// ===== Draw Wheel =====
+function drawWheel(pcts) {
+  const svg = document.getElementById('wheelSvg');
+  const cx = 170, cy = 170, R = 145, r_inner = 20;
+  const n = 7;
+  const step = (2 * Math.PI) / n;
+  const offset = -Math.PI / 2; // start top
+
+  let html = '';
+
+  // Background rings
+  [25, 50, 75, 100].forEach(ring => {
+    const rr = r_inner + (R - r_inner) * ring / 100;
+    html += `<circle cx="${cx}" cy="${cy}" r="${rr}" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`;
+  });
+
+  // Grid lines
+  for (let i = 0; i < n; i++) {
+    const angle = offset + i * step;
+    const x = cx + R * Math.cos(angle);
+    const y = cy + R * Math.sin(angle);
+    html += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+  }
+
+  // Slices
+  const slicePoints = [];
+  for (let i = 0; i < n; i++) {
+    const pct = pcts[i] ?? 0;
+    const rr  = r_inner + (R - r_inner) * pct / 100;
+    const a1  = offset + i * step;
+    const a2  = offset + (i + 1) * step;
+    const color = PILLARS[i].color;
+
+    // Filled slice
+    const x1 = cx + rr * Math.cos(a1);
+    const y1 = cy + rr * Math.sin(a1);
+    const x2 = cx + rr * Math.cos(a2);
+    const y2 = cy + rr * Math.sin(a2);
+    const large = (a2 - a1) > Math.PI ? 1 : 0;
+
+    if (pcts[i] !== null) {
+      html += `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${rr} ${rr} 0 ${large} 1 ${x2} ${y2} Z"
+        fill="${color}" fill-opacity="0.25" stroke="${color}" stroke-width="1.5" stroke-opacity="0.6"/>`;
+    }
+
+    // Outer arc point for polygon
+    const midAngle = offset + (i + 0.5) * step;
+    slicePoints.push({ x: cx + rr * Math.cos(midAngle), y: cy + rr * Math.sin(midAngle), color, pct });
+  }
+
+  // Polygon outline (connecting all slice edges)
+  const polyPts = [];
+  for (let i = 0; i < n; i++) {
+    const pct = pcts[i] ?? 0;
+    const rr  = r_inner + (R - r_inner) * pct / 100;
+    const midAngle = offset + (i + 0.5) * step;
+    polyPts.push(`${cx + rr * Math.cos(midAngle)},${cy + rr * Math.sin(midAngle)}`);
+  }
+
+  // Labels + dots
+  for (let i = 0; i < n; i++) {
+    const angle = offset + (i + 0.5) * step;
+    const labelR = R + 22;
+    const lx = cx + labelR * Math.cos(angle);
+    const ly = cy + labelR * Math.sin(angle);
+    const color = PILLARS[i].color;
+    const pct = pcts[i];
+
+    // Emoji label
+    html += `<text x="${lx}" y="${ly + 5}" text-anchor="middle" font-size="16" font-family="Tajawal">${PILLARS[i].emoji}</text>`;
+
+    // Pct label if available
+    if (pct !== null) {
+      const dotR = r_inner + (R - r_inner) * pct / 100;
+      const dotX = cx + dotR * Math.cos(angle);
+      const dotY = cy + dotR * Math.sin(angle);
+      html += `<circle cx="${dotX}" cy="${dotY}" r="5" fill="${color}" stroke="#0a1628" stroke-width="2"/>`;
+    }
+  }
+
+  // Center
+  html += `<circle cx="${cx}" cy="${cy}" r="${r_inner}" fill="#0f1f3d" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>`;
+
+  // Center text
+  const filled = pcts.filter(p => p !== null).length;
+  const avg    = filled ? Math.round(pcts.filter(p=>p!==null).reduce((a,b)=>a+b,0)/filled) : null;
+  if (avg !== null) {
+    html += `<text x="${cx}" y="${cy + 5}" text-anchor="middle" font-size="14" font-weight="800" fill="#e8f0fe" font-family="Tajawal">${avg}%</text>`;
+  }
+
+  svg.innerHTML = html;
+}
+
+// ===== Main update =====
+function update() {
+  const pcts = PILLARS.map(p => pillarPct(p));
+
+  // Update badges
+  pcts.forEach((pct, i) => {
+    const sb = document.getElementById('sb' + (i+1));
+    const pp = document.getElementById('pp' + (i+1));
+    if (pct !== null) {
+      sb.textContent = Math.round(pct) + '%';
+      pp.textContent = pct >= 70 ? '✓ جيد' : pct >= 40 ? '◑ متوسط' : '✗ يحتاج';
+      pp.style.color = pct >= 70 ? '#34c98a' : pct >= 40 ? '#ff9f43' : '#ff6b6b';
+    } else {
+      sb.textContent = '—';
+      pp.textContent = '—';
+      pp.style.color = '';
+    }
+  });
+
+  // Draw wheel
+  drawWheel(pcts);
+
+  // Overall
+  const filled = pcts.filter(p => p !== null);
+  if (filled.length > 0) {
+    const avg = Math.round(filled.reduce((a,b)=>a+b,0) / filled.length);
+    document.getElementById('overallNum').textContent = avg + '%';
+
+    let label, desc;
+    if (avg >= 75) {
+      label = 'نمط حياة ممتاز 🌟';
+      desc  = 'معظم ركائز صحتك في مستوى جيد. ركّز على تعزيز نقاط قوتك والحفاظ عليها.';
+    } else if (avg >= 55) {
+      label = 'نمط حياة جيد مع فجوات';
+      desc  = 'لديك أساس صحي جيد وبعض الركائز تحتاج اهتماماً. التحسين في ركيزة واحدة يؤثر في الباقي.';
+    } else if (avg >= 35) {
+      label = 'نمط حياة يحتاج تحسيناً';
+      desc  = 'عدة ركائز تحتاج اهتماماً. ابدأ بالأضعف واحدة في كل مرة — التغيير التدريجي أثبت فاعلية أعلى.';
+    } else {
+      label = 'يحتاج مراجعة جذرية';
+      desc  = 'نتائجك تشير إلى حاجة لتغيير نمط الحياة بشكل منهجي. استشارة متخصص في طب نمط الحياة ستُسرّع رحلتك.';
+    }
+    document.getElementById('overallLabel').textContent = label;
+    document.getElementById('overallDesc').textContent  = desc;
+  } else {
+    document.getElementById('overallNum').textContent  = '—';
+    document.getElementById('overallLabel').textContent = 'أدخل نتائجك لرؤية مستواك الكلي';
+    document.getElementById('overallDesc').textContent  = 'أدخل درجاتك من التقييمات السابقة في الحقول على اليسار.';
+  }
+
+  // Bars
+  const barColors = PILLARS.map(p => p.color);
+  if (filled.length > 0) {
+    let barsHTML = '';
+    pcts.forEach((pct, i) => {
+      if (pct === null) return;
+      const color = PILLARS[i].color;
+      const lvlColor = pct >= 70 ? '#34c98a' : pct >= 40 ? '#ff9f43' : '#ff6b6b';
+      barsHTML += `<div class="bar-row">
+        <div class="bar-name">${PILLARS[i].emoji} ${PILLARS[i].name.split(' ').slice(-1)[0]}</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${pct}%;background:${color}"></div>
+        </div>
+        <div class="bar-pct" style="color:${lvlColor}">${Math.round(pct)}%</div>
+      </div>`;
+    });
+    document.getElementById('barsContainer').innerHTML = barsHTML || '<div style="text-align:center;padding:20px;font-size:13px;color:var(--text-dim)">أدخل نتائجك لرؤية التفصيل</div>';
+  } else {
+    document.getElementById('barsContainer').innerHTML = '<div style="text-align:center;padding:20px;font-size:13px;color:var(--text-dim)">أدخل نتائجك لرؤية التفصيل</div>';
+  }
+
+  // Recommendation — weakest pillar
+  const withPct = pcts.map((pct, i) => ({ pct, i })).filter(x => x.pct !== null);
+  if (withPct.length > 0) {
+    withPct.sort((a, b) => a.pct - b.pct);
+    const weakest = withPct[0];
+    document.getElementById('recCard').style.display = 'block';
+    document.getElementById('recText').textContent = PILLARS[weakest.i].rec;
+  } else {
+    document.getElementById('recCard').style.display = 'none';
+  }
+}
+
+// ===== Print =====
+function printWheel() {
+  window.print();
+}
+
+// ===== Reset =====
+function resetAll() {
+  document.querySelectorAll('.score-input').forEach(el => el.value = '');
+  update();
+}
+
+// ===== Init =====
+drawWheel(Array(7).fill(null));
+update();
+</script>
+</body>
+</html>
