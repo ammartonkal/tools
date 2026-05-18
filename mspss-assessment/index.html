@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مقياس الدعم الاجتماعي المُدرَك (MSPSS)</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #3d6b4a;
+    --primary-light: #e6f2ea;
+    --primary-dark: #234030;
+    --accent: #5a9e6a;
+    --f-color: #7a3b2e;
+    --f-light: #f7efe6;
+    --fr-color: #2d5f8a;
+    --fr-light: #e6f0f8;
+    --so-color: #4a3570;
+    --so-light: #ede8f7;
+    --success: #2d7a4f;
+    --success-light: #e6f4ed;
+    --warning: #b06000;
+    --warning-light: #fff3e0;
+    --danger: #c0392b;
+    --danger-light: #fdecea;
+    --border: #cce0d4;
+    --bg: #f1f7f3;
+    --card: #ffffff;
+    --text: #0d2018;
+    --text-muted: #3a6050;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(61,107,74,0.10);
+  }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  .header {
+    background: var(--primary);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 32px 28px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: 60px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 12px;
+    border-radius: 20px;
+    padding: 3px 12px;
+    margin-bottom: 12px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .header p  { font-size: 14px; opacity: 0.85; max-width: 560px; line-height: 1.6; }
+  .header-meta { display: flex; gap: 20px; margin-top: 18px; flex-wrap: wrap; }
+  .header-meta span {
+    font-size: 13px; opacity: 0.8;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .header-meta span::before { content: '•'; opacity: 0.6; }
+
+  /* Source legend */
+  .source-legend {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    display: flex; gap: 20px; flex-wrap: wrap; align-items: center;
+  }
+  .legend-label { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-dot.f  { background: var(--f-color); }
+  .legend-dot.fr { background: var(--fr-color); }
+  .legend-dot.so { background: var(--so-color); }
+
+  .progress-bar-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .progress-label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill  { height: 100%; background: var(--primary); border-radius: 10px; width: 0%; transition: width 0.4s ease; }
+  .progress-count { font-size: 13px; color: var(--primary); font-weight: 700; white-space: nowrap; }
+
+  /* Domain card */
+  .domain-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .domain-card.has-error { border-color: var(--danger); }
+
+  .domain-header {
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .domain-header.f  { background: var(--f-light); }
+  .domain-header.fr { background: var(--fr-light); }
+  .domain-header.so { background: var(--so-light); }
+
+  .domain-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    color: #fff; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .domain-icon.f  { background: var(--f-color); }
+  .domain-icon.fr { background: var(--fr-color); }
+  .domain-icon.so { background: var(--so-color); }
+
+  .domain-title    { font-size: 15px; font-weight: 700; }
+  .domain-title.f  { color: var(--f-color); }
+  .domain-title.fr { color: var(--fr-color); }
+  .domain-title.so { color: var(--so-color); }
+  .domain-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+  .domain-body { padding: 20px; }
+
+  .q-block { margin-bottom: 18px; }
+  .q-block:last-child { margin-bottom: 0; }
+  .q-label {
+    font-size: 14px; font-weight: 500; color: var(--text);
+    margin-bottom: 12px; line-height: 1.6;
+  }
+  .q-num { color: var(--primary); font-weight: 700; margin-left: 6px; }
+
+  /* 7-point agreement scale */
+  .scale-7 {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .s7-opt { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+  .s7-opt input[type="radio"] { display: none; }
+  .s7-btn {
+    width: 100%; padding: 10px 2px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    text-align: center;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 10px;
+    color: var(--text-muted);
+    background: var(--bg);
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.3;
+  }
+  .s7-opt input:checked + .s7-btn {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 700;
+  }
+  .s7-opt:hover .s7-btn { border-color: var(--accent); background: var(--primary-light); }
+  .s7-val { font-size: 10px; color: var(--text-muted); font-weight: 700; }
+  .scale-ends {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-muted);
+    margin-top: 4px; padding: 0 2px;
+  }
+
+  .alert-missing {
+    background: var(--danger-light); border: 1.5px solid #f5b7b1;
+    border-radius: 8px; padding: 12px 16px; font-size: 14px;
+    color: var(--danger); margin-bottom: 16px; display: none;
+  }
+  .error-note { font-size: 12px; color: var(--danger); margin-top: 8px; display: none; }
+  .domain-card.has-error .error-note { display: block; }
+
+  .btn-wrap { text-align: center; margin-top: 28px; }
+  .btn-calc {
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 10px;
+    padding: 14px 44px; font-size: 16px; font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px 14px rgba(61,107,74,0.25);
+  }
+  .btn-calc:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-calc:active { transform: translateY(0); }
+
+  /* Result */
+  .result-card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 28px;
+    margin-top: 28px; display: none;
+  }
+  .result-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--primary-dark); }
+
+  /* Overall score */
+  .overall-score {
+    display: flex; align-items: center; gap: 20px;
+    margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .score-circle {
+    width: 90px; height: 90px; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-weight: 700; flex-shrink: 0; border: 4px solid;
+  }
+  .score-circle .sv { font-size: 26px; line-height: 1; }
+  .score-circle .sm { font-size: 12px; opacity: 0.7; }
+  .score-circle.low  { border-color: #c0392b; color: #c0392b; background: #fdecea; }
+  .score-circle.mid  { border-color: #b06000; color: #b06000; background: #fff3e0; }
+  .score-circle.high { border-color: #2d7a4f; color: #2d7a4f; background: #e6f4ed; }
+
+  .overall-interp h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .overall-interp p  { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Three sources */
+  .three-sources { margin-bottom: 24px; }
+  .three-sources h4 { font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 14px; }
+  .source-card {
+    border-radius: 10px; padding: 16px 18px;
+    margin-bottom: 10px; border: 1.5px solid var(--border);
+    display: flex; align-items: center; gap: 16px;
+  }
+  .source-card.f  { border-right: 4px solid var(--f-color); }
+  .source-card.fr { border-right: 4px solid var(--fr-color); }
+  .source-card.so { border-right: 4px solid var(--so-color); }
+
+  .source-info { flex: 1; }
+  .source-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .source-name.f  { color: var(--f-color); }
+  .source-name.fr { color: var(--fr-color); }
+  .source-name.so { color: var(--so-color); }
+  .source-track { height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 4px; }
+  .source-fill  { height: 100%; border-radius: 10px; transition: width 0.6s ease; }
+  .source-fill.f  { background: var(--f-color); }
+  .source-fill.fr { background: var(--fr-color); }
+  .source-fill.so { background: var(--so-color); }
+  .source-note { font-size: 12px; color: var(--text-muted); }
+  .source-score { font-size: 20px; font-weight: 700; flex-shrink: 0; }
+  .source-score.f  { color: var(--f-color); }
+  .source-score.fr { color: var(--fr-color); }
+  .source-score.so { color: var(--so-color); }
+
+  .recs { border-top: 1.5px solid var(--border); padding-top: 20px; margin-top: 4px; }
+  .recs h4 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary-dark); }
+  .rec-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 14px; line-height: 1.6; }
+  .rec-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .btn-reset {
+    background: none; border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 10px 28px; font-size: 14px; font-family: 'Tajawal', sans-serif;
+    color: var(--text-muted); cursor: pointer; margin-top: 20px;
+    transition: all 0.2s; display: block; margin-left: auto; margin-right: auto;
+  }
+  .btn-reset:hover { border-color: var(--primary); color: var(--primary); }
+
+  .references {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 20px 24px; margin-top: 20px;
+  }
+  .references h4 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text-muted); }
+  .references p  { font-size: 12px; color: var(--text-muted); line-height: 1.8; direction: ltr; text-align: left; }
+
+  @media (max-width: 560px) {
+    .header h1 { font-size: 18px; }
+    .scale-7 { grid-template-columns: repeat(7,1fr); gap: 2px; }
+    .s7-btn  { font-size: 9px; padding: 8px 1px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-badge">ركيزة الترابط الاجتماعي · طب نمط الحياة</div>
+    <h1>مقياس الدعم الاجتماعي المُدرَك (MSPSS)</h1>
+    <p>تقييم ذاتي لمستوى الدعم الاجتماعي الذي تشعر بتوافره من ثلاثة مصادر: الأسرة، الأصدقاء، والشخص المقرب.</p>
+    <div class="header-meta">
+      <span>12 سؤالاً</span>
+      <span>3 مصادر دعم</span>
+      <span>الدرجة من 84</span>
+      <span>5 دقائق</span>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="source-legend">
+    <span class="legend-label">مصادر الدعم:</span>
+    <div class="legend-item"><div class="legend-dot f"></div><span>الأسرة</span></div>
+    <div class="legend-item"><div class="legend-dot fr"></div><span>الأصدقاء</span></div>
+    <div class="legend-item"><div class="legend-dot so"></div><span>الشخص المقرب</span></div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <span class="progress-label">التقدم</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-count" id="progressCount">0 / 12</span>
+  </div>
+
+  <div id="alertMissing" class="alert-missing">يرجى الإجابة على جميع الأسئلة قبل احتساب النتيجة.</div>
+
+  <!-- ===== الشخص المقرب ===== -->
+  <div class="domain-card" id="d_so">
+    <div class="domain-header so">
+      <div class="domain-icon so">💜</div>
+      <div>
+        <div class="domain-title so">الشخص المقرب</div>
+        <div class="domain-subtitle">الشريك أو الصديق المقرب الذي تثق به</div>
+      </div>
+    </div>
+    <div class="domain-body">
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١.</span> هناك شخص مميز في حياتي أشعر بأنه يهتم بمشاعري.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q1" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q1" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q1" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q1" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q1" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q1" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q1" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٢.</span> هناك شخص مميز أستطيع مشاركته أفراحي وأحزاني.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q2" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q2" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q2" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q2" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q2" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q2" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q2" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٣.</span> هناك شخص مميز يكون مصدر راحتي في أوقات الضيق.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q3" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q3" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q3" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q3" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q3" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q3" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q3" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٤.</span> هناك شخص مميز يُساعدني حين أحتاج إلى ذلك.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q4" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q4" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q4" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q4" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q4" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q4" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q4" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="error-note">الرجاء الإجابة على جميع أسئلة هذا المصدر</div>
+    </div>
+  </div>
+
+  <!-- ===== الأسرة ===== -->
+  <div class="domain-card" id="d_f">
+    <div class="domain-header f">
+      <div class="domain-icon f">🏠</div>
+      <div>
+        <div class="domain-title f">الأسرة</div>
+        <div class="domain-subtitle">العائلة والأهل والأقارب المقربون</div>
+      </div>
+    </div>
+    <div class="domain-body">
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٥.</span> أسرتي تحاول فعلاً مساعدتي.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q5" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q5" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q5" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q5" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q5" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q5" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q5" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٦.</span> أستطيع مشاركة أفراحي وأحزاني مع أسرتي.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q6" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q6" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q6" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q6" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q6" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q6" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q6" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٧.</span> أسرتي على استعداد لمساعدتي في اتخاذ قراراتي.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q7" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q7" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q7" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q7" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q7" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q7" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q7" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٨.</span> أسرتي تقدّم لي الدعم العاطفي الذي أحتاجه.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q8" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q8" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q8" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q8" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q8" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q8" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q8" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="error-note">الرجاء الإجابة على جميع أسئلة هذا المصدر</div>
+    </div>
+  </div>
+
+  <!-- ===== الأصدقاء ===== -->
+  <div class="domain-card" id="d_fr">
+    <div class="domain-header fr">
+      <div class="domain-icon fr">🤝</div>
+      <div>
+        <div class="domain-title fr">الأصدقاء</div>
+        <div class="domain-subtitle">الأصدقاء المقربون وشبكة الدعم الاجتماعي</div>
+      </div>
+    </div>
+    <div class="domain-body">
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">٩.</span> أصدقائي يحاولون فعلاً مساعدتي.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q9" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q9" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q9" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q9" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q9" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q9" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q9" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١٠.</span> أستطيع الاعتماد على أصدقائي حين تسوء الأمور.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q10" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q10" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q10" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q10" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q10" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q10" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q10" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١١.</span> أستطيع مشاركة أفراحي وأحزاني مع أصدقائي.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q11" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q11" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q11" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q11" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q11" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q11" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q11" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><span class="q-num">١٢.</span> أصدقائي يقدّمون لي الدعم العاطفي الذي أحتاجه.</div>
+        <div class="scale-7">
+          <label class="s7-opt"><input type="radio" name="q12" value="1" onchange="updateProgress()"><span class="s7-btn">لا أوافق بشدة</span><span class="s7-val">1</span></label>
+          <label class="s7-opt"><input type="radio" name="q12" value="2" onchange="updateProgress()"><span class="s7-btn">لا أوافق</span><span class="s7-val">2</span></label>
+          <label class="s7-opt"><input type="radio" name="q12" value="3" onchange="updateProgress()"><span class="s7-btn">لا أوافق نسبياً</span><span class="s7-val">3</span></label>
+          <label class="s7-opt"><input type="radio" name="q12" value="4" onchange="updateProgress()"><span class="s7-btn">محايد</span><span class="s7-val">4</span></label>
+          <label class="s7-opt"><input type="radio" name="q12" value="5" onchange="updateProgress()"><span class="s7-btn">أوافق نسبياً</span><span class="s7-val">5</span></label>
+          <label class="s7-opt"><input type="radio" name="q12" value="6" onchange="updateProgress()"><span class="s7-btn">أوافق</span><span class="s7-val">6</span></label>
+          <label class="s7-opt"><input type="radio" name="q12" value="7" onchange="updateProgress()"><span class="s7-btn">أوافق بشدة</span><span class="s7-val">7</span></label>
+        </div>
+        <div class="scale-ends"><span>لا أوافق بشدة</span><span>أوافق بشدة</span></div>
+      </div>
+
+      <div class="error-note">الرجاء الإجابة على جميع أسئلة هذا المصدر</div>
+    </div>
+  </div>
+
+  <div class="btn-wrap">
+    <button class="btn-calc" onclick="calculate()">احسب نتيجتي</button>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+    <div class="result-title">نتيجة مقياس الدعم الاجتماعي المُدرَك</div>
+
+    <div class="overall-score">
+      <div class="score-circle" id="scoreCircle">
+        <span class="sv" id="scoreVal">—</span>
+        <span class="sm">من 84</span>
+      </div>
+      <div class="overall-interp">
+        <h3 id="scoreLabel">—</h3>
+        <p id="scoreDesc">—</p>
+      </div>
+    </div>
+
+    <div class="three-sources">
+      <h4>تفصيل مصادر الدعم</h4>
+      <div id="sourcesDetail"></div>
+    </div>
+
+    <div class="recs">
+      <h4>التوصيات</h4>
+      <div id="recsList"></div>
+    </div>
+
+    <button class="btn-reset" onclick="resetForm()">إعادة التقييم</button>
+  </div>
+
+  <div class="references">
+    <h4>المراجع العلمية</h4>
+    <p>
+      Zimet GD, Dahlem NW, Zimet SG, Farley GK. The Multidimensional Scale of Perceived Social Support. <em>Journal of Personality Assessment</em>. 1988;52(1):30–41.<br>
+      Zimet GD, Powell SS, Farley GK, Werkman S, Berkoff KA. Psychometric characteristics of the Multidimensional Scale of Perceived Social Support. <em>Journal of Personality Assessment</em>. 1990;55(3–4):610–617.<br>
+      Kazarian SS, McCabe SB. Dimensions of social support in the MSPSS: Factorial structure, reliability, and theoretical implications. <em>Journal of Community Psychology</em>. 1991;19(2):150–160.
+    </p>
+  </div>
+
+</div>
+
+<script>
+const QNAMES = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12'];
+const SO_QS  = ['q1','q2','q3','q4'];
+const F_QS   = ['q5','q6','q7','q8'];
+const FR_QS  = ['q9','q10','q11','q12'];
+
+function getVal(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? parseInt(el.value) : null;
+}
+
+function updateProgress() {
+  const answered = QNAMES.filter(n => getVal(n) !== null).length;
+  const pct = Math.round(answered / 12 * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = answered + ' / 12';
+}
+
+function sumOf(qs) {
+  return qs.reduce((s, n) => s + (getVal(n) ?? 0), 0);
+}
+
+function sourceTier(score) {
+  const avg = score / 4;
+  if (avg <= 3.5) return 'low';
+  if (avg <= 5.5) return 'mid';
+  return 'high';
+}
+
+function overallTier(score) {
+  const avg = score / 12;
+  if (avg <= 3.5) return 'low';
+  if (avg <= 5.5) return 'mid';
+  return 'high';
+}
+
+function calculate() {
+  document.getElementById('alertMissing').style.display = 'none';
+  document.querySelectorAll('.domain-card').forEach(c => c.classList.remove('has-error'));
+
+  let missing = false;
+  [['d_so', SO_QS], ['d_f', F_QS], ['d_fr', FR_QS]].forEach(([id, qs]) => {
+    if (qs.some(n => getVal(n) === null)) {
+      document.getElementById(id).classList.add('has-error');
+      missing = true;
+    }
+  });
+
+  if (missing) {
+    document.getElementById('alertMissing').style.display = 'block';
+    document.getElementById('alertMissing').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const soScore = sumOf(SO_QS);
+  const fScore  = sumOf(F_QS);
+  const frScore = sumOf(FR_QS);
+  const total   = soScore + fScore + frScore;
+
+  const tier = overallTier(total);
+  const circle = document.getElementById('scoreCircle');
+  document.getElementById('scoreVal').textContent = total;
+  circle.className = 'score-circle ' + tier;
+
+  const interps = {
+    low:  { label: 'دعم اجتماعي منخفض',   desc: 'تشعر بمحدودية الدعم المتاح لك. هذا يستدعي الانتباه والعمل على تعزيز روابطك الاجتماعية من مصادرها المختلفة.' },
+    mid:  { label: 'دعم اجتماعي متوسط',   desc: 'لديك قدر من الدعم الاجتماعي لكنه يحتاج تعزيزاً. انظر إلى تفصيل المصادر لمعرفة أين تكمن الفجوة.' },
+    high: { label: 'دعم اجتماعي مرتفع',   desc: 'تشعر بدعم اجتماعي جيد من محيطك. هذا عامل وقاية قوي للصحة النفسية والجسدية — حافظ عليه.' },
+  };
+  document.getElementById('scoreLabel').textContent = interps[tier].label;
+  document.getElementById('scoreDesc').textContent  = interps[tier].desc;
+
+  // Source details
+  const sources = [
+    { name: 'الشخص المقرب', score: soScore, cls: 'so',
+      notes: { low: 'الشعور بغياب شخص مقرب مؤثر جداً. قد يستحق هذا الأمر تأملاً والعمل على بناء علاقة أعمق مع شخص تثق به.', mid: 'العلاقة المقربة موجودة لكنها تحتاج تعميقاً. اللقاءات الحضورية المنتظمة والحديث الصريح يقويان هذه الرابطة.', high: 'تشعر بوجود شخص مقرب داعم في حياتك — هذه الرابطة ثمينة، احرص على تغذيتها.' }
+    },
+    { name: 'الأسرة', score: fScore, cls: 'f',
+      notes: { low: 'تشعر بمحدودية الدعم الأسري. يستحق استكشاف أسباب هذه الفجوة والتفكير في طرق لتحسين التواصل الأسري.', mid: 'الدعم الأسري متوسط. إحياء عادات التواصل الأسري المنتظم — كالتجمعات والمكالمات — يُقوي هذا الجانب.', high: 'أسرتك مصدر دعم جيد. الاستثمار في هذه العلاقات يُعزز صحتك ويُقوي شبكة أمانك.' }
+    },
+    { name: 'الأصدقاء', score: frScore, cls: 'fr',
+      notes: { low: 'تشعر بمحدودية الدعم من الأصدقاء. بناء صداقات عميقة يحتاج وقتاً ولكنه يبدأ بالمبادرة والانتظام في التواصل.', mid: 'علاقاتك مع الأصدقاء تحتاج تطوير. خصص وقتاً للقاء بأصدقائك حضورياً بشكل منتظم.', high: 'شبكة أصدقائك قوية وداعمة. هذا الثراء الاجتماعي من أهم عوامل الصمود في وجه الضغوط.' }
+    },
+  ];
+
+  document.getElementById('sourcesDetail').innerHTML = sources.map(s => {
+    const pct = (s.score / 28) * 100;
+    const lvl = sourceTier(s.score);
+    const lvlLabel = { low: 'منخفض', mid: 'متوسط', high: 'مرتفع' };
+    return `<div class="source-card ${s.cls}">
+      <div class="source-info">
+        <div class="source-name ${s.cls}">${s.name} — ${lvlLabel[lvl]}</div>
+        <div class="source-track"><div class="source-fill ${s.cls}" style="width:${pct}%"></div></div>
+        <div class="source-note">${s.notes[lvl]}</div>
+      </div>
+      <div class="source-score ${s.cls}">${s.score}<span style="font-size:12px;opacity:0.6">/28</span></div>
+    </div>`;
+  }).join('');
+
+  // Recommendations
+  const recs = [];
+  const soTier = sourceTier(soScore);
+  const fTier  = sourceTier(fScore);
+  const frTier = sourceTier(frScore);
+
+  if (soTier === 'low')
+    recs.push({ icon: '💜', text: 'غياب شخص مقرب هو أكثر ما يؤثر على الصحة النفسية. فكر في شخص في حياتك يمكن أن يكون هذا الدور — وابدأ بالتواصل معه بصدق وعمق.' });
+  if (fTier === 'low')
+    recs.push({ icon: '🏠', text: 'ابدأ بخطوة صغيرة نحو تحسين التواصل الأسري — زيارة، مكالمة، أو رسالة. الروابط الأسرية تتقوى بالانتظام لا بالمناسبات فقط.' });
+  if (frTier === 'low')
+    recs.push({ icon: '🤝', text: 'بناء الصداقات يبدأ بالانخراط في أنشطة مشتركة — رياضة، تطوع، دراسة. اللقاء المتكرر هو ما يحوّل المعرفة إلى صداقة حقيقية.' });
+  if (tier === 'high')
+    recs.push({ icon: '✅', text: 'شبكة دعمك الاجتماعي قوية. استمر في تغذية هذه العلاقات — فالروابط الاجتماعية مثل النباتات تحتاج رعاية مستمرة لتبقى قوية.' });
+  if (tier === 'low' || tier === 'mid')
+    recs.push({ icon: '📅', text: 'خصص موعداً أسبوعياً ثابتاً للتواصل مع شخص من أي مصدر دعم — الانتظام هو المفتاح. حتى مكالمة أسبوعية منتظمة تصنع فارقاً ملموساً.' });
+
+  document.getElementById('recsList').innerHTML = recs.map(r =>
+    `<div class="rec-item"><span class="rec-icon">${r.icon}</span><span>${r.text}</span></div>`
+  ).join('');
+
+  const card = document.getElementById('resultCard');
+  card.style.display = 'block';
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function resetForm() {
+  QNAMES.forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false));
+  document.querySelectorAll('.domain-card').forEach(c => c.classList.remove('has-error'));
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('alertMissing').style.display = 'none';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
